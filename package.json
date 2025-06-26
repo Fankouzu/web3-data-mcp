@@ -1,0 +1,45 @@
+{
+  "name": "web3-data-mcp",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol server for Web3 data access with multiple data provider support",
+  "main": "src/index.js",
+  "bin": {
+    "web3-data-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js --debug",
+    "test": "node test-error-handling.js",
+    "test:provider": "node test-rootdata-provider.js",
+    "test:api": "node tests/api-test.js",
+    "config:example": "node src/index.js --config-example",
+    "help": "node src/index.js --help",
+    "env:help": "node src/index.js --env-help"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "web3",
+    "blockchain",
+    "crypto",
+    "data",
+    "api",
+    "rootdata"
+  ],
+  "author": "Web3 Data MCP Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/web3-data-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/web3-data-mcp/issues"
+  },
+  "homepage": "https://github.com/your-org/web3-data-mcp#readme"
+}
