@@ -9,9 +9,16 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node src/index.js --debug",
-    "test": "node test-error-handling.js",
+    "test": "node test-error-handling.js && node test-mcp-server.js && node test-rootdata-provider.js",
+    "test:unit": "node test-error-handling.js",
+    "test:integration": "node test-rootdata-provider.js",
+    "test:coverage": "echo 'Coverage reporting not yet implemented. Run: npm test'",
     "test:provider": "node test-rootdata-provider.js",
     "test:api": "node tests/api-test.js",
+    "lint": "eslint src/ tests/ *.js --ext .js",
+    "lint:fix": "eslint src/ tests/ *.js --ext .js --fix",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\" \"*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\" \"*.js\"",
     "config:example": "node src/index.js --config-example",
     "help": "node src/index.js --help",
     "env:help": "node src/index.js --env-help"
@@ -31,6 +38,14 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.1",
     "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
+    "prettier": "^3.6.1"
   },
   "engines": {
     "node": ">=18.0.0"

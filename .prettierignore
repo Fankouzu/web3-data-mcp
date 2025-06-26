@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Config files that might have specific formatting
+.eslintrc.js
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# Generated files
+*.min.js
+*.bundle.js 

@@ -3,11 +3,11 @@
  * 用于验证开发环境和API连接
  */
 
-const RootDataApiTester = require('./tests/api-test.js');
-const languageUtils = require('./src/utils/language.js');
+const RootDataApiTester = require('./api-test.js');
+const languageUtils = require('../src/utils/language.js');
 
 console.log('🔧 Web3 Data MCP 服务器开发环境测试');
-console.log('=' .repeat(50));
+console.log('='.repeat(50));
 
 // 测试语言检测功能
 console.log('\n📝 测试语言检测功能:');
@@ -19,7 +19,7 @@ const testQueries = [
   '以太坊是什么？',
   'blockchain technology',
   '区块链技术',
-  'crypto投资分析'  // 混合语言
+  'crypto投资分析' // 混合语言
 ];
 
 testQueries.forEach(query => {
@@ -41,16 +41,17 @@ if (!apiKey) {
   console.log('或者设置环境变量:');
   console.log('export ROOTDATA_API_KEY=your-api-key');
   console.log('node test-setup.js');
-  
+
   process.exit(0);
 } else {
   console.log('✅ 找到API Key:', apiKey.substring(0, 8) + '...');
-  
+
   // 运行API测试
   console.log('\n🚀 开始API连接测试:');
   const tester = new RootDataApiTester(apiKey);
-  
-  tester.runAllTests()
+
+  tester
+    .runAllTests()
     .then(report => {
       console.log('\n📋 测试完成报告:');
       if (report.successRate === 100) {
@@ -60,7 +61,7 @@ if (!apiKey) {
       } else {
         console.log('❌ 大部分测试失败，请检查API Key和网络连接');
       }
-      
+
       console.log('\n下一步:');
       console.log('1. 如果测试通过，可以运行: npm run develop');
       console.log('2. 如果测试失败，请检查API Key和网络连接');

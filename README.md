@@ -1,284 +1,468 @@
-# Web3 Data MCP
+# Web3 Data MCP Server
 
-**Languages**: [English](README.md) | [中文](README.zh-CN.md)
+A comprehensive Model Context Protocol (MCP) server for Web3 data analysis, providing access to blockchain ecosystem information through standardized APIs.
 
-A Model Context Protocol (MCP) server designed to provide Large Language Models (LLMs) with access to real-time, high-quality Web3 data from various data providers. This tool acts as a bridge, allowing AI agents to query detailed information about Web3 projects, funding, tokens, and market trends.
+## 🌟 Features
 
-The initial and primary data provider is **RootData**.
+- **🔗 Multiple Data Sources**: Supports RootData API with plans for more providers
+- **📊 Comprehensive Coverage**: 19+ real API endpoints across Basic, Plus, and Pro tiers
+- **🌍 Multi-language Support**: English and Chinese language interfaces
+- **🛡️ Robust Error Handling**: Built-in retry mechanisms and graceful error recovery
+- **📈 Usage Monitoring**: Real-time credit tracking and API rate limiting
+- **🧠 Smart Query Routing**: Intelligent endpoint selection based on query intent
 
-## Features
+## 📋 Table of Contents
 
-- **Multi-Provider Support**: Easily extendable to include more Web3 data providers.
-- **Comprehensive Data**: Access a wide range of data including:
-  - Project Details
-  - Funding Rounds
-  - Token Information
-  - Ecosystem Overviews
-  - Investment Analysis
-  - Social Media Metrics
-- **Usage Monitoring**: Built-in credit monitoring to track API usage and costs.
-- **Easy to Use**: Simple command-line interface for starting and managing the server.
-- **Configurable**: Flexible configuration for API keys, server ports, and more.
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [API Coverage](#api-coverage)
+- [Usage Examples](#usage-examples)
+- [Development](#development)
+- [Testing](#testing)
+- [Contributing](#contributing)
 
-## Installation
+## 🚀 Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-org/web3-data-mcp.git
-    cd web3-data-mcp
-    ```
+### Prerequisites
 
-2.  **Install dependencies:**
-    This project requires Node.js v18.0.0 or higher.
-    ```bash
-    npm install
-    ```
+- Node.js 16+ 
+- npm or yarn
+- Valid RootData API key
 
-3.  **Get your RootData API Key:**
-    - Visit [RootData.com](https://www.rootdata.com/)
-    - Sign up for an account or log in
-    - Navigate to your API settings to obtain your API key
-    - Note your API level (Basic, Plus, or Pro) as it determines which tools you can access
+### Quick Start
 
-## Configuration
-
-The MCP server requires API keys for the data providers you want to use. The configuration is managed through environment variables or a `.env` file.
-
-1.  Create a `.env` file in the root of the project:
-    ```bash
-    touch .env
-    ```
-
-2.  Add your API keys and other configurations to the `.env` file. You can see all available options by running the example command:
-    ```bash
-    npm run config:example
-    ```
-    This will output a template that you can copy into your `.env` file and fill out.
-
-    A minimal configuration for the RootData provider would look like this:
-    ```env
-    # web3-data-mcp/.env
-
-    # Logging Configuration
-    LOG_LEVEL=info
-
-    # RootData Provider API Key (Required)
-    ROOTDATA_API_KEY=your_rootdata_api_key_here
-
-    # Optional RootData Configuration
-    ROOTDATA_BASE_URL=https://api.rootdata.com/open
-    ROOTDATA_TIMEOUT=30000
-    ROOTDATA_RETRIES=3
-
-    # Optional Monitoring Configuration
-    CREDITS_WARNING_THRESHOLD=100
-    CREDITS_CRITICAL_THRESHOLD=20
-    ```
-
-## Usage
-
-You can start the MCP server using the following npm scripts:
-
--   **Start the server:**
-    ```bash
-    npm start
-    ```
-
--   **Start in debug mode for more verbose logging:**
-    ```bash
-    npm run dev
-    ```
-
--   **View all available commands:**
-    ```bash
-    npm run help
-    ```
-
-Once the server is running, it will expose the MCP endpoint that AI models and agents can connect to.
-
-## MCP Client Configuration
-
-### Claude Desktop Configuration
-
-To use this tool with Claude Desktop, you need to add it to your MCP configuration file.
-
-1. **Locate your Claude Desktop configuration file:**
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
-
-2. **Add the web3-data-mcp server to your configuration:**
-
-```json
-{
-  "mcpServers": {
-    "web3-data": {
-      "command": "node",
-      "args": ["/absolute/path/to/web3-data-mcp/src/index.js"],
-      "env": {
-        "ROOTDATA_API_KEY": "your-rootdata-api-key-here"
-      }
-    }
-  }
-}
-```
-
-**Important:** Make sure to:
-- Replace `/absolute/path/to/web3-data-mcp/` with the actual absolute path to your project
-- Replace `your-rootdata-api-key-here` with your actual RootData API key
-- Ensure Node.js is available in your system PATH
-
-3. **Example complete configuration:**
-
-```json
-{
-  "mcpServers": {
-    "web3-data": {
-      "command": "node",
-      "args": ["/Users/username/projects/web3-data-mcp/src/index.js"],
-      "env": {
-        "ROOTDATA_API_KEY": "rd_1234567890abcdef",
-        "LOG_LEVEL": "info",
-        "CREDITS_WARNING_THRESHOLD": "50"
-      }
-    }
-  }
-}
-```
-
-4. **Restart Claude Desktop** after saving the configuration file.
-
-### Other MCP Clients
-
-For other MCP-compatible clients, use the following connection details:
-
-- **Command**: `node`
-- **Arguments**: `["/path/to/web3-data-mcp/src/index.js"]`
-- **Environment Variables**: At minimum, set `ROOTDATA_API_KEY`
-
-### Verification
-
-After configuration, you can verify the connection by asking Claude:
-- "What Web3 tools do you have access to?"
-- "Check my RootData API credits balance"
-- "Search for information about Ethereum"
-
-## API Credits and Levels
-
-The RootData provider uses a credit-based system with different API levels:
-
-- **Basic Level**: Access to basic search and project information tools
-- **Plus Level**: Access to funding rounds and social data tools  
-- **Pro Level**: Access to advanced investment analysis tools
-
-Each API call consumes a certain number of credits. The tool automatically checks your remaining credits and API level, and will warn you when credits are running low.
-
-## Available Tools (RootData Provider)
-
-The following tools are currently implemented and available through the RootData provider. They can be called by an AI agent connected to this MCP server.
-
-### ✅ Implemented Tools
-
-| Tool Name                     | Description                                      | Parameters                                                                   | Credits Cost |
-| ----------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------- | ------------ |
-| `check_credits`               | Check API key balance and level.                 | (None)                                                                       | 0            |
-| `search_web3_entities`        | Search for Web3 projects, orgs, and people.      | `query`: (string) The search keyword. <br/> `precise_x_search`: (boolean, optional) | 5 |
-| `get_project_details`         | Get detailed information for a specific project. | `project_id`: (string) The unique ID of the project.                         | 10           |
-| `get_funding_rounds`          | Get funding rounds for a project or org.         | `project_id` or `organization_id`: (string)                                  | 15 (Plus level required) |
-| `get_token_info`              | Get detailed information for a token.            | `token_symbol`: (string) The token symbol (e.g., BTC).                       | 8            |
-| `get_projects_by_ecosystem`   | Find projects within a specific ecosystem.       | `ecosystem`: (string) The ecosystem name (e.g., Ethereum, Solana).           | 12           |
-
-### 🚧 Planned Tools (Defined but not yet implemented)
-
-The following tools are defined in the endpoints configuration but not yet implemented in the provider:
-
-- `get_projects_by_tags` - Find projects associated with certain tags
-- `get_investment_analysis` - Get investment analysis data (Pro level required)
-- `get_social_data` - Get social media data for a project (Plus level required)
-
-## Prompt Suggestions
-
-Here are some example prompts you could use with an AI agent that has access to this MCP tool:
-
-### Basic Queries (Available with all API levels)
--   "Search for information about Uniswap."
--   "Get the detailed information for the project with ID '12345'."
--   "What is the token information for ETH?"
--   "Find all projects in the Solana ecosystem."
--   "Check my API credits balance."
-
-### Advanced Queries (Require Plus/Pro level)
--   "Who invested in the latest funding round for the project with ID '12345'?" (Plus level required)
--   "Get the funding history for Uniswap." (Plus level required)
-
-### Combined Queries
--   "Search for 'Axie Infinity' and then get its detailed information."
--   "Compare the number of projects in the Polygon ecosystem versus the Avalanche ecosystem."
--   "Find information about the BTC token and any related projects."
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"没有配置任何数据供应商" Error**
-   - Make sure you have set the `ROOTDATA_API_KEY` environment variable
-   - Run `npm run env:help` to see all available environment variables
-
-2. **API Key Issues**
-   - Verify your RootData API key is correct
-   - Check your credit balance with the `check_credits` tool
-   - Ensure your API level has access to the tools you're trying to use
-
-3. **Tool Not Found Errors**
-   - Some tools are defined but not yet implemented (see "Planned Tools" section)
-   - Make sure you're using the correct tool names as listed in the "Implemented Tools" section
-
-4. **Claude Desktop Connection Issues**
-   - Ensure the path in `claude_desktop_config.json` is absolute, not relative
-   - Verify Node.js is installed and accessible from command line (`node --version`)
-   - Check that the configuration file syntax is valid JSON
-   - Restart Claude Desktop after making configuration changes
-   - Look for error messages in Claude Desktop's developer console
-
-5. **Permission Issues**
-   - On macOS/Linux, ensure the script has execute permissions: `chmod +x src/index.js`
-   - Make sure the Node.js executable is in your system PATH
-
-### Debug Mode
-
-Run the server in debug mode for more detailed logging:
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/web3-data-mcp.git
+cd web3-data-mcp
+
+# Install dependencies
+npm install
+
+# Copy configuration template
+cp config/config.example.json config/config.json
+
+# Configure your API keys (see Configuration section)
+# Edit config/config.json with your credentials
+
+# Start the server
 npm run dev
 ```
 
-This will show detailed information about API calls, credit usage, and any errors.
+## ⚙️ Configuration
 
-### Testing Your Configuration
+Create `config/config.json` with your API credentials:
 
-Before using with Claude Desktop, you can test your configuration locally:
+```json
+{
+  "server": {
+    "name": "web3-data-mcp",
+    "version": "1.0.0",
+    "timeout": 30000,
+    "retries": 3
+  },
+  "providers": {
+    "rootdata": {
+      "apiKey": "your-rootdata-api-key-here",
+      "baseUrl": "https://api.rootdata.com/open",
+      "timeout": 30000,
+      "retries": 3
+    }
+  },
+  "monitoring": {
+    "creditsWarningThreshold": 100,
+    "creditsCriticalThreshold": 20,
+    "autoRefreshInterval": 300000,
+    "errorFrequencyThreshold": 10
+  },
+  "logging": {
+    "level": "info",
+    "enableStats": true,
+    "enableErrorTracking": true
+  }
+}
+```
 
-1. **Test the server startup:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm start
-   ```
-   You should see a success message without errors.
+### Environment Variables
 
-2. **Test API connectivity:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm run test:provider
-   ```
-   This will test the RootData API connection and show your credit balance.
+Alternatively, you can use environment variables:
 
-3. **Test with debug output:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm run dev
-   ```
-   This will show detailed initialization logs.
+```bash
+export ROOTDATA_API_KEY="your-api-key"
+export MCP_SERVER_PORT="3000"
+export NODE_ENV="production"
+```
 
-## Contributing
+## 📊 API Coverage
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue.
+### RootData Provider
 
-## License
+Our implementation strictly follows the official RootData API documentation with **19 real endpoints**:
 
-This project is licensed under the MIT License. 
+#### 🟢 Basic Level (4 endpoints)
+| Endpoint | Description | Credits | Method |
+|----------|-------------|---------|--------|
+| `/ser_inv` | Search projects/organizations/people | 0 | `searchWeb3Entities()` |
+| `/quotacredits` | Check API key balance | 0 | `checkCredits()` |
+| `/get_item` | Get project details | 2 | `getProjectDetails()` |
+| `/get_org` | Get organization details | 2 | `getOrganizationDetails()` |
+
+#### 🟡 Plus Level (4 endpoints)
+| Endpoint | Description | Credits | Method |
+|----------|-------------|---------|--------|
+| `/id_map` | Get ID mapping lists | 20 | `getIdMapping()` |
+| `/get_invest` | Get investor information | 2/item | `getInvestorDetails()` |
+| `/twitter_map` | Export X (Twitter) data | 50 | `getTwitterData()` |
+| `/get_fac` | Get funding rounds | 2/item | `getFundingInformation()` |
+
+#### 🔴 Pro Level (11 endpoints)
+| Endpoint | Description | Credits | Method |
+|----------|-------------|---------|--------|
+| `/get_people` | Get people details | 2 | `getPeopleDetails()` |
+| `/ser_change` | Sync updates | 1/item | `getSyncUpdates()` |
+| `/hot_index` | Hot projects Top 100 | 10 | `getHotProjects()` |
+| `/hot_project_on_x` | X hot projects | 10 | `getHotProjectsOnX()` |
+| `/leading_figures_on_crypto_x` | X hot people | 10 | `getHotPeopleOnX()` |
+| `/job_changes` | Job position changes | 10 | `getJobChanges()` |
+| `/new_tokens` | Recent token launches | 10 | `getNewTokens()` |
+| `/ecosystem_map` | Ecosystem mapping | 50 | `getEcosystemMap()` |
+| `/tag_map` | Tag mapping | 50 | `getTagMap()` |
+| `/projects_by_ecosystems` | Projects by ecosystem | 20 | `getProjectsByEcosystems()` |
+| `/projects_by_tags` | Projects by tags | 20 | `getProjectsByTags()` |
+
+## 💡 Usage Examples
+
+### Basic Search Operations
+
+```javascript
+// Search for Web3 entities
+const results = await provider.searchWeb3Entities("Ethereum");
+console.log(`Found ${results.data.length} results`);
+
+// Get project details by ID
+const project = await provider.getProjectDetails("12");
+console.log(`Project: ${project.data.project_name}`);
+
+// Get project by contract address
+const contractProject = await provider.getProjectByContract("0x...", {
+  includeTeam: true,
+  includeInvestors: true
+});
+```
+
+### Organization and People Data
+
+```javascript
+// Get organization details
+const org = await provider.getOrganizationDetails(219, {
+  includeTeam: true,
+  includeInvestments: true
+});
+
+// Get people information (Pro level required)
+const person = await provider.getPeopleDetails(12972);
+console.log(`Person: ${person.data.people_name}`);
+```
+
+### Advanced Analytics (Plus/Pro)
+
+```javascript
+// Get funding information with filters
+const funding = await provider.getFundingInformation({
+  page: 1,
+  page_size: 20,
+  start_time: "2023-01",
+  end_time: "2023-12",
+  min_amount: 1000000
+});
+
+// Get hot projects (Pro level)
+const hotProjects = await provider.getHotProjects(7); // Last 7 days
+
+// Get ecosystem projects
+const ecosystemProjects = await provider.getProjectsByEcosystems("52,54");
+
+// Get social media data
+const twitterData = await provider.getTwitterData(1); // Type 1 = Projects
+```
+
+### Credits Management
+
+```javascript
+// Check remaining credits
+const credits = await provider.checkCredits();
+console.log(`Level: ${credits.data.level}, Credits: ${credits.data.credits}`);
+
+// Get detailed provider status
+const status = provider.getDetailedStatus();
+console.log(`Available tools: ${status.availableToolsCount}/${status.totalToolsCount}`);
+```
+
+### Smart Query Interface
+
+```javascript
+// Natural language queries
+const result1 = await provider.smartQuery("Ethereum DeFi projects");
+const result2 = await provider.smartQuery("recent funding rounds");
+const result3 = await provider.smartQuery("生态系统项目"); // Chinese support
+```
+
+## 🔧 Development
+
+### Project Structure
+
+```
+web3-data-mcp/
+├── src/
+│   ├── index.js                 # Main server entry
+│   ├── server/                  # MCP server implementation
+│   │   ├── base/               # Base classes
+│   │   └── rootdata/           # RootData provider
+│   │       ├── RootDataClient.js    # API client
+│   │       ├── RootDataProvider.js  # MCP provider
+│   │       └── endpoints/           # API endpoint definitions
+│   └── utils/                  # Utility functions
+├── config/                     # Configuration files
+├── tests/                      # Test suites
+└── docs/                       # Documentation
+```
+
+### API Client Architecture
+
+```javascript
+// Base API Client
+class ApiClient {
+  async request(endpoint, method, data, headers) {
+    // Handles HTTP requests, retries, and error handling
+  }
+}
+
+// RootData Specific Client
+class RootDataClient extends ApiClient {
+  async searchEntities(query, language, preciseXSearch) {
+    // RootData-specific API implementation
+  }
+}
+
+// MCP Provider Wrapper
+class RootDataProvider extends DataProvider {
+  async executeApiCall(endpointId, params) {
+    // MCP protocol implementation
+  }
+}
+```
+
+### Adding New Endpoints
+
+1. **Define endpoint in `endpoints/index.js`**:
+```javascript
+{
+  id: 'new_endpoint',
+  name: 'new_api_method',
+  description: 'Description of the new endpoint',
+  endpoint: '/new_endpoint',
+  method: 'POST',
+  requiredLevel: 'basic',
+  creditsPerCall: 5,
+  category: 'category_name',
+  inputSchema: { /* JSON schema */ },
+  outputDescription: 'Description of response'
+}
+```
+
+2. **Implement in RootDataClient.js**:
+```javascript
+async newApiMethod(param1, param2, language = 'en') {
+  try {
+    const response = await this.request('/new_endpoint', 'POST', {
+      param1,
+      param2
+    }, { language });
+    
+    return {
+      success: true,
+      data: response.data.data
+    };
+  } catch (error) {
+    // Error handling
+  }
+}
+```
+
+3. **Add to RootDataProvider.js**:
+```javascript
+case 'new_endpoint':
+  result = await this.client.newApiMethod(params.param1, params.param2, language);
+  break;
+```
+
+## 🧪 Testing
+
+### Unit Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suite
+npm test -- --grep "RootData"
+
+# Run with coverage
+npm run test:coverage
+```
+
+### Integration Tests
+
+```bash
+# Set up test API key
+export ROOTDATA_API_KEY="your-test-api-key"
+
+# Run integration tests
+npm run test:integration
+```
+
+### Test Coverage
+
+Our comprehensive test suite covers:
+
+- ✅ All 19 API endpoints
+- ✅ Error handling scenarios
+- ✅ Different API access levels
+- ✅ Parameter validation
+- ✅ Response formatting
+- ✅ Credit management
+- ✅ Language detection
+
+### Manual Testing
+
+```bash
+# Start server in debug mode
+npm run dev
+
+# Test basic search
+curl -X POST http://localhost:3000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Ethereum"}'
+
+# Test with MCP client
+npx @modelcontextprotocol/cli@latest \
+  --transport stdio \
+  -- node src/index.js
+```
+
+## 🛠️ API Reference
+
+### Core Methods
+
+#### `searchWeb3Entities(query, options)`
+Search for projects, organizations, and people in the Web3 ecosystem.
+
+**Parameters:**
+- `query` (string): Search keywords
+- `options` (object): 
+  - `language` (string): 'en' or 'zh'
+  - `preciseXSearch` (boolean): Enable precise X handle search
+
+**Returns:** Array of matching entities with type, name, and metadata.
+
+#### `getProjectDetails(projectId, options)`
+Get comprehensive project information.
+
+**Parameters:**
+- `projectId` (string|number): Project ID
+- `options` (object):
+  - `includeTeam` (boolean): Include team member information
+  - `includeInvestors` (boolean): Include investor information
+  - `language` (string): Response language
+
+**Returns:** Detailed project information including description, funding, team, etc.
+
+#### `getFundingInformation(filters)`
+Get funding rounds data with filtering options.
+
+**Parameters:**
+- `filters` (object):
+  - `page` (number): Page number
+  - `page_size` (number): Items per page (max 200)
+  - `start_time` (string): Start date (YYYY-MM)
+  - `end_time` (string): End date (YYYY-MM)
+  - `min_amount` (number): Minimum funding amount
+  - `max_amount` (number): Maximum funding amount
+
+**Returns:** Paginated funding rounds with amount, valuation, investors, etc.
+
+### Error Handling
+
+All methods return a standardized response format:
+
+```javascript
+{
+  success: boolean,
+  data: any,           // Response data on success
+  error: string,       // Error message on failure
+  credits: {           // Credit information
+    remaining: number,
+    used: number
+  }
+}
+```
+
+### Common Error Codes
+
+- `401`: Invalid API key
+- `403`: Insufficient permissions (upgrade API level needed)
+- `429`: Rate limit exceeded
+- `404`: Resource not found
+- `500`: Internal server error
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Add tests for new functionality
+5. Run the test suite: `npm test`
+6. Commit your changes: `git commit -m 'Add amazing feature'`
+7. Push to the branch: `git push origin feature/amazing-feature`
+8. Open a Pull Request
+
+### Code Style
+
+We use ESLint and Prettier for code formatting:
+
+```bash
+# Check code style
+npm run lint
+
+# Auto-fix style issues
+npm run lint:fix
+
+# Format code
+npm run format
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [RootData Official API Documentation](https://cn.rootdata.com/Api/Doc)
+- [Model Context Protocol Specification](https://github.com/modelcontextprotocol/specification)
+- [Issue Tracker](https://github.com/your-username/web3-data-mcp/issues)
+- [Changelog](CHANGELOG.md)
+
+## 🙋‍♂️ Support
+
+- 📧 Email: support@example.com
+- 💬 Discord: [Join our community](https://discord.gg/your-server)
+- 📖 Documentation: [Full API docs](https://docs.example.com)
+- 🐛 Bug Reports: [GitHub Issues](https://github.com/your-username/web3-data-mcp/issues)
+
+---
+
+**Made with ❤️ for the Web3 community** 

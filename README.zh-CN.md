@@ -1,284 +1,468 @@
-# Web3 数据 MCP
+# Web3 Data MCP 服务器
 
-**语言**: [English](README.md) | [中文](README.zh-CN.md)
+一个全面的模型上下文协议（MCP）服务器，用于 Web3 数据分析，通过标准化 API 提供区块链生态系统信息访问。
 
-一个基于模型上下文协议（MCP）的服务器，旨在为大型语言模型（LLM）提供来自各种数据提供商的实时、高质量Web3数据访问。该工具充当桥梁，允许AI代理查询Web3项目、融资、代币和市场趋势的详细信息。
+## 🌟 特性
 
-主要和初始数据提供商是 **RootData**。
+- **🔗 多数据源支持**: 支持 RootData API，计划支持更多提供商
+- **📊 全面覆盖**: 19+ 个真实 API 端点，覆盖基础版、Plus 版、专业版三个等级
+- **🌍 多语言支持**: 英文和中文语言界面
+- **🛡️ 健壮的错误处理**: 内置重试机制和优雅的错误恢复
+- **📈 使用监控**: 实时积分跟踪和 API 速率限制
+- **🧠 智能查询路由**: 基于查询意图的智能端点选择
 
-## 功能特性
+## 📋 目录
 
-- **多提供商支持**: 易于扩展以包含更多Web3数据提供商。
-- **全面数据**: 访问广泛的数据范围，包括：
-  - 项目详情
-  - 融资轮次
-  - 代币信息
-  - 生态系统概述
-  - 投资分析
-  - 社交媒体指标
-- **使用监控**: 内置信用监控以追踪API使用情况和成本。
-- **易于使用**: 简单的命令行界面用于启动和管理服务器。
-- **可配置**: 灵活配置API密钥、服务器端口等。
+- [安装](#安装)
+- [配置](#配置)
+- [API 覆盖范围](#api-覆盖范围)
+- [使用示例](#使用示例)
+- [开发](#开发)
+- [测试](#测试)
+- [贡献](#贡献)
 
-## 安装
+## 🚀 安装
 
-1.  **克隆仓库:**
-    ```bash
-    git clone https://github.com/Fankouzu/web3-data-mcp.git
-    cd web3-data-mcp
-    ```
+### 前置要求
 
-2.  **安装依赖:**
-    本项目需要 Node.js v18.0.0 或更高版本。
-    ```bash
-    npm install
-    ```
+- Node.js 16+ 
+- npm 或 yarn
+- 有效的 RootData API 密钥
 
-3.  **获取您的 RootData API 密钥:**
-    - 访问 [RootData.com](https://www.rootdata.com/)
-    - 注册账户或登录
-    - 导航到您的API设置以获取API密钥
-    - 注意您的API级别（Basic、Plus或Pro），因为它决定了您可以访问哪些工具
+### 快速开始
 
-## 配置
-
-MCP服务器需要您想要使用的数据提供商的API密钥。配置通过环境变量或`.env`文件管理。
-
-1.  在项目根目录创建`.env`文件:
-    ```bash
-    touch .env
-    ```
-
-2.  将您的API密钥和其他配置添加到`.env`文件中。您可以通过运行示例命令查看所有可用选项:
-    ```bash
-    npm run config:example
-    ```
-    这将输出一个模板，您可以复制到您的`.env`文件中并填写。
-
-    RootData提供商的最小配置如下所示:
-    ```env
-    # web3-data-mcp/.env
-
-    # 日志配置
-    LOG_LEVEL=info
-
-    # RootData 提供商 API 密钥（必需）
-    ROOTDATA_API_KEY=your_rootdata_api_key_here
-
-    # 可选的 RootData 配置
-    ROOTDATA_BASE_URL=https://api.rootdata.com/open
-    ROOTDATA_TIMEOUT=30000
-    ROOTDATA_RETRIES=3
-
-    # 可选的监控配置
-    CREDITS_WARNING_THRESHOLD=100
-    CREDITS_CRITICAL_THRESHOLD=20
-    ```
-
-## 使用方法
-
-您可以使用以下npm脚本启动MCP服务器:
-
--   **启动服务器:**
-    ```bash
-    npm start
-    ```
-
--   **以调试模式启动，获得更详细的日志:**
-    ```bash
-    npm run dev
-    ```
-
--   **查看所有可用命令:**
-    ```bash
-    npm run help
-    ```
-
-服务器运行后，它将暴露MCP端点，AI模型和代理可以连接到该端点。
-
-## MCP 客户端配置
-
-### Claude Desktop 配置
-
-要在Claude Desktop中使用此工具，您需要将其添加到MCP配置文件中。
-
-1. **找到您的Claude Desktop配置文件:**
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
-
-2. **将web3-data-mcp服务器添加到您的配置中:**
-
-```json
-{
-  "mcpServers": {
-    "web3-data": {
-      "command": "node",
-      "args": ["/absolute/path/to/web3-data-mcp/src/index.js"],
-      "env": {
-        "ROOTDATA_API_KEY": "your-rootdata-api-key-here"
-      }
-    }
-  }
-}
-```
-
-**重要:** 确保:
-- 将 `/absolute/path/to/web3-data-mcp/` 替换为项目的实际绝对路径
-- 将 `your-rootdata-api-key-here` 替换为您的实际RootData API密钥
-- 确保Node.js在您的系统PATH中可用
-
-3. **完整配置示例:**
-
-```json
-{
-  "mcpServers": {
-    "web3-data": {
-      "command": "node",
-      "args": ["/Users/username/projects/web3-data-mcp/src/index.js"],
-      "env": {
-        "ROOTDATA_API_KEY": "rd_1234567890abcdef",
-        "LOG_LEVEL": "info",
-        "CREDITS_WARNING_THRESHOLD": "50"
-      }
-    }
-  }
-}
-```
-
-4. 保存配置文件后**重启Claude Desktop**。
-
-### 其他MCP客户端
-
-对于其他兼容MCP的客户端，使用以下连接详情:
-
-- **命令**: `node`
-- **参数**: `["/path/to/web3-data-mcp/src/index.js"]`
-- **环境变量**: 至少设置 `ROOTDATA_API_KEY`
-
-### 验证
-
-配置后，您可以通过询问Claude来验证连接:
-- "您有哪些Web3工具可以使用？"
-- "检查我的RootData API信用余额"
-- "搜索以太坊的信息"
-
-## API 信用和级别
-
-RootData提供商使用基于信用的系统，具有不同的API级别:
-
-- **Basic级别**: 访问基本搜索和项目信息工具
-- **Plus级别**: 访问融资轮次和社交数据工具  
-- **Pro级别**: 访问高级投资分析工具
-
-每次API调用都会消耗一定数量的信用。该工具会自动检查您的剩余信用和API级别，并在信用不足时发出警告。
-
-## 可用工具（RootData 提供商）
-
-以下工具目前已实现并可通过RootData提供商使用。它们可以被连接到此MCP服务器的AI代理调用。
-
-### ✅ 已实现工具
-
-| 工具名称                     | 描述                                      | 参数                                                                   | 信用成本 |
-| ----------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------- | ------------ |
-| `check_credits`               | 检查API密钥余额和级别。                 | (无)                                                                       | 0            |
-| `search_web3_entities`        | 搜索Web3项目、组织和人员。      | `query`: (string) 搜索关键词。 <br/> `precise_x_search`: (boolean, 可选) | 5 |
-| `get_project_details`         | 获取特定项目的详细信息。 | `project_id`: (string) 项目的唯一ID。                         | 10           |
-| `get_funding_rounds`          | 获取项目或组织的融资轮次。         | `project_id` 或 `organization_id`: (string)                                  | 15 (需要Plus级别) |
-| `get_token_info`              | 获取代币的详细信息。            | `token_symbol`: (string) 代币符号 (例如：BTC)。                       | 8            |
-| `get_projects_by_ecosystem`   | 查找特定生态系统内的项目。       | `ecosystem`: (string) 生态系统名称 (例如：Ethereum、Solana)。           | 12           |
-
-### 🚧 计划中的工具（已定义但尚未实现）
-
-以下工具已在端点配置中定义，但尚未在提供商中实现:
-
-- `get_projects_by_tags` - 查找与特定标签相关的项目
-- `get_investment_analysis` - 获取投资分析数据 (需要Pro级别)
-- `get_social_data` - 获取项目的社交媒体数据 (需要Plus级别)
-
-## 提示建议
-
-以下是一些您可以与有权访问此MCP工具的AI代理一起使用的示例提示:
-
-### 基础查询（所有API级别可用）
--   "搜索关于Uniswap的信息。"
--   "获取ID为'12345'的项目的详细信息。"
--   "ETH代币的信息是什么？"
--   "查找Solana生态系统中的所有项目。"
--   "检查我的API信用余额。"
-
-### 高级查询（需要Plus/Pro级别）
--   "谁投资了ID为'12345'的项目的最新融资轮次？" (需要Plus级别)
--   "获取Uniswap的融资历史。" (需要Plus级别)
-
-### 组合查询
--   "搜索'Axie Infinity'然后获取其详细信息。"
--   "比较Polygon生态系统与Avalanche生态系统的项目数量。"
--   "查找BTC代币的信息和任何相关项目。"
-
-## 故障排除
-
-### 常见问题
-
-1. **"没有配置任何数据供应商" 错误**
-   - 确保您已设置 `ROOTDATA_API_KEY` 环境变量
-   - 运行 `npm run env:help` 查看所有可用的环境变量
-
-2. **API密钥问题**
-   - 验证您的RootData API密钥是否正确
-   - 使用 `check_credits` 工具检查您的信用余额
-   - 确保您的API级别可以访问您尝试使用的工具
-
-3. **工具未找到错误**
-   - 一些工具已定义但尚未实现（请参阅"计划中的工具"部分）
-   - 确保您使用的工具名称与"已实现工具"部分中列出的正确
-
-4. **Claude Desktop 连接问题**
-   - 确保 `claude_desktop_config.json` 中的路径是绝对路径，而不是相对路径
-   - 验证Node.js已安装并可从命令行访问 (`node --version`)
-   - 检查配置文件语法是否为有效的JSON
-   - 进行配置更改后重启Claude Desktop
-   - 在Claude Desktop的开发者控制台中查找错误消息
-
-5. **权限问题**
-   - 在macOS/Linux上，确保脚本有执行权限: `chmod +x src/index.js`
-   - 确保Node.js可执行文件在您的系统PATH中
-
-### 调试模式
-
-以调试模式运行服务器以获得更详细的日志:
 ```bash
+# 克隆仓库
+git clone https://github.com/your-username/web3-data-mcp.git
+cd web3-data-mcp
+
+# 安装依赖
+npm install
+
+# 复制配置模板
+cp config/config.example.json config/config.json
+
+# 配置你的 API 密钥（参见配置部分）
+# 编辑 config/config.json 添加你的凭据
+
+# 启动服务器
 npm run dev
 ```
 
-这将显示有关API调用、信用使用情况和任何错误的详细信息。
+## ⚙️ 配置
 
-### 测试您的配置
+创建包含 API 凭据的 `config/config.json` 文件：
 
-在与Claude Desktop一起使用之前，您可以在本地测试您的配置:
+```json
+{
+  "server": {
+    "name": "web3-data-mcp",
+    "version": "1.0.0",
+    "timeout": 30000,
+    "retries": 3
+  },
+  "providers": {
+    "rootdata": {
+      "apiKey": "your-rootdata-api-key-here",
+      "baseUrl": "https://api.rootdata.com/open",
+      "timeout": 30000,
+      "retries": 3
+    }
+  },
+  "monitoring": {
+    "creditsWarningThreshold": 100,
+    "creditsCriticalThreshold": 20,
+    "autoRefreshInterval": 300000,
+    "errorFrequencyThreshold": 10
+  },
+  "logging": {
+    "level": "info",
+    "enableStats": true,
+    "enableErrorTracking": true
+  }
+}
+```
 
-1. **测试服务器启动:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm start
-   ```
-   您应该看到成功消息，没有错误。
+### 环境变量
 
-2. **测试API连接:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm run test:provider
-   ```
-   这将测试RootData API连接并显示您的信用余额。
+或者，你也可以使用环境变量：
 
-3. **使用调试输出测试:**
-   ```bash
-   ROOTDATA_API_KEY=your-api-key npm run dev
-   ```
-   这将显示详细的初始化日志。
+```bash
+export ROOTDATA_API_KEY="your-api-key"
+export MCP_SERVER_PORT="3000"
+export NODE_ENV="production"
+```
 
-## 贡献
+## 📊 API 覆盖范围
 
-欢迎贡献！请随时提交pull request或开启issue。
+### RootData 提供商
 
-## 许可证
+我们的实现严格遵循官方 RootData API 文档，包含 **19 个真实端点**：
 
-本项目基于MIT许可证授权。 
+#### 🟢 基础版 (4 个端点)
+| 端点 | 描述 | 积分 | 方法 |
+|----------|-------------|---------|--------|
+| `/ser_inv` | 搜索项目/组织/人员 | 0 | `searchWeb3Entities()` |
+| `/quotacredits` | 检查 API 密钥余额 | 0 | `checkCredits()` |
+| `/get_item` | 获取项目详情 | 2 | `getProjectDetails()` |
+| `/get_org` | 获取组织详情 | 2 | `getOrganizationDetails()` |
+
+#### 🟡 Plus 版 (4 个端点)
+| 端点 | 描述 | 积分 | 方法 |
+|----------|-------------|---------|--------|
+| `/id_map` | 获取 ID 映射列表 | 20 | `getIdMapping()` |
+| `/get_invest` | 获取投资人信息 | 2/项 | `getInvestorDetails()` |
+| `/twitter_map` | 导出 X (Twitter) 数据 | 50 | `getTwitterData()` |
+| `/get_fac` | 获取融资轮次 | 2/项 | `getFundingInformation()` |
+
+#### 🔴 专业版 (11 个端点)
+| 端点 | 描述 | 积分 | 方法 |
+|----------|-------------|---------|--------|
+| `/get_people` | 获取人员详情 | 2 | `getPeopleDetails()` |
+| `/ser_change` | 同步更新 | 1/项 | `getSyncUpdates()` |
+| `/hot_index` | 热门项目 Top 100 | 10 | `getHotProjects()` |
+| `/hot_project_on_x` | X 热门项目 | 10 | `getHotProjectsOnX()` |
+| `/leading_figures_on_crypto_x` | X 热门人物 | 10 | `getHotPeopleOnX()` |
+| `/job_changes` | 职位变动 | 10 | `getJobChanges()` |
+| `/new_tokens` | 最新代币发布 | 10 | `getNewTokens()` |
+| `/ecosystem_map` | 生态系统映射 | 50 | `getEcosystemMap()` |
+| `/tag_map` | 标签映射 | 50 | `getTagMap()` |
+| `/projects_by_ecosystems` | 按生态系统查询项目 | 20 | `getProjectsByEcosystems()` |
+| `/projects_by_tags` | 按标签查询项目 | 20 | `getProjectsByTags()` |
+
+## 💡 使用示例
+
+### 基础搜索操作
+
+```javascript
+// 搜索 Web3 实体
+const results = await provider.searchWeb3Entities("以太坊");
+console.log(`找到 ${results.data.length} 个结果`);
+
+// 通过 ID 获取项目详情
+const project = await provider.getProjectDetails("12");
+console.log(`项目: ${project.data.project_name}`);
+
+// 通过合约地址获取项目
+const contractProject = await provider.getProjectByContract("0x...", {
+  includeTeam: true,
+  includeInvestors: true
+});
+```
+
+### 组织和人员数据
+
+```javascript
+// 获取组织详情
+const org = await provider.getOrganizationDetails(219, {
+  includeTeam: true,
+  includeInvestments: true
+});
+
+// 获取人员信息（需要专业版）
+const person = await provider.getPeopleDetails(12972);
+console.log(`人员: ${person.data.people_name}`);
+```
+
+### 高级分析 (Plus/专业版)
+
+```javascript
+// 获取带过滤条件的融资信息
+const funding = await provider.getFundingInformation({
+  page: 1,
+  page_size: 20,
+  start_time: "2023-01",
+  end_time: "2023-12",
+  min_amount: 1000000
+});
+
+// 获取热门项目（专业版）
+const hotProjects = await provider.getHotProjects(7); // 最近 7 天
+
+// 获取生态系统项目
+const ecosystemProjects = await provider.getProjectsByEcosystems("52,54");
+
+// 获取社交媒体数据
+const twitterData = await provider.getTwitterData(1); // 类型 1 = 项目
+```
+
+### 积分管理
+
+```javascript
+// 检查剩余积分
+const credits = await provider.checkCredits();
+console.log(`等级: ${credits.data.level}, 积分: ${credits.data.credits}`);
+
+// 获取详细的提供商状态
+const status = provider.getDetailedStatus();
+console.log(`可用工具: ${status.availableToolsCount}/${status.totalToolsCount}`);
+```
+
+### 智能查询接口
+
+```javascript
+// 自然语言查询
+const result1 = await provider.smartQuery("以太坊 DeFi 项目");
+const result2 = await provider.smartQuery("最近的融资轮次");
+const result3 = await provider.smartQuery("生态系统项目"); // 中文支持
+```
+
+## 🔧 开发
+
+### 项目结构
+
+```
+web3-data-mcp/
+├── src/
+│   ├── index.js                 # 主服务器入口
+│   ├── core/                    # MCP 服务器实现
+│   │   ├── base/               # 基础类
+│   │   └── rootdata/           # RootData 提供商
+│   │       ├── RootDataClient.js    # API 客户端
+│   │       ├── RootDataProvider.js  # MCP 提供商
+│   │       └── endpoints/           # API 端点定义
+│   └── utils/                  # 工具函数
+├── config/                     # 配置文件
+├── tests/                      # 测试套件
+└── docs/                       # 文档
+```
+
+### API 客户端架构
+
+```javascript
+// 基础 API 客户端
+class ApiClient {
+  async request(endpoint, method, data, headers) {
+    // 处理 HTTP 请求、重试和错误处理
+  }
+}
+
+// RootData 特定客户端
+class RootDataClient extends ApiClient {
+  async searchEntities(query, language, preciseXSearch) {
+    // RootData 特定的 API 实现
+  }
+}
+
+// MCP 提供商包装器
+class RootDataProvider extends DataProvider {
+  async executeApiCall(endpointId, params) {
+    // MCP 协议实现
+  }
+}
+```
+
+### 添加新端点
+
+1. **在 `endpoints/index.js` 中定义端点**:
+```javascript
+{
+  id: 'new_endpoint',
+  name: 'new_api_method',
+  description: '新端点的描述',
+  endpoint: '/new_endpoint',
+  method: 'POST',
+  requiredLevel: 'basic',
+  creditsPerCall: 5,
+  category: 'category_name',
+  inputSchema: { /* JSON schema */ },
+  outputDescription: '响应描述'
+}
+```
+
+2. **在 RootDataClient.js 中实现**:
+```javascript
+async newApiMethod(param1, param2, language = 'zh') {
+  try {
+    const response = await this.request('/new_endpoint', 'POST', {
+      param1,
+      param2
+    }, { language });
+    
+    return {
+      success: true,
+      data: response.data.data
+    };
+  } catch (error) {
+    // 错误处理
+  }
+}
+```
+
+3. **添加到 RootDataProvider.js**:
+```javascript
+case 'new_endpoint':
+  result = await this.client.newApiMethod(params.param1, params.param2, language);
+  break;
+```
+
+## 🧪 测试
+
+### 单元测试
+
+```bash
+# 运行所有测试
+npm test
+
+# 运行特定测试套件
+npm test -- --grep "RootData"
+
+# 运行覆盖率测试
+npm run test:coverage
+```
+
+### 集成测试
+
+```bash
+# 设置测试 API 密钥
+export ROOTDATA_API_KEY="your-test-api-key"
+
+# 运行集成测试
+npm run test:integration
+```
+
+### 测试覆盖率
+
+我们的全面测试套件覆盖：
+
+- ✅ 所有 19 个 API 端点
+- ✅ 错误处理场景
+- ✅ 不同的 API 访问级别
+- ✅ 参数验证
+- ✅ 响应格式化
+- ✅ 积分管理
+- ✅ 语言检测
+
+### 手动测试
+
+```bash
+# 在调试模式下启动服务器
+npm run dev
+
+# 测试基础搜索
+curl -X POST http://localhost:3000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "以太坊"}'
+
+# 使用 MCP 客户端测试
+npx @modelcontextprotocol/cli@latest \
+  --transport stdio \
+  -- node src/index.js
+```
+
+## 🛠️ API 参考
+
+### 核心方法
+
+#### `searchWeb3Entities(query, options)`
+在 Web3 生态系统中搜索项目、组织和人员。
+
+**参数:**
+- `query` (string): 搜索关键词
+- `options` (object): 
+  - `language` (string): 'en' 或 'zh'
+  - `preciseXSearch` (boolean): 启用精确 X 句柄搜索
+
+**返回:** 匹配实体的数组，包含类型、名称和元数据。
+
+#### `getProjectDetails(projectId, options)`
+获取全面的项目信息。
+
+**参数:**
+- `projectId` (string|number): 项目 ID
+- `options` (object):
+  - `includeTeam` (boolean): 包含团队成员信息
+  - `includeInvestors` (boolean): 包含投资者信息
+  - `language` (string): 响应语言
+
+**返回:** 详细的项目信息，包括描述、融资、团队等。
+
+#### `getFundingInformation(filters)`
+获取带过滤选项的融资轮次数据。
+
+**参数:**
+- `filters` (object):
+  - `page` (number): 页码
+  - `page_size` (number): 每页项目数（最大 200）
+  - `start_time` (string): 开始日期 (YYYY-MM)
+  - `end_time` (string): 结束日期 (YYYY-MM)
+  - `min_amount` (number): 最小融资金额
+  - `max_amount` (number): 最大融资金额
+
+**返回:** 分页的融资轮次，包含金额、估值、投资者等。
+
+### 错误处理
+
+所有方法返回标准化响应格式：
+
+```javascript
+{
+  success: boolean,
+  data: any,           // 成功时的响应数据
+  error: string,       // 失败时的错误消息
+  credits: {           // 积分信息
+    remaining: number,
+    used: number
+  }
+}
+```
+
+### 常见错误代码
+
+- `401`: 无效的 API 密钥
+- `403`: 权限不足（需要升级 API 级别）
+- `429`: 请求频率超限
+- `404`: 资源未找到
+- `500`: 内部服务器错误
+
+## 🤝 贡献
+
+我们欢迎贡献！请查看我们的[贡献指南](CONTRIBUTING.md)了解详情。
+
+### 开发工作流程
+
+1. Fork 仓库
+2. 创建功能分支: `git checkout -b feature/amazing-feature`
+3. 进行更改
+4. 为新功能添加测试
+5. 运行测试套件: `npm test`
+6. 提交更改: `git commit -m 'Add amazing feature'`
+7. 推送到分支: `git push origin feature/amazing-feature`
+8. 创建 Pull Request
+
+### 代码风格
+
+我们使用 ESLint 和 Prettier 进行代码格式化：
+
+```bash
+# 检查代码风格
+npm run lint
+
+# 自动修复风格问题
+npm run lint:fix
+
+# 格式化代码
+npm run format
+```
+
+## 📄 许可证
+
+本项目基于 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 🔗 链接
+
+- [RootData 官方 API 文档](https://cn.rootdata.com/Api/Doc)
+- [模型上下文协议规范](https://github.com/modelcontextprotocol/specification)
+- [问题跟踪器](https://github.com/your-username/web3-data-mcp/issues)
+- [更新日志](CHANGELOG.md)
+
+## 🙋‍♂️ 支持
+
+- 📧 邮箱: support@example.com
+- 💬 Discord: [加入我们的社区](https://discord.gg/your-server)
+- 📖 文档: [完整 API 文档](https://docs.example.com)
+- 🐛 错误报告: [GitHub Issues](https://github.com/your-username/web3-data-mcp/issues)
+
+---
+
+**为 Web3 社区倾心打造 ❤️** 

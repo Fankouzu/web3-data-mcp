@@ -15,7 +15,7 @@ function detectLanguage(text) {
 
   // 移除空白字符
   const cleanText = text.trim();
-  
+
   if (cleanText.length === 0) {
     return 'en';
   }
@@ -23,12 +23,12 @@ function detectLanguage(text) {
   // 检测中文字符
   const chineseRegex = /[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/;
   const chineseMatches = cleanText.match(chineseRegex);
-  
+
   if (chineseMatches) {
     // 计算中文字符比例
     const chineseCharCount = (cleanText.match(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g) || []).length;
     const totalCharCount = cleanText.replace(/\s/g, '').length;
-    
+
     // 如果中文字符占比超过30%，判定为中文
     if (chineseCharCount / totalCharCount > 0.3) {
       return 'zh';
@@ -37,10 +37,30 @@ function detectLanguage(text) {
 
   // 检测常见的中文词汇
   const chineseKeywords = [
-    '比特币', '以太坊', '区块链', '加密货币', '数字货币', '代币',
-    '项目', '投资', '融资', '交易所', '钱包', '智能合约',
-    '去中心化', '中心化', '公链', '私链', '联盟链', '侧链',
-    '挖矿', '矿池', '节点', '共识', '算法', '协议'
+    '比特币',
+    '以太坊',
+    '区块链',
+    '加密货币',
+    '数字货币',
+    '代币',
+    '项目',
+    '投资',
+    '融资',
+    '交易所',
+    '钱包',
+    '智能合约',
+    '去中心化',
+    '中心化',
+    '公链',
+    '私链',
+    '联盟链',
+    '侧链',
+    '挖矿',
+    '矿池',
+    '节点',
+    '共识',
+    '算法',
+    '协议'
   ];
 
   for (const keyword of chineseKeywords) {
@@ -57,10 +77,25 @@ function detectLanguage(text) {
 
   // 检测常见的英文Web3关键词
   const englishKeywords = [
-    'bitcoin', 'ethereum', 'blockchain', 'cryptocurrency', 'crypto',
-    'token', 'project', 'investment', 'funding', 'exchange',
-    'wallet', 'smart contract', 'defi', 'nft', 'dao',
-    'decentralized', 'centralized', 'mining', 'staking'
+    'bitcoin',
+    'ethereum',
+    'blockchain',
+    'cryptocurrency',
+    'crypto',
+    'token',
+    'project',
+    'investment',
+    'funding',
+    'exchange',
+    'wallet',
+    'smart contract',
+    'defi',
+    'nft',
+    'dao',
+    'decentralized',
+    'centralized',
+    'mining',
+    'staking'
   ];
 
   const lowerText = cleanText.toLowerCase();
@@ -81,10 +116,10 @@ function detectLanguage(text) {
  */
 function getLanguageName(langCode) {
   const languages = {
-    'zh': '中文',
-    'en': 'English'
+    zh: '中文',
+    en: 'English'
   };
-  
+
   return languages[langCode] || 'English';
 }
 

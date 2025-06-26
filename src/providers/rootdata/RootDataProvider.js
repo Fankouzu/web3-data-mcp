@@ -17,7 +17,7 @@ class RootDataProvider extends DataProvider {
    */
   constructor(config = {}) {
     super('rootdata', config);
-    
+
     if (!config.apiKey) {
       throw new Error('RootData API Key is required');
     }
@@ -38,7 +38,7 @@ class RootDataProvider extends DataProvider {
     try {
       // 直接调用checkCredits获取用户信息
       const creditsResult = await this.checkCredits();
-      
+
       if (!creditsResult.success) {
         throw new Error(`API credentials validation failed: ${creditsResult.error}`);
       }
@@ -50,12 +50,12 @@ class RootDataProvider extends DataProvider {
 
       // 更新可用端点
       this.endpoints = getAvailableEndpoints(this.userLevel);
-      
+
       // 注册MCP工具
       this.registerTools();
-      
+
       this.isInitialized = true;
-      
+
       console.log(`✅ RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
       return true;
     } catch (error) {
@@ -73,15 +73,15 @@ class RootDataProvider extends DataProvider {
       const result = await this.client.checkCredits();
       return {
         success: true,
-        data: result.data
+        data:    result.data
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message,
-        data: {
+        error:   error.message,
+        data:    {
           credits: 0,
-          level: 'unknown'
+          level:   'unknown'
         }
       };
     }
@@ -95,14 +95,16 @@ class RootDataProvider extends DataProvider {
    */
   async executeApiCall(endpointId, params = {}) {
     const endpoint = getEndpointById(endpointId);
-    
+
     if (!endpoint) {
       throw new Error(`Unknown endpoint ID: ${endpointId}`);
     }
 
     // 检查用户等级权限
     if (!this.hasAccess(endpoint.requiredLevel)) {
-      throw new Error(`Insufficient permissions, requires ${endpoint.requiredLevel} level, current is ${this.userLevel}`);
+      throw new Error(
+        `Insufficient permissions, requires ${endpoint.requiredLevel} level, current is ${this.userLevel}`
+      );
     }
 
     // 检查credits余额
@@ -113,7 +115,7 @@ class RootDataProvider extends DataProvider {
     try {
       let result;
       const language = this.detectQueryLanguage(params.query || '') || 'en';
-      
+
       console.log(`🌐 Executing RootData API call: ${endpointId}`);
       console.log(`📤 Request parameters:`, JSON.stringify(params, null, 2));
       console.log(`🔤 Detected language: ${language}`);
@@ -124,11 +126,7 @@ class RootDataProvider extends DataProvider {
           break;
 
         case 'search_entities':
-          result = await this.client.searchEntities(
-            params.query, 
-            language, 
-            params.precise_x_search
-          );
+          result = await this.client.searchEntities(params.query, language, params.precise_x_search);
           break;
 
         case 'get_project':
@@ -183,10 +181,9 @@ class RootDataProvider extends DataProvider {
       }
 
       console.log(`📥 API call successful, endpoint: ${endpointId}`);
-      
+
       // 格式化响应并更新credits
       return this.formatResponse(result, endpoint.creditsPerCall);
-
     } catch (error) {
       console.error(`💥 API call failed, endpoint: ${endpointId}`);
       console.error(`❌ Error message: ${error.message}`);
@@ -202,13 +199,13 @@ class RootDataProvider extends DataProvider {
   getAvailableTools() {
     this.updateAvailableTools();
     return this.availableTools.map(tool => ({
-      name: tool.name,
-      description: tool.description,
-      inputSchema: tool.inputSchema,
-      endpoint: tool.endpoint,
-      requiredLevel: tool.requiredLevel,
-      creditsPerCall: tool.creditsPerCall,
-      category: tool.category,
+      name:              tool.name,
+      description:       tool.description,
+      inputSchema:       tool.inputSchema,
+      endpoint:          tool.endpoint,
+      requiredLevel:     tool.requiredLevel,
+      creditsPerCall:    tool.creditsPerCall,
+      category:          tool.category,
       outputDescription: tool.outputDescription
     }));
   }
@@ -220,13 +217,13 @@ class RootDataProvider extends DataProvider {
   registerTools() {
     this.endpoints.forEach(endpoint => {
       const toolDefinition = {
-        name: endpoint.name,
-        description: endpoint.description,
-        inputSchema: endpoint.inputSchema,
-        endpoint: endpoint.id,
-        requiredLevel: endpoint.requiredLevel,
-        creditsPerCall: endpoint.creditsPerCall,
-        category: endpoint.category,
+        name:              endpoint.name,
+        description:       endpoint.description,
+        inputSchema:       endpoint.inputSchema,
+        endpoint:          endpoint.id,
+        requiredLevel:     endpoint.requiredLevel,
+        creditsPerCall:    endpoint.creditsPerCall,
+        category:          endpoint.category,
         outputDescription: endpoint.outputDescription
       };
 
@@ -258,9 +255,9 @@ class RootDataProvider extends DataProvider {
    * @returns {Promise<Object>} 项目详情
    */
   async getProjectDetails(projectId, options = {}) {
-    return await this.executeApiCall('get_project', { 
-      project_id: projectId,
-      include_team: options.includeTeam || false,
+    return await this.executeApiCall('get_project', {
+      project_id:        projectId,
+      include_team:      options.includeTeam || false,
       include_investors: options.includeInvestors || false
     });
   }
@@ -272,9 +269,9 @@ class RootDataProvider extends DataProvider {
    * @returns {Promise<Object>} 项目详情
    */
   async getProjectByContract(contractAddress, options = {}) {
-    return await this.executeApiCall('get_project', { 
-      contract_address: contractAddress,
-      include_team: options.includeTeam || false,
+    return await this.executeApiCall('get_project', {
+      contract_address:  contractAddress,
+      include_team:      options.includeTeam || false,
       include_investors: options.includeInvestors || false
     });
   }
@@ -286,9 +283,9 @@ class RootDataProvider extends DataProvider {
    * @returns {Promise<Object>} 机构详情
    */
   async getOrganizationDetails(orgId, options = {}) {
-    return await this.executeApiCall('get_organization', { 
-      org_id: orgId,
-      include_team: options.includeTeam || false,
+    return await this.executeApiCall('get_organization', {
+      org_id:              orgId,
+      include_team:        options.includeTeam || false,
       include_investments: options.includeInvestments || false
     });
   }
@@ -392,27 +389,27 @@ class RootDataProvider extends DataProvider {
   async smartQuery(query) {
     try {
       const language = this.detectQueryLanguage(query);
-      
+
       // 简单的查询意图识别
       if (query.toLowerCase().includes('project') || query.includes('项目')) {
         return await this.searchWeb3Entities(query, { language });
       }
-      
+
       if (query.toLowerCase().includes('funding') || query.includes('融资')) {
         return await this.getFundingInformation();
       }
-      
+
       if (query.toLowerCase().includes('ecosystem') || query.includes('生态')) {
         return await this.getEcosystemMap();
       }
-      
+
       // 默认使用搜索
       return await this.searchWeb3Entities(query, { language });
     } catch (error) {
       return {
         success: false,
-        error: error.message,
-        data: null
+        error:   error.message,
+        data:    null
       };
     }
   }
@@ -424,18 +421,18 @@ class RootDataProvider extends DataProvider {
   async refreshStatus() {
     try {
       const creditsResult = await this.checkCredits();
-      
+
       if (creditsResult.success) {
         this.credits = creditsResult.data.credits;
         this.userLevel = creditsResult.data.level;
         this.lastCreditsCheck = new Date();
-        
+
         // 更新可用端点
         this.endpoints = getAvailableEndpoints(this.userLevel);
-        
+
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error(`刷新状态失败: ${error.message}`);
@@ -449,15 +446,15 @@ class RootDataProvider extends DataProvider {
    */
   getDetailedStatus() {
     return {
-      provider: 'RootData',
-      isInitialized: this.isInitialized,
-      level: this.userLevel || 'unknown',
-      credits: this.credits || 0,
-      lastCreditsCheck: this.lastCreditsCheck,
+      provider:            'RootData',
+      isInitialized:       this.isInitialized,
+      level:               this.userLevel || 'unknown',
+      credits:             this.credits || 0,
+      lastCreditsCheck:    this.lastCreditsCheck,
       availableToolsCount: this.endpoints.length,
-      totalToolsCount: 19, // 总共19个真实端点
-      supportedLanguages: ['en', 'zh'],
-      apiEndpoint: 'https://api.rootdata.com/open'
+      totalToolsCount:     19, // 总共19个真实端点
+      supportedLanguages:  ['en', 'zh'],
+      apiEndpoint:         'https://api.rootdata.com/open'
     };
   }
 }

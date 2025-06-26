@@ -7,9 +7,9 @@
  * Credits状态枚举
  */
 const CreditsStatus = {
-  OK: 'ok',
-  WARNING: 'warning',
-  CRITICAL: 'critical',
+  OK:        'ok',
+  WARNING:   'warning',
+  CRITICAL:  'critical',
   EXHAUSTED: 'exhausted'
 };
 
@@ -17,10 +17,10 @@ const CreditsStatus = {
  * 监控事件类型
  */
 const MonitorEvents = {
-  CREDITS_WARNING: 'credits_warning',
-  CREDITS_CRITICAL: 'credits_critical',
-  CREDITS_EXHAUSTED: 'credits_exhausted',
-  CREDITS_RESTORED: 'credits_restored',
+  CREDITS_WARNING:         'credits_warning',
+  CREDITS_CRITICAL:        'credits_critical',
+  CREDITS_EXHAUSTED:       'credits_exhausted',
+  CREDITS_RESTORED:        'credits_restored',
   PROVIDER_STATUS_CHANGED: 'provider_status_changed'
 };
 
@@ -28,23 +28,23 @@ class CreditsMonitor {
   constructor() {
     // 默认阈值配置
     this.thresholds = {
-      warning: 100,    // 警告阈值
-      critical: 20,    // 严重警告阈值
-      exhausted: 0     // 耗尽阈值
+      warning:   100, // 警告阈值
+      critical:  20, // 严重警告阈值
+      exhausted: 0 // 耗尽阈值
     };
 
     // 提供商状态跟踪
     this.providerStatus = new Map();
-    
+
     // 事件监听器
     this.eventListeners = new Map();
-    
+
     // 使用统计
     this.usageStats = {
-      totalCreditsConsumed: 0,
+      totalCreditsConsumed:  0,
       consumptionByProvider: {},
-      consumptionByHour: {},
-      dailyConsumption: {}
+      consumptionByHour:     {},
+      dailyConsumption:      {}
     };
 
     // 自动刷新间隔（毫秒）
@@ -60,16 +60,16 @@ class CreditsMonitor {
    */
   registerProvider(providerName, provider, customThresholds = {}) {
     const thresholds = { ...this.thresholds, ...customThresholds };
-    
+
     this.providerStatus.set(providerName, {
-      provider: provider,
-      credits: provider.credits || 0,
-      level: provider.userLevel || 'unknown',
-      status: this._calculateStatus(provider.credits || 0, thresholds),
-      thresholds: thresholds,
-      lastCheck: new Date(),
-      totalConsumed: 0,
-      isActive: true,
+      provider,
+      credits:             provider.credits || 0,
+      level:               provider.userLevel || 'unknown',
+      status:              this._calculateStatus(provider.credits || 0, thresholds),
+      thresholds,
+      lastCheck:           new Date(),
+      totalConsumed:       0,
+      isActive:            true,
       consecutiveFailures: 0
     });
 
@@ -84,7 +84,7 @@ class CreditsMonitor {
    */
   updateCredits(providerName, newCredits, consumed = 0) {
     const providerInfo = this.providerStatus.get(providerName);
-    
+
     if (!providerInfo) {
       console.warn(`⚠️ Provider not found: ${providerName}`);
       return;
@@ -92,7 +92,7 @@ class CreditsMonitor {
 
     const oldStatus = providerInfo.status;
     const oldCredits = providerInfo.credits;
-    
+
     // 更新状态
     providerInfo.credits = newCredits;
     providerInfo.status = this._calculateStatus(newCredits, providerInfo.thresholds);
@@ -118,11 +118,11 @@ class CreditsMonitor {
   async checkAllProviders() {
     const statusSummary = {
       timestamp: new Date().toISOString(),
-      total: this.providerStatus.size,
-      byStatus: {
-        [CreditsStatus.OK]: 0,
-        [CreditsStatus.WARNING]: 0,
-        [CreditsStatus.CRITICAL]: 0,
+      total:     this.providerStatus.size,
+      byStatus:  {
+        [CreditsStatus.OK]:        0,
+        [CreditsStatus.WARNING]:   0,
+        [CreditsStatus.CRITICAL]:  0,
         [CreditsStatus.EXHAUSTED]: 0
       },
       providers: {}
@@ -141,11 +141,10 @@ class CreditsMonitor {
         const currentStatus = this.getProviderStatus(providerName);
         statusSummary.providers[providerName] = currentStatus;
         statusSummary.byStatus[currentStatus.status]++;
-
       } catch (error) {
         console.error(`❌ Failed to check ${providerName} status:`, error.message);
         providerInfo.consecutiveFailures++;
-        
+
         // 如果连续失败太多次，标记为不活跃
         if (providerInfo.consecutiveFailures >= 3) {
           providerInfo.isActive = false;
@@ -163,23 +162,23 @@ class CreditsMonitor {
    */
   getProviderStatus(providerName) {
     const providerInfo = this.providerStatus.get(providerName);
-    
+
     if (!providerInfo) {
       return null;
     }
 
     return {
-      provider: providerName,
-      credits: providerInfo.credits,
-      level: providerInfo.level,
-      status: providerInfo.status,
-      thresholds: providerInfo.thresholds,
-      lastCheck: providerInfo.lastCheck,
-      totalConsumed: providerInfo.totalConsumed,
-      isActive: providerInfo.isActive,
+      provider:            providerName,
+      credits:             providerInfo.credits,
+      level:               providerInfo.level,
+      status:              providerInfo.status,
+      thresholds:          providerInfo.thresholds,
+      lastCheck:           providerInfo.lastCheck,
+      totalConsumed:       providerInfo.totalConsumed,
+      isActive:            providerInfo.isActive,
       consecutiveFailures: providerInfo.consecutiveFailures,
-      message: this._getStatusMessage(providerInfo.status, providerInfo.credits, providerInfo.thresholds),
-      timeUntilCritical: this._calculateTimeUntilCritical(providerName)
+      message:             this._getStatusMessage(providerInfo.status, providerInfo.credits, providerInfo.thresholds),
+      timeUntilCritical:   this._calculateTimeUntilCritical(providerName)
     };
   }
 
@@ -189,18 +188,18 @@ class CreditsMonitor {
    */
   getOverview() {
     const overview = {
-      timestamp: new Date().toISOString(),
-      totalProviders: this.providerStatus.size,
+      timestamp:       new Date().toISOString(),
+      totalProviders:  this.providerStatus.size,
       activeProviders: 0,
-      totalCredits: 0,
+      totalCredits:    0,
       statusBreakdown: {
-        [CreditsStatus.OK]: 0,
-        [CreditsStatus.WARNING]: 0,
-        [CreditsStatus.CRITICAL]: 0,
+        [CreditsStatus.OK]:        0,
+        [CreditsStatus.WARNING]:   0,
+        [CreditsStatus.CRITICAL]:  0,
         [CreditsStatus.EXHAUSTED]: 0
       },
       usageStats: this.usageStats,
-      alerts: []
+      alerts:     []
     };
 
     for (const [providerName, providerInfo] of this.providerStatus) {
@@ -208,16 +207,16 @@ class CreditsMonitor {
         overview.activeProviders++;
         overview.totalCredits += providerInfo.credits;
       }
-      
+
       overview.statusBreakdown[providerInfo.status]++;
 
       // 收集需要注意的警告
       if (providerInfo.status === CreditsStatus.CRITICAL || providerInfo.status === CreditsStatus.EXHAUSTED) {
         overview.alerts.push({
           provider: providerName,
-          status: providerInfo.status,
-          credits: providerInfo.credits,
-          message: this._getStatusMessage(providerInfo.status, providerInfo.credits, providerInfo.thresholds)
+          status:   providerInfo.status,
+          credits:  providerInfo.credits,
+          message:  this._getStatusMessage(providerInfo.status, providerInfo.credits, providerInfo.thresholds)
         });
       }
     }
@@ -233,7 +232,7 @@ class CreditsMonitor {
    */
   predictConsumption(providerName, hours = 24) {
     const providerInfo = this.providerStatus.get(providerName);
-    
+
     if (!providerInfo) {
       return null;
     }
@@ -245,13 +244,13 @@ class CreditsMonitor {
     const remainingAfterPrediction = Math.max(0, currentCredits - predictedConsumption);
 
     return {
-      provider: providerName,
-      currentCredits: currentCredits,
-      hourlyAverage: hourlyConsumption,
-      predictedConsumption: predictedConsumption,
-      remainingAfterPrediction: remainingAfterPrediction,
+      provider:             providerName,
+      currentCredits,
+      hourlyAverage:        hourlyConsumption,
+      predictedConsumption,
+      remainingAfterPrediction,
       hoursUntilExhaustion: hourlyConsumption > 0 ? Math.floor(currentCredits / hourlyConsumption) : Infinity,
-      warning: remainingAfterPrediction <= providerInfo.thresholds.critical
+      warning:              remainingAfterPrediction <= providerInfo.thresholds.critical
     };
   }
 
@@ -262,14 +261,14 @@ class CreditsMonitor {
    */
   setThresholds(providerName, thresholds) {
     const providerInfo = this.providerStatus.get(providerName);
-    
+
     if (providerInfo) {
       providerInfo.thresholds = { ...providerInfo.thresholds, ...thresholds };
-      
+
       // 重新计算状态
       const newStatus = this._calculateStatus(providerInfo.credits, providerInfo.thresholds);
       const oldStatus = providerInfo.status;
-      
+
       if (newStatus !== oldStatus) {
         providerInfo.status = newStatus;
         this._handleStatusChange(providerName, oldStatus, newStatus, providerInfo.credits, providerInfo.credits);
@@ -321,7 +320,7 @@ class CreditsMonitor {
       }
     }, intervalMs);
 
-    console.error(`🔄 Started automatic Credits monitoring (interval: ${intervalMs/1000} seconds)`);
+    console.error(`🔄 Started automatic Credits monitoring (interval: ${intervalMs / 1000} seconds)`);
   }
 
   /**
@@ -356,14 +355,16 @@ class CreditsMonitor {
    * @private
    */
   _handleStatusChange(providerName, oldStatus, newStatus, oldCredits, newCredits) {
-    console.error(`📊 ${providerName} Credits status changed: ${oldStatus} -> ${newStatus} (${oldCredits} -> ${newCredits})`);
-    
+    console.error(
+      `📊 ${providerName} Credits status changed: ${oldStatus} -> ${newStatus} (${oldCredits} -> ${newCredits})`
+    );
+
     this._emitEvent(MonitorEvents.PROVIDER_STATUS_CHANGED, {
-      provider: providerName,
-      oldStatus: oldStatus,
-      newStatus: newStatus,
-      oldCredits: oldCredits,
-      newCredits: newCredits,
+      provider:  providerName,
+      oldStatus,
+      newStatus,
+      oldCredits,
+      newCredits,
       timestamp: new Date().toISOString()
     });
   }
@@ -378,26 +379,26 @@ class CreditsMonitor {
     switch (status) {
       case CreditsStatus.WARNING:
         this._emitEvent(MonitorEvents.CREDITS_WARNING, {
-          provider: providerName,
-          credits: credits,
+          provider:  providerName,
+          credits,
           threshold: providerInfo.thresholds.warning,
           timestamp: new Date().toISOString()
         });
         break;
-        
+
       case CreditsStatus.CRITICAL:
         this._emitEvent(MonitorEvents.CREDITS_CRITICAL, {
-          provider: providerName,
-          credits: credits,
+          provider:  providerName,
+          credits,
           threshold: providerInfo.thresholds.critical,
           timestamp: new Date().toISOString()
         });
         break;
-        
+
       case CreditsStatus.EXHAUSTED:
         this._emitEvent(MonitorEvents.CREDITS_EXHAUSTED, {
-          provider: providerName,
-          credits: credits,
+          provider:  providerName,
+          credits,
           timestamp: new Date().toISOString()
         });
         break;
@@ -429,20 +430,20 @@ class CreditsMonitor {
     if (consumed <= 0) return;
 
     this.usageStats.totalCreditsConsumed += consumed;
-    
+
     // 按提供商统计
     if (!this.usageStats.consumptionByProvider[providerName]) {
       this.usageStats.consumptionByProvider[providerName] = 0;
     }
     this.usageStats.consumptionByProvider[providerName] += consumed;
-    
+
     // 按小时统计
     const currentHour = new Date().toISOString().substr(0, 13); // YYYY-MM-DDTHH
     if (!this.usageStats.consumptionByHour[currentHour]) {
       this.usageStats.consumptionByHour[currentHour] = 0;
     }
     this.usageStats.consumptionByHour[currentHour] += consumed;
-    
+
     // 按天统计
     const currentDay = new Date().toISOString().substr(0, 10); // YYYY-MM-DD
     if (!this.usageStats.dailyConsumption[currentDay]) {
@@ -458,7 +459,7 @@ class CreditsMonitor {
   _calculateHourlyAverage(providerName) {
     const providerConsumption = this.usageStats.consumptionByProvider[providerName] || 0;
     const hoursOfData = Object.keys(this.usageStats.consumptionByHour).length;
-    
+
     return hoursOfData > 0 ? providerConsumption / hoursOfData : 0;
   }
 
@@ -474,7 +475,7 @@ class CreditsMonitor {
 
     const providerInfo = this.providerStatus.get(providerName);
     const creditsUntilCritical = providerInfo.credits - providerInfo.thresholds.critical;
-    
+
     if (creditsUntilCritical <= 0) {
       return 0;
     }

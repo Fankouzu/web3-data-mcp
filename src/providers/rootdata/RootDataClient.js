@@ -14,11 +14,11 @@ class RootDataClient extends ApiClient {
    */
   constructor(apiKey, options = {}) {
     const baseUrl = 'https://api.rootdata.com/open';
-    
+
     // RootData特定的默认头部
     const defaultHeaders = {
-      'apikey': apiKey,
-      'language': 'en',
+      apikey:         apiKey,
+      language:       'en',
       'Content-Type': 'application/json',
       ...options.defaultHeaders
     };
@@ -38,11 +38,11 @@ class RootDataClient extends ApiClient {
   async checkCredits() {
     try {
       const response = await this.request('/quotacredits', 'POST', {});
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data
+          data:    response.data.data
         };
       } else {
         throw new ApiError(
@@ -56,12 +56,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `查询余额失败: ${error.message}`,
-        'CREDITS_CHECK_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`查询余额失败: ${error.message}`, 'CREDITS_CHECK_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -75,7 +70,7 @@ class RootDataClient extends ApiClient {
   async searchEntities(query, language = 'en', preciseXSearch = false) {
     try {
       const requestData = {
-        query: query
+        query
       };
 
       if (preciseXSearch) {
@@ -83,17 +78,17 @@ class RootDataClient extends ApiClient {
       }
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/ser_inv', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || [],
-          query: query,
-          language: language
+          data:    response.data.data || [],
+          query,
+          language
         };
       } else {
         throw new ApiError(
@@ -107,12 +102,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `搜索失败: ${error.message}`,
-        'SEARCH_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`搜索失败: ${error.message}`, 'SEARCH_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -143,15 +133,15 @@ class RootDataClient extends ApiClient {
       }
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/get_item', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data
+          data:    response.data.data
         };
       } else {
         throw new ApiError(
@@ -196,15 +186,15 @@ class RootDataClient extends ApiClient {
       }
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/get_org', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data
+          data:    response.data.data
         };
       } else {
         throw new ApiError(
@@ -240,15 +230,15 @@ class RootDataClient extends ApiClient {
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/get_people', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data
+          data:    response.data.data
         };
       } else {
         throw new ApiError(
@@ -262,12 +252,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get people details: ${error.message}`,
-        'PEOPLE_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get people details: ${error.message}`, 'PEOPLE_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -284,15 +269,15 @@ class RootDataClient extends ApiClient {
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/id_map', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -306,12 +291,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get ID map: ${error.message}`,
-        'ID_MAP_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get ID map: ${error.message}`, 'ID_MAP_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -324,15 +304,15 @@ class RootDataClient extends ApiClient {
   async getFundingRounds(params = {}, language = 'en') {
     try {
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/get_fac', 'POST', params, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || {}
+          data:    response.data.data || {}
         };
       } else {
         throw new ApiError(
@@ -346,12 +326,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get funding rounds: ${error.message}`,
-        'FUNDING_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get funding rounds: ${error.message}`, 'FUNDING_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -365,20 +340,20 @@ class RootDataClient extends ApiClient {
   async getInvestors(page = 1, pageSize = 10, language = 'en') {
     try {
       const requestData = {
-        page: parseInt(page),
+        page:      parseInt(page),
         page_size: parseInt(pageSize)
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/get_invest', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || {}
+          data:    response.data.data || {}
         };
       } else {
         throw new ApiError(
@@ -392,12 +367,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get investors: ${error.message}`,
-        'INVESTORS_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get investors: ${error.message}`, 'INVESTORS_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -414,15 +384,15 @@ class RootDataClient extends ApiClient {
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/twitter_map', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -436,12 +406,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get Twitter map: ${error.message}`,
-        'TWITTER_MAP_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get Twitter map: ${error.message}`, 'TWITTER_MAP_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -458,15 +423,15 @@ class RootDataClient extends ApiClient {
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/projects_by_ecosystems', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -502,15 +467,15 @@ class RootDataClient extends ApiClient {
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/projects_by_tags', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -551,15 +516,15 @@ class RootDataClient extends ApiClient {
       }
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/ser_change', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -573,12 +538,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get sync updates: ${error.message}`,
-        'SYNC_UPDATES_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get sync updates: ${error.message}`, 'SYNC_UPDATES_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -591,19 +551,19 @@ class RootDataClient extends ApiClient {
   async getHotProjects(days, language = 'en') {
     try {
       const requestData = {
-        days: days
+        days
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/hot_index', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -617,12 +577,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get hot projects: ${error.message}`,
-        'HOT_PROJECTS_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get hot projects: ${error.message}`, 'HOT_PROJECTS_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -637,21 +592,21 @@ class RootDataClient extends ApiClient {
   async getHotProjectsOnX(heat, influence, followers, language = 'en') {
     try {
       const requestData = {
-        heat: heat,
-        influence: influence,
-        followers: followers
+        heat,
+        influence,
+        followers
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/hot_project_on_x', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || {}
+          data:    response.data.data || {}
         };
       } else {
         throw new ApiError(
@@ -686,20 +641,20 @@ class RootDataClient extends ApiClient {
     try {
       const requestData = {
         rank_type: rankType,
-        page: page,
+        page,
         page_size: pageSize
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/leading_figures_on_crypto_x', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || {}
+          data:    response.data.data || {}
         };
       } else {
         throw new ApiError(
@@ -732,20 +687,20 @@ class RootDataClient extends ApiClient {
   async getJobChanges(recentJoinees, recentResignations, language = 'en') {
     try {
       const requestData = {
-        recent_joinees: recentJoinees,
+        recent_joinees:      recentJoinees,
         recent_resignations: recentResignations
       };
 
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/job_changes', 'POST', requestData, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || {}
+          data:    response.data.data || {}
         };
       } else {
         throw new ApiError(
@@ -759,12 +714,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get job changes: ${error.message}`,
-        'JOB_CHANGES_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get job changes: ${error.message}`, 'JOB_CHANGES_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -776,15 +726,15 @@ class RootDataClient extends ApiClient {
   async getNewTokens(language = 'en') {
     try {
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/new_tokens', 'POST', {}, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -798,12 +748,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get new tokens: ${error.message}`,
-        'NEW_TOKENS_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get new tokens: ${error.message}`, 'NEW_TOKENS_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -815,15 +760,15 @@ class RootDataClient extends ApiClient {
   async getEcosystemMap(language = 'en') {
     try {
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/ecosystem_map', 'POST', {}, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -854,15 +799,15 @@ class RootDataClient extends ApiClient {
   async getTagMap(language = 'en') {
     try {
       const headers = {
-        'language': language
+        language
       };
 
       const response = await this.request('/tag_map', 'POST', {}, headers);
-      
+
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || []
+          data:    response.data.data || []
         };
       } else {
         throw new ApiError(
@@ -876,12 +821,7 @@ class RootDataClient extends ApiClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(
-        `Failed to get tag map: ${error.message}`,
-        'TAG_MAP_ERROR',
-        null,
-        'RootDataClient'
-      );
+      throw new ApiError(`Failed to get tag map: ${error.message}`, 'TAG_MAP_ERROR', null, 'RootDataClient');
     }
   }
 
@@ -891,7 +831,7 @@ class RootDataClient extends ApiClient {
    */
   updateApiKey(newApiKey) {
     super.updateApiKey(newApiKey);
-    this.setDefaultHeaders({ 'apikey': newApiKey });
+    this.setDefaultHeaders({ apikey: newApiKey });
   }
 
   /**
@@ -899,7 +839,7 @@ class RootDataClient extends ApiClient {
    * @param {string} language - 语言代码
    */
   setDefaultLanguage(language) {
-    this.setDefaultHeaders({ 'language': language });
+    this.setDefaultHeaders({ language });
   }
 }
 

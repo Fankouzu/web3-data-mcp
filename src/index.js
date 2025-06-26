@@ -18,7 +18,7 @@ async function main() {
   try {
     // 检查命令行参数
     const args = process.argv.slice(2);
-    
+
     if (args.includes('--help') || args.includes('-h')) {
       printHelp();
       return;
@@ -37,10 +37,10 @@ async function main() {
 
     // 初始化配置管理器
     const configManager = new ConfigManager();
-    
+
     // 加载配置
     const config = configManager.loadConfig();
-    
+
     // 检查是否有配置的供应商
     const configuredProviders = configManager.getConfiguredProviders();
     if (configuredProviders.length === 0) {
@@ -64,7 +64,7 @@ async function main() {
 
     // 创建并初始化MCP服务器
     const mcpServer = new McpServer(config.server);
-    
+
     // 准备供应商配置
     const providerConfigs = {};
     configuredProviders.forEach(providerName => {
@@ -73,7 +73,7 @@ async function main() {
 
     // 初始化服务器
     const initSuccess = await mcpServer.initialize(providerConfigs);
-    
+
     if (!initSuccess) {
       console.error('❌ Server initialization failed');
       process.exit(1);
@@ -81,17 +81,16 @@ async function main() {
 
     // 启动服务器
     await mcpServer.start();
-    
   } catch (error) {
     console.error('💥 Startup failed:', error.message);
-    
+
     if (error.message.includes('Configuration validation failed')) {
       console.error('');
       console.error('Please check configuration file or environment variable settings.');
       console.error('Run --config-example to see example configuration.');
       console.error('Run --env-help to see environment variable configuration instructions.');
     }
-    
+
     process.exit(1);
   }
 }

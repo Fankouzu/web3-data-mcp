@@ -19,31 +19,27 @@ class ConfigManager {
     // 默认配置
     const defaultConfig = {
       server: {
-        name: 'web3-data-mcp',
+        name:    'web3-data-mcp',
         version: '1.0.0',
         timeout: 30000,
         retries: 3
       },
-      providers: {},
+      providers:  {},
       monitoring: {
-        creditsWarningThreshold: 100,
+        creditsWarningThreshold:  100,
         creditsCriticalThreshold: 20,
-        autoRefreshInterval: 300000, // 5分钟
-        errorFrequencyThreshold: 10
+        autoRefreshInterval:      300000, // 5分钟
+        errorFrequencyThreshold:  10
       },
       logging: {
-        level: 'info',
-        enableStats: true,
+        level:               'info',
+        enableStats:         true,
         enableErrorTracking: true
       }
     };
 
     // 合并配置：默认配置 < 环境变量配置 < 用户配置
-    this.config = this._deepMerge(
-      defaultConfig,
-      this.envConfig,
-      userConfig
-    );
+    this.config = this._deepMerge(defaultConfig, this.envConfig, userConfig);
 
     // 验证配置
     this._validateConfig();
@@ -116,7 +112,7 @@ class ConfigManager {
     }
 
     const safeConfig = JSON.parse(JSON.stringify(this.config));
-    
+
     // 隐藏API密钥
     if (safeConfig.providers) {
       Object.keys(safeConfig.providers).forEach(providerName => {
@@ -141,9 +137,9 @@ class ConfigManager {
     }
 
     if (process.env.MCP_SERVER_TIMEOUT) {
-      this.envConfig.server = { 
+      this.envConfig.server = {
         ...this.envConfig.server,
-        timeout: parseInt(process.env.MCP_SERVER_TIMEOUT, 10) 
+        timeout: parseInt(process.env.MCP_SERVER_TIMEOUT, 10)
       };
     }
 
@@ -153,7 +149,7 @@ class ConfigManager {
     // RootData配置
     if (process.env.ROOTDATA_API_KEY) {
       this.envConfig.providers.rootdata = {
-        apiKey: process.env.ROOTDATA_API_KEY,
+        apiKey:  process.env.ROOTDATA_API_KEY,
         baseUrl: process.env.ROOTDATA_BASE_URL || 'https://api.rootdata.com/open',
         timeout: process.env.ROOTDATA_TIMEOUT ? parseInt(process.env.ROOTDATA_TIMEOUT, 10) : undefined,
         retries: process.env.ROOTDATA_RETRIES ? parseInt(process.env.ROOTDATA_RETRIES, 10) : undefined
@@ -210,7 +206,7 @@ class ConfigManager {
 
     configuredProviders.forEach(providerName => {
       const providerConfig = this.getProviderConfig(providerName);
-      
+
       if (!providerConfig.apiKey) {
         errors.push(`${providerName} provider missing API key`);
       }
@@ -289,7 +285,7 @@ class ConfigManager {
       }
       return current[key];
     }, obj);
-    
+
     target[lastKey] = value;
   }
 
@@ -301,11 +297,11 @@ class ConfigManager {
     if (!apiKey || apiKey.length < 8) {
       return '***';
     }
-    
+
     const start = apiKey.substring(0, 4);
     const end = apiKey.substring(apiKey.length - 4);
     const middle = '*'.repeat(Math.max(4, apiKey.length - 8));
-    
+
     return `${start}${middle}${end}`;
   }
 
@@ -316,14 +312,14 @@ class ConfigManager {
   static createExampleConfig() {
     const exampleConfig = {
       server: {
-        name: 'web3-data-mcp',
+        name:    'web3-data-mcp',
         version: '1.0.0',
         timeout: 30000,
         retries: 3
       },
       providers: {
         rootdata: {
-          apiKey: 'your-rootdata-api-key-here',
+          apiKey:  'your-rootdata-api-key-here',
           baseUrl: 'https://api.rootdata.com/open',
           timeout: 30000,
           retries: 3
@@ -337,14 +333,14 @@ class ConfigManager {
         // }
       },
       monitoring: {
-        creditsWarningThreshold: 100,
+        creditsWarningThreshold:  100,
         creditsCriticalThreshold: 20,
-        autoRefreshInterval: 300000, // 5分钟
-        errorFrequencyThreshold: 10
+        autoRefreshInterval:      300000, // 5分钟
+        errorFrequencyThreshold:  10
       },
       logging: {
-        level: 'info',
-        enableStats: true,
+        level:               'info',
+        enableStats:         true,
         enableErrorTracking: true
       }
     };

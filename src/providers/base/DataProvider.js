@@ -23,12 +23,12 @@ class DataProvider {
     this.name = name;
     this.config = config;
     this.isInitialized = false;
-    
+
     // 用户状态
     this.userLevel = 'unknown';
     this.credits = 0;
     this.lastCreditsCheck = null;
-    
+
     // 工具注册表
     this.tools = new Map();
     this.availableTools = [];
@@ -82,17 +82,17 @@ class DataProvider {
       this.credits = result.credits || 0;
       this.userLevel = result.level || 'unknown';
       this.lastCreditsCheck = new Date();
-      
+
       return {
-        success: true,
-        credits: this.credits,
-        level: this.userLevel,
+        success:  true,
+        credits:  this.credits,
+        level:    this.userLevel,
         provider: this.name
       };
     } catch (error) {
       return {
-        success: false,
-        error: error.message,
+        success:  false,
+        error:    error.message,
         provider: this.name
       };
     }
@@ -105,9 +105,9 @@ class DataProvider {
    */
   hasAccess(requiredLevel) {
     const levels = {
-      'basic': 1,
-      'plus': 2,
-      'pro': 3
+      basic: 1,
+      plus:  2,
+      pro:   3
     };
 
     const userLevelNum = levels[this.userLevel.toLowerCase()] || 0;
@@ -148,7 +148,7 @@ class DataProvider {
    */
   registerTool(toolDefinition) {
     const requiredFields = ['name', 'description', 'inputSchema', 'endpoint', 'requiredLevel', 'creditsPerCall'];
-    
+
     for (const field of requiredFields) {
       if (toolDefinition[field] === undefined || toolDefinition[field] === null) {
         throw new Error(`Tool definition missing required field: ${field}`);
@@ -157,7 +157,7 @@ class DataProvider {
 
     // 添加供应商信息
     toolDefinition.provider = this.name;
-    
+
     this.tools.set(toolDefinition.name, toolDefinition);
     this.updateAvailableTools();
   }
@@ -187,10 +187,10 @@ class DataProvider {
   getCreditsStatus() {
     const status = {
       provider: this.name,
-      credits: this.credits,
-      level: this.userLevel,
-      status: 'ok',
-      message: null
+      credits:  this.credits,
+      level:    this.userLevel,
+      status:   'ok',
+      message:  null
     };
 
     if (this.credits <= 20) {
@@ -213,18 +213,18 @@ class DataProvider {
   formatResponse(apiResponse, creditsUsed = 0) {
     // 更新credits
     this.consumeCredits(creditsUsed);
-    
+
     const creditsStatus = this.getCreditsStatus();
-    
+
     return {
-      success: true,
-      data: apiResponse,
+      success:  true,
+      data:     apiResponse,
       provider: this.name,
-      credits: {
+      credits:  {
         remaining: this.credits,
-        used: creditsUsed,
-        status: creditsStatus.status,
-        message: creditsStatus.message
+        used:      creditsUsed,
+        status:    creditsStatus.status,
+        message:   creditsStatus.message
       },
       timestamp: new Date().toISOString()
     };
@@ -236,13 +236,13 @@ class DataProvider {
    */
   getStatus() {
     return {
-      provider: this.name,
-      initialized: this.isInitialized,
-      level: this.userLevel,
-      credits: this.credits,
-      lastCreditsCheck: this.lastCreditsCheck,
+      provider:            this.name,
+      initialized:         this.isInitialized,
+      level:               this.userLevel,
+      credits:             this.credits,
+      lastCreditsCheck:    this.lastCreditsCheck,
       availableToolsCount: this.availableTools.length,
-      totalToolsCount: this.tools.size
+      totalToolsCount:     this.tools.size
     };
   }
 }

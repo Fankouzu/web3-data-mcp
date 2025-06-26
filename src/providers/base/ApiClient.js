@@ -35,12 +35,12 @@ class ApiClient {
     this.timeout = options.timeout || 30000;
     this.retries = options.retries || 3;
     this.defaultHeaders = options.defaultHeaders || {};
-    
+
     // 请求统计
     this.stats = {
-      totalRequests: 0,
-      successfulRequests: 0,
-      failedRequests: 0,
+      totalRequests:       0,
+      successfulRequests:  0,
+      failedRequests:      0,
       averageResponseTime: 0
     };
   }
@@ -60,17 +60,17 @@ class ApiClient {
     for (let attempt = 1; attempt <= this.retries; attempt++) {
       try {
         this.stats.totalRequests++;
-        
+
         const response = await this._makeRequest(endpoint, method, data, headers);
-        
+
         // 记录成功
         this.stats.successfulRequests++;
         this._updateAverageResponseTime(Date.now() - startTime);
-        
+
         return response;
       } catch (error) {
         lastError = error;
-        
+
         // 如果是最后一次尝试或不应该重试的错误，直接抛出
         if (attempt === this.retries || !this._shouldRetry(error)) {
           this.stats.failedRequests++;
@@ -95,7 +95,7 @@ class ApiClient {
       // 简单的路径拼接，避免URL构造问题
       const fullPath = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
       const postData = method !== 'GET' ? JSON.stringify(data) : null;
-      
+
       const requestHeaders = {
         'Content-Type': 'application/json',
         ...this.defaultHeaders,
@@ -108,23 +108,23 @@ class ApiClient {
 
       // 解析baseUrl
       const baseUrl = new URL(this.baseUrl);
-      
+
       const options = {
         hostname: baseUrl.hostname,
-        port: baseUrl.port || (baseUrl.protocol === 'https:' ? 443 : 80),
-        path: baseUrl.pathname + fullPath,
-        method: method,
-        headers: requestHeaders,
-        timeout: this.timeout
+        port:     baseUrl.port || (baseUrl.protocol === 'https:' ? 443 : 80),
+        path:     baseUrl.pathname + fullPath,
+        method,
+        headers:  requestHeaders,
+        timeout:  this.timeout
       };
 
-      const req = https.request(options, (res) => {
+      const req = https.request(options, res => {
         let body = '';
-        
-        res.on('data', (chunk) => {
+
+        res.on('data', chunk => {
           body += chunk;
         });
-        
+
         res.on('end', () => {
           try {
             // 尝试解析JSON响应
@@ -138,8 +138,8 @@ class ApiClient {
 
             const response = {
               statusCode: res.statusCode,
-              headers: res.headers,
-              data: result
+              headers:    res.headers,
+              data:       result
             };
 
             // 检查HTTP状态码
@@ -155,42 +155,34 @@ class ApiClient {
               reject(error);
             }
           } catch (error) {
-            reject(new ApiError(
-              `Response processing error: ${error.message}`,
-              'RESPONSE_PARSE_ERROR',
-              res.statusCode,
-              this.constructor.name
-            ));
+            reject(
+              new ApiError(
+                `Response processing error: ${error.message}`,
+                'RESPONSE_PARSE_ERROR',
+                res.statusCode,
+                this.constructor.name
+              )
+            );
           }
         });
       });
 
-      req.on('error', (error) => {
+      req.on('error', error => {
         console.error(`🌐 Network request failed: ${method} ${endpoint}`);
         console.error(`❌ Network error: ${error.message}`);
         console.error(`🔍 Error code: ${error.code}`);
-        reject(new ApiError(
-          `Network request error: ${error.message}`,
-          'NETWORK_ERROR',
-          null,
-          this.constructor.name
-        ));
+        reject(new ApiError(`Network request error: ${error.message}`, 'NETWORK_ERROR', null, this.constructor.name));
       });
 
       req.on('timeout', () => {
         req.destroy();
-        reject(new ApiError(
-          `Request timeout (${this.timeout}ms)`,
-          'TIMEOUT',
-          null,
-          this.constructor.name
-        ));
+        reject(new ApiError(`Request timeout (${this.timeout}ms)`, 'TIMEOUT', null, this.constructor.name));
       });
 
       if (postData) {
         req.write(postData);
       }
-      
+
       req.end();
     });
   }
@@ -241,7 +233,7 @@ class ApiClient {
    */
   _updateAverageResponseTime(responseTime) {
     const totalRequests = this.stats.successfulRequests;
-    this.stats.averageResponseTime = 
+    this.stats.averageResponseTime =
       (this.stats.averageResponseTime * (totalRequests - 1) + responseTime) / totalRequests;
   }
 
@@ -252,9 +244,10 @@ class ApiClient {
   getStats() {
     return {
       ...this.stats,
-      successRate: this.stats.totalRequests > 0 
-        ? (this.stats.successfulRequests / this.stats.totalRequests * 100).toFixed(2) + '%'
-        : '0%'
+      successRate:
+        this.stats.totalRequests > 0
+          ? ((this.stats.successfulRequests / this.stats.totalRequests) * 100).toFixed(2) + '%'
+          : '0%'
     };
   }
 
@@ -263,9 +256,9 @@ class ApiClient {
    */
   resetStats() {
     this.stats = {
-      totalRequests: 0,
-      successfulRequests: 0,
-      failedRequests: 0,
+      totalRequests:       0,
+      successfulRequests:  0,
+      failedRequests:      0,
       averageResponseTime: 0
     };
   }
