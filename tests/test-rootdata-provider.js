@@ -20,7 +20,10 @@ describe('RootData API Provider Tests', () => {
   });
 
   afterEach(() => {
-    // 重置provider状态
+    // 清理provider资源
+    if (provider && provider.cleanup) {
+      provider.cleanup();
+    }
     provider = null;
   });
 
@@ -539,12 +542,11 @@ describe('RootData API Level Simulation Tests', () => {
     });
 
     test('Plus级别应该可以获取融资信息', async () => {
-      plusProvider.client = {
-        getFundingRounds: jest.fn().mockResolvedValue({
-          success: true,
-          data:    { items: [] }
-        })
-      };
+      // Mock executeApiCall 而不是client方法
+      plusProvider.executeApiCall = jest.fn().mockResolvedValue({
+        success: true,
+        data:    { items: [] }
+      });
 
       const result = await plusProvider.getFundingInformation();
       expect(result.success).toBe(true);
@@ -561,24 +563,22 @@ describe('RootData API Level Simulation Tests', () => {
     });
 
     test('Pro级别应该可以获取人物信息', async () => {
-      proProvider.client = {
-        getPeople: jest.fn().mockResolvedValue({
-          success: true,
-          data:    { people_name: 'Test Person' }
-        })
-      };
+      // Mock executeApiCall 而不是client方法
+      proProvider.executeApiCall = jest.fn().mockResolvedValue({
+        success: true,
+        data:    { people_name: 'Test Person' }
+      });
 
       const result = await proProvider.getPeopleDetails(123);
       expect(result.success).toBe(true);
     });
 
     test('Pro级别应该可以获取热门项目', async () => {
-      proProvider.client = {
-        getHotProjects: jest.fn().mockResolvedValue({
-          success: true,
-          data:    [{ project_name: 'Hot Project' }]
-        })
-      };
+      // Mock executeApiCall 而不是client方法
+      proProvider.executeApiCall = jest.fn().mockResolvedValue({
+        success: true,
+        data:    [{ project_name: 'Hot Project' }]
+      });
 
       const result = await proProvider.getHotProjects(1);
       expect(result.success).toBe(true);

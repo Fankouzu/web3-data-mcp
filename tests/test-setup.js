@@ -42,7 +42,10 @@ if (!apiKey) {
   console.log('export ROOTDATA_API_KEY=your-api-key');
   console.log('node test-setup.js');
 
-  process.exit(0);
+  // 在Jest测试环境中不退出进程
+  if (process.env.NODE_ENV !== 'test' && typeof jest === 'undefined') {
+    process.exit(0);
+  }
 } else {
   console.log('✅ 找到API Key:', apiKey.substring(0, 8) + '...');
 

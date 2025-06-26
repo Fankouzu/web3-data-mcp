@@ -60,6 +60,7 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.6.0",
     "jest": "^30.0.3",
+    "jest-junit": "^16.0.0",
     "prettier": "^3.6.1"
   },
   "engines": {
@@ -72,17 +73,5 @@
   "bugs": {
     "url": "https://github.com/your-org/web3-data-mcp/issues"
   },
-  "homepage": "https://github.com/your-org/web3-data-mcp#readme",
-  "jest": {
-    "testEnvironment": "node",
-    "verbose": true,
-    "collectCoverage": false,
-    "testMatch": ["**/tests/**/*.js"],
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js",
-      "!**/node_modules/**"
-    ]
-  }
+  "homepage": "https://github.com/your-org/web3-data-mcp#readme"
 }

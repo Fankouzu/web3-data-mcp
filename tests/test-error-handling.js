@@ -184,4 +184,66 @@ if (require.main === module) {
   });
 }
 
+// Jest测试套件
+describe('Error Handling System Tests', () => {
+  let errorHandler, creditsMonitor, toolRouter;
+
+  beforeEach(() => {
+    errorHandler = new ErrorHandler();
+    creditsMonitor = new CreditsMonitor();
+    toolRouter = new ToolRouter();
+  });
+
+  test('错误处理器应该正确初始化', () => {
+    expect(errorHandler).toBeDefined();
+    expect(typeof errorHandler.handleApiError).toBe('function');
+    expect(typeof errorHandler.handleInsufficientCredits).toBe('function');
+  });
+
+  test('Credits监控器应该正确初始化', () => {
+    expect(creditsMonitor).toBeDefined();
+    expect(typeof creditsMonitor.registerProvider).toBe('function');
+    expect(typeof creditsMonitor.updateCredits).toBe('function');
+  });
+
+  test('工具路由器应该正确初始化', () => {
+    expect(toolRouter).toBeDefined();
+    expect(typeof toolRouter.registerProvider).toBe('function');
+    expect(typeof toolRouter.routeQuery).toBe('function');
+  });
+
+  test('API错误处理', () => {
+    const apiError = new ApiError('Test error', 'API_ERROR', 500, 'rootdata');
+    const result = errorHandler.handleApiError(apiError, 'rootdata', {
+      query: 'test query'
+    });
+
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+  });
+
+  test('Credits不足错误处理', () => {
+    const result = errorHandler.handleInsufficientCredits(50, 10, 'rootdata');
+    
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.error.type).toBe('INSUFFICIENT_CREDITS');
+  });
+
+  test('权限不足错误处理', () => {
+    const result = errorHandler.handleInsufficientPermissions('pro', 'basic', 'rootdata');
+    
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.error.type).toBe('INSUFFICIENT_PERMISSIONS');
+  });
+
+  // 跳过需要真实提供商的测试
+  test.skip('完整错误处理系统集成测试', async () => {
+    const result = await testErrorHandlingSystem();
+    expect(result).toBe(true);
+  }, 60000);
+});
+
 module.exports = testErrorHandlingSystem;

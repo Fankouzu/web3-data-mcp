@@ -144,6 +144,11 @@ class RootDataProvider extends DataProvider {
    * @returns {Promise<Object>} API响应结果
    */
   async executeApiCall(endpointId, params = {}, options = {}) {
+    // 检查provider是否已配置
+    if (!this.client) {
+      throw new Error('Provider must be configured');
+    }
+
     const endpoint = getEndpointById(endpointId);
 
     if (!endpoint) {

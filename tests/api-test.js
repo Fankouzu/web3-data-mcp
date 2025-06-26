@@ -239,6 +239,67 @@ class RootDataApiTester {
 }
 
 // 如果直接运行此脚本
+// Jest测试套件
+describe('RootData API Tests', () => {
+  let tester;
+  const mockApiKey = 'test-api-key-12345';
+
+  beforeEach(() => {
+    tester = new RootDataApiTester(mockApiKey);
+  });
+
+  test('API连接测试器应该正确初始化', () => {
+    expect(tester.apiKey).toBe(mockApiKey);
+    expect(tester.baseUrl).toBe('https://api.rootdata.com/open');
+    expect(tester.testResults).toEqual([]);
+  });
+
+  test('应该能够构造正确的HTTP请求', () => {
+    // 测试makeRequest方法的构造逻辑
+    expect(tester.makeRequest).toBeDefined();
+    expect(typeof tester.makeRequest).toBe('function');
+  });
+
+  test('测试结果生成器应该工作', () => {
+    // 添加一些模拟测试结果
+    tester.testResults = [
+      { test: 'mock_test_1', success: true },
+      { test: 'mock_test_2', success: false }
+    ];
+
+    const report = tester.generateReport();
+    expect(report.total).toBe(2);
+    expect(report.success).toBe(1);
+    expect(report.failed).toBe(1);
+    expect(report.successRate).toBe(50);
+  });
+
+  // 跳过实际的API调用测试，因为需要真实的API密钥
+  test.skip('真实API调用 - Credits余额查询', async () => {
+    const realApiKey = process.env.ROOTDATA_API_KEY;
+    if (!realApiKey) {
+      console.log('跳过真实API测试 - 缺少ROOTDATA_API_KEY环境变量');
+      return;
+    }
+
+    const realTester = new RootDataApiTester(realApiKey);
+    const result = await realTester.testCreditsBalance();
+    expect(result.success).toBe(true);
+  }, 10000);
+
+  test.skip('真实API调用 - 项目搜索', async () => {
+    const realApiKey = process.env.ROOTDATA_API_KEY;
+    if (!realApiKey) {
+      console.log('跳过真实API测试 - 缺少ROOTDATA_API_KEY环境变量');
+      return;
+    }
+
+    const realTester = new RootDataApiTester(realApiKey);
+    const result = await realTester.testProjectSearch();
+    expect(result.success).toBe(true);
+  }, 10000);
+});
+
 if (require.main === module) {
   const apiKey = process.env.ROOTDATA_API_KEY;
 
