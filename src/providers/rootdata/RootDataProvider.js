@@ -15,7 +15,7 @@ class RootDataProvider extends DataProvider {
    * @param {number} config.timeout - 请求超时时间
    * @param {number} config.retries - 重试次数
    */
-  constructor(config) {
+  constructor(config = {}) {
     super('rootdata', config);
     
     if (!config.apiKey) {
@@ -44,8 +44,8 @@ class RootDataProvider extends DataProvider {
       }
 
       // 手动设置用户状态
-      this.credits = creditsResult.credits;
-      this.userLevel = creditsResult.level;
+      this.credits = creditsResult.data.credits || 0;
+      this.userLevel = creditsResult.data.level || 'basic';
       this.lastCreditsCheck = new Date();
 
       // 更新可用端点
@@ -56,7 +56,7 @@ class RootDataProvider extends DataProvider {
       
       this.isInitialized = true;
       
-      console.error(`✅ RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
+      console.log(`✅ RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
       return true;
     } catch (error) {
       console.error(`❌ RootData provider initialization failed: ${error.message}`);
@@ -73,17 +73,16 @@ class RootDataProvider extends DataProvider {
       const result = await this.client.checkCredits();
       return {
         success: true,
-        credits: result.credits,
-        level: result.level,
-        totalCredits: result.totalCredits,
-        lastMonthCredits: result.lastMonthCredits
+        data: result.data
       };
     } catch (error) {
       return {
         success: false,
         error: error.message,
-        credits: 0,
-        level: 'unknown'
+        data: {
+          credits: 0,
+          level: 'unknown'
+        }
       };
     }
   }
@@ -94,7 +93,7 @@ class RootDataProvider extends DataProvider {
    * @param {Object} params - 请求参数
    * @returns {Promise<Object>} API响应结果
    */
-  async executeApiCall(endpointId, params) {
+  async executeApiCall(endpointId, params = {}) {
     const endpoint = getEndpointById(endpointId);
     
     if (!endpoint) {
@@ -115,9 +114,9 @@ class RootDataProvider extends DataProvider {
       let result;
       const language = this.detectQueryLanguage(params.query || '') || 'en';
       
-      console.error(`🌐 Executing RootData API call: ${endpointId}`);
-      console.error(`📤 Request parameters:`, JSON.stringify(params, null, 2));
-      console.error(`🔤 Detected language: ${language}`);
+      console.log(`🌐 Executing RootData API call: ${endpointId}`);
+      console.log(`📤 Request parameters:`, JSON.stringify(params, null, 2));
+      console.log(`🔤 Detected language: ${language}`);
 
       switch (endpointId) {
         case 'credits_check':
@@ -132,27 +131,58 @@ class RootDataProvider extends DataProvider {
           );
           break;
 
-        case 'project_details':
-          result = await this.client.getProjectDetails(params.project_id, language);
+        case 'get_project':
+          result = await this.client.getProject(
+            params.project_id,
+            params.contract_address,
+            params.include_team,
+            params.include_investors,
+            language
+          );
           break;
 
-        case 'funding_rounds':
+        case 'get_organization':
+          result = await this.client.getOrganization(
+            params.org_id,
+            params.include_team,
+            params.include_investments,
+            language
+          );
+          break;
+
+        case 'get_people':
+          result = await this.client.getPeople(params.people_id, language);
+          break;
+
+        case 'get_id_map':
+          result = await this.client.getIdMap(params.type, language);
+          break;
+
+        case 'get_funding_rounds':
           result = await this.client.getFundingRounds(params, language);
           break;
 
-        case 'token_info':
-          result = await this.client.getTokenInfo(params.token_symbol, language);
+        case 'get_investors':
+          result = await this.client.getInvestors(params.page, params.page_size, language);
           break;
 
-        case 'projects_by_ecosystem':
-          result = await this.client.getProjectsByEcosystem(params.ecosystem, language);
+        case 'get_twitter_map':
+          result = await this.client.getTwitterMap(params.type, language);
+          break;
+
+        case 'projects_by_ecosystems':
+          result = await this.client.getProjectsByEcosystems(params.ecosystem_ids, language);
+          break;
+
+        case 'projects_by_tags':
+          result = await this.client.getProjectsByTags(params.tag_ids, language);
           break;
 
         default:
           throw new Error(`Endpoint ${endpointId} not yet implemented`);
       }
 
-      console.error(`📥 API call successful, endpoint: ${endpointId}`);
+      console.log(`📥 API call successful, endpoint: ${endpointId}`);
       
       // 格式化响应并更新credits
       return this.formatResponse(result, endpoint.creditsPerCall);
@@ -203,8 +233,10 @@ class RootDataProvider extends DataProvider {
       this.registerTool(toolDefinition);
     });
 
-    console.error(`📝 Registered ${this.tools.size} RootData tools`);
+    console.log(`📝 Registered ${this.tools.size} RootData tools`);
   }
+
+  // ========== 公共API方法 ==========
 
   /**
    * 搜索Web3实体（智能路由入口）
@@ -221,122 +253,211 @@ class RootDataProvider extends DataProvider {
 
   /**
    * 获取项目详情
-   * @param {string} projectId - 项目ID
+   * @param {string|number} projectId - 项目ID
+   * @param {Object} options - 选项
    * @returns {Promise<Object>} 项目详情
    */
-  async getProjectDetails(projectId) {
-    return await this.executeApiCall('project_details', { project_id: projectId });
+  async getProjectDetails(projectId, options = {}) {
+    return await this.executeApiCall('get_project', { 
+      project_id: projectId,
+      include_team: options.includeTeam || false,
+      include_investors: options.includeInvestors || false
+    });
   }
 
   /**
-   * 获取融资信息
+   * 通过合约地址获取项目详情
+   * @param {string} contractAddress - 合约地址
+   * @param {Object} options - 选项
+   * @returns {Promise<Object>} 项目详情
+   */
+  async getProjectByContract(contractAddress, options = {}) {
+    return await this.executeApiCall('get_project', { 
+      contract_address: contractAddress,
+      include_team: options.includeTeam || false,
+      include_investors: options.includeInvestors || false
+    });
+  }
+
+  /**
+   * 获取机构详情
+   * @param {number} orgId - 机构ID
+   * @param {Object} options - 选项
+   * @returns {Promise<Object>} 机构详情
+   */
+  async getOrganizationDetails(orgId, options = {}) {
+    return await this.executeApiCall('get_organization', { 
+      org_id: orgId,
+      include_team: options.includeTeam || false,
+      include_investments: options.includeInvestments || false
+    });
+  }
+
+  /**
+   * 获取人物详情 (Pro级别)
+   * @param {number} peopleId - 人物ID
+   * @returns {Promise<Object>} 人物详情
+   */
+  async getPeopleDetails(peopleId) {
+    return await this.executeApiCall('get_people', { people_id: peopleId });
+  }
+
+  /**
+   * 获取ID映射 (Plus级别)
+   * @param {number} type - 类型: 1项目 2机构 3人物
+   * @returns {Promise<Object>} ID列表
+   */
+  async getIdMapping(type) {
+    return await this.executeApiCall('get_id_map', { type });
+  }
+
+  /**
+   * 获取融资轮次信息 (Plus级别)
    * @param {Object} params - 查询参数
    * @returns {Promise<Object>} 融资信息
    */
-  async getFundingRounds(params) {
-    return await this.executeApiCall('funding_rounds', params);
+  async getFundingInformation(params = {}) {
+    return await this.executeApiCall('get_funding_rounds', params);
   }
 
   /**
-   * 获取代币信息
-   * @param {string} tokenSymbol - 代币符号
-   * @returns {Promise<Object>} 代币信息
+   * 获取投资者信息 (Plus级别)
+   * @param {number} page - 页码
+   * @param {number} pageSize - 每页条数
+   * @returns {Promise<Object>} 投资者信息
    */
-  async getTokenInfo(tokenSymbol) {
-    return await this.executeApiCall('token_info', { token_symbol: tokenSymbol });
+  async getInvestorDetails(page = 1, pageSize = 10) {
+    return await this.executeApiCall('get_investors', { page, page_size: pageSize });
   }
 
   /**
-   * 按生态系统搜索项目
-   * @param {string} ecosystem - 生态系统名称
+   * 获取Twitter数据 (Plus级别)
+   * @param {number} type - 类型: 1项目 2机构 3人物
+   * @returns {Promise<Object>} Twitter数据
+   */
+  async getTwitterData(type) {
+    return await this.executeApiCall('get_twitter_map', { type });
+  }
+
+  /**
+   * 根据生态系统获取项目 (Pro级别)
+   * @param {string} ecosystemIds - 生态ID，多个逗号分隔
    * @returns {Promise<Object>} 项目列表
    */
-  async getProjectsByEcosystem(ecosystem) {
-    return await this.executeApiCall('projects_by_ecosystem', { ecosystem });
+  async getProjectsByEcosystems(ecosystemIds) {
+    return await this.executeApiCall('projects_by_ecosystems', { ecosystem_ids: ecosystemIds });
+  }
+
+  /**
+   * 根据标签获取项目 (Pro级别)
+   * @param {string} tagIds - 标签ID，多个逗号分隔
+   * @returns {Promise<Object>} 项目列表
+   */
+  async getProjectsByTags(tagIds) {
+    return await this.executeApiCall('projects_by_tags', { tag_ids: tagIds });
+  }
+
+  // ========== Pro级别特殊方法（需要添加到client中） ==========
+
+  /**
+   * 获取热门项目 (Pro级别)
+   * @param {number} days - 天数: 1 或 7
+   * @returns {Promise<Object>} 热门项目
+   */
+  async getHotProjects(days) {
+    return await this.executeApiCall('hot_projects', { days });
+  }
+
+  /**
+   * 获取生态系统映射 (Pro级别)
+   * @returns {Promise<Object>} 生态系统列表
+   */
+  async getEcosystemMap() {
+    return await this.executeApiCall('ecosystem_map', {});
+  }
+
+  /**
+   * 获取标签映射 (Pro级别)
+   * @returns {Promise<Object>} 标签列表
+   */
+  async getTagMap() {
+    return await this.executeApiCall('tag_map', {});
   }
 
   /**
    * 智能查询路由
-   * 根据查询内容自动选择最合适的API端点
-   * @param {string} query - 用户查询
+   * @param {string} query - 自然语言查询
    * @returns {Promise<Object>} 查询结果
    */
   async smartQuery(query) {
-    const queryLower = query.toLowerCase();
-    
-    // 简单的意图识别
-    if (queryLower.includes('funding') || queryLower.includes('投资') || queryLower.includes('融资')) {
-      // 先搜索实体，然后获取融资信息
-      const searchResult = await this.searchWeb3Entities(query);
-      if (searchResult.success && searchResult.data.data.length > 0) {
-        const firstEntity = searchResult.data.data[0];
-        if (firstEntity.project_id) {
-          return await this.getFundingRounds({ project_id: firstEntity.project_id });
-        }
+    try {
+      const language = this.detectQueryLanguage(query);
+      
+      // 简单的查询意图识别
+      if (query.toLowerCase().includes('project') || query.includes('项目')) {
+        return await this.searchWeb3Entities(query, { language });
       }
-      return searchResult;
-    }
-    
-    if (queryLower.includes('token') || queryLower.includes('代币') || queryLower.includes('币价')) {
-      // 尝试提取代币符号
-      const tokenMatch = query.match(/\b([A-Z]{2,10})\b/);
-      if (tokenMatch) {
-        return await this.getTokenInfo(tokenMatch[1]);
+      
+      if (query.toLowerCase().includes('funding') || query.includes('融资')) {
+        return await this.getFundingInformation();
       }
-    }
-    
-    if (queryLower.includes('ecosystem') || queryLower.includes('生态') || 
-        queryLower.includes('ethereum') || queryLower.includes('solana') || 
-        queryLower.includes('polygon')) {
-      // 生态系统查询
-      const ecosystems = ['ethereum', 'solana', 'polygon', 'avalanche', 'arbitrum'];
-      const matchedEcosystem = ecosystems.find(eco => queryLower.includes(eco));
-      if (matchedEcosystem) {
-        return await this.getProjectsByEcosystem(matchedEcosystem);
+      
+      if (query.toLowerCase().includes('ecosystem') || query.includes('生态')) {
+        return await this.getEcosystemMap();
       }
+      
+      // 默认使用搜索
+      return await this.searchWeb3Entities(query, { language });
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: null
+      };
     }
-    
-    // 默认使用通用搜索
-    return await this.searchWeb3Entities(query);
   }
 
   /**
-   * 更新供应商状态
-   * 重新检查credits和等级，更新可用工具
+   * 刷新供应商状态
+   * @returns {Promise<boolean>} 刷新是否成功
    */
   async refreshStatus() {
-    const credentialsResult = await this.validateCredentials();
-    
-    if (credentialsResult.success) {
-      this.endpoints = getAvailableEndpoints(this.userLevel);
-      this.updateAvailableTools();
+    try {
+      const creditsResult = await this.checkCredits();
       
-      console.error(`🔄 RootData status updated (Level: ${this.userLevel}, Credits: ${this.credits})`);
+      if (creditsResult.success) {
+        this.credits = creditsResult.data.credits;
+        this.userLevel = creditsResult.data.level;
+        this.lastCreditsCheck = new Date();
+        
+        // 更新可用端点
+        this.endpoints = getAvailableEndpoints(this.userLevel);
+        
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error(`刷新状态失败: ${error.message}`);
+      return false;
     }
-    
-    return credentialsResult;
   }
 
   /**
-   * 获取供应商的详细状态信息
-   * @returns {Object} 详细状态
+   * 获取详细状态信息
+   * @returns {Object} 状态信息对象
    */
   getDetailedStatus() {
-    const baseStatus = this.getStatus();
-    const clientStats = this.client.getStats();
-    
     return {
-      ...baseStatus,
-      apiStats: clientStats,
-      creditsStatus: this.getCreditsStatus(),
-      availableEndpoints: this.endpoints.length,
-      endpoints: this.endpoints.map(ep => ({
-        id: ep.id,
-        name: ep.name,
-        category: ep.category,
-        creditsPerCall: ep.creditsPerCall,
-        available: this.hasAccess(ep.requiredLevel) && this.hasCredits(ep.creditsPerCall)
-      }))
+      provider: 'RootData',
+      isInitialized: this.isInitialized,
+      level: this.userLevel || 'unknown',
+      credits: this.credits || 0,
+      lastCreditsCheck: this.lastCreditsCheck,
+      availableToolsCount: this.endpoints.length,
+      totalToolsCount: 19, // 总共19个真实端点
+      supportedLanguages: ['en', 'zh'],
+      apiEndpoint: 'https://api.rootdata.com/open'
     };
   }
 }

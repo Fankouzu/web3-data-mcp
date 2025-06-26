@@ -534,6 +534,358 @@ class RootDataClient extends ApiClient {
   }
 
   /**
+   * 获取同步更新数据 (Pro级别)
+   * @param {number} beginTime - 开始时间戳
+   * @param {number} endTime - 结束时间戳（可选）
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 更新列表
+   */
+  async getSyncUpdates(beginTime, endTime = null, language = 'en') {
+    try {
+      const requestData = {
+        begin_time: beginTime
+      };
+
+      if (endTime) {
+        requestData.end_time = endTime;
+      }
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/ser_change', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get sync updates',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get sync updates: ${error.message}`,
+        'SYNC_UPDATES_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取热门项目Top100 (Pro级别)
+   * @param {number} days - 天数：1 或 7
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 热门项目列表
+   */
+  async getHotProjects(days, language = 'en') {
+    try {
+      const requestData = {
+        days: days
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/hot_index', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get hot projects',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get hot projects: ${error.message}`,
+        'HOT_PROJECTS_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取X热门项目 (Pro级别)
+   * @param {boolean} heat - X热度榜单
+   * @param {boolean} influence - X影响力榜单
+   * @param {boolean} followers - X关注者榜单
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} X热门项目
+   */
+  async getHotProjectsOnX(heat, influence, followers, language = 'en') {
+    try {
+      const requestData = {
+        heat: heat,
+        influence: influence,
+        followers: followers
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/hot_project_on_x', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || {}
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get hot projects on X',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get hot projects on X: ${error.message}`,
+        'HOT_PROJECTS_X_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取X热门人物 (Pro级别)
+   * @param {string} rankType - 榜单类型：'heat' 或 'influence'
+   * @param {number} page - 页码
+   * @param {number} pageSize - 每页条数
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} X热门人物
+   */
+  async getHotPeopleOnX(rankType, page = 1, pageSize = 10, language = 'en') {
+    try {
+      const requestData = {
+        rank_type: rankType,
+        page: page,
+        page_size: pageSize
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/leading_figures_on_crypto_x', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || {}
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get hot people on X',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get hot people on X: ${error.message}`,
+        'HOT_PEOPLE_X_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取人物职位动态 (Pro级别)
+   * @param {boolean} recentJoinees - 近期入职
+   * @param {boolean} recentResignations - 近期离职
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 职位动态
+   */
+  async getJobChanges(recentJoinees, recentResignations, language = 'en') {
+    try {
+      const requestData = {
+        recent_joinees: recentJoinees,
+        recent_resignations: recentResignations
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/job_changes', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || {}
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get job changes',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get job changes: ${error.message}`,
+        'JOB_CHANGES_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取近期发币项目 (Pro级别)
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 新代币列表
+   */
+  async getNewTokens(language = 'en') {
+    try {
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/new_tokens', 'POST', {}, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get new tokens',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get new tokens: ${error.message}`,
+        'NEW_TOKENS_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取生态版图 (Pro级别)
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 生态系统列表
+   */
+  async getEcosystemMap(language = 'en') {
+    try {
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/ecosystem_map', 'POST', {}, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get ecosystem map',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get ecosystem map: ${error.message}`,
+        'ECOSYSTEM_MAP_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取标签版图 (Pro级别)
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 标签列表
+   */
+  async getTagMap(language = 'en') {
+    try {
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/tag_map', 'POST', {}, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get tag map',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get tag map: ${error.message}`,
+        'TAG_MAP_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
    * 更新API Key和默认头部
    * @param {string} newApiKey - 新的API密钥
    */
