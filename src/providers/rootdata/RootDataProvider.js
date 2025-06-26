@@ -6,6 +6,8 @@
 const DataProvider = require('../base/DataProvider');
 const RootDataClient = require('./RootDataClient');
 const { getAvailableEndpoints, getEndpointById } = require('./endpoints');
+const { PerformanceOptimizer } = require('../../utils/performanceOptimizer');
+const { validateResponse, validateApiResponse } = require('../../validators/responseValidator');
 
 class RootDataProvider extends DataProvider {
   /**
@@ -20,6 +22,27 @@ class RootDataProvider extends DataProvider {
 
     this.apiKey = config.apiKey;
     this.isConfigured = false;
+
+    // 初始化性能优化器
+    this.performanceOptimizer = new PerformanceOptimizer({
+      cache: {
+        enabled: config.enableCache !== false,
+        maxSize: config.cacheMaxSize || 500,
+        ttl: config.cacheTtl || 300000 // 5分钟
+      },
+      rateLimit: {
+        maxRequests: config.maxRequestsPerMinute || 60,
+        windowMs: 60000
+      },
+      batch: {
+        batchSize: config.batchSize || 5,
+        batchDelay: config.batchDelay || 100
+      },
+      memory: {
+        enabled: config.enableMemoryMonitoring !== false,
+        maxMemoryMB: config.maxMemoryMB || 500
+      }
+    });
 
     if (config.apiKey) {
       this.configure(config);
@@ -114,12 +137,13 @@ class RootDataProvider extends DataProvider {
   }
 
   /**
-   * 执行API调用
+   * 执行API调用（带性能优化和数据验证）
    * @param {string} endpointId - 端点ID
    * @param {Object} params - 请求参数
+   * @param {Object} options - 执行选项
    * @returns {Promise<Object>} API响应结果
    */
-  async executeApiCall(endpointId, params = {}) {
+  async executeApiCall(endpointId, params = {}, options = {}) {
     const endpoint = getEndpointById(endpointId);
 
     if (!endpoint) {
@@ -138,82 +162,112 @@ class RootDataProvider extends DataProvider {
       throw new Error(`Insufficient credits, requires ${endpoint.creditsPerCall}, current remaining ${this.credits}`);
     }
 
-    try {
-      let result;
-      const language = this.detectQueryLanguage(params.query || '') || 'en';
+    // 使用性能优化器执行请求
+    return await this.performanceOptimizer.optimizeRequest(
+      endpointId,
+      params,
+      async () => {
+        try {
+          let result;
+          const language = this.detectQueryLanguage(params.query || '') || 'en';
 
-      console.log(`🌐 Executing RootData API call: ${endpointId}`);
-      console.log(`📤 Request parameters:`, JSON.stringify(params, null, 2));
-      console.log(`🔤 Detected language: ${language}`);
+          console.log(`🌐 Executing RootData API call: ${endpointId}`);
+          console.log(`📤 Request parameters:`, JSON.stringify(params, null, 2));
+          console.log(`🔤 Detected language: ${language}`);
 
-      switch (endpointId) {
-        case 'credits_check':
-          result = await this.client.checkCredits();
-          break;
+          switch (endpointId) {
+            case 'credits_check':
+              result = await this.client.checkCredits();
+              break;
 
-        case 'search_entities':
-          result = await this.client.searchEntities(params.query, language, params.precise_x_search);
-          break;
+            case 'search_entities':
+              result = await this.client.searchEntities(params.query, language, params.precise_x_search);
+              break;
 
-        case 'get_project':
-          result = await this.client.getProject(
-            params.project_id,
-            params.contract_address,
-            params.include_team,
-            params.include_investors
-          );
-          break;
+            case 'get_project':
+              result = await this.client.getProject(
+                params.project_id,
+                params.contract_address,
+                params.include_team,
+                params.include_investors
+              );
+              break;
 
-        case 'get_organization':
-          result = await this.client.getOrganization(
-            params.org_id,
-            params.include_team,
-            params.include_investments
-          );
-          break;
+            case 'get_organization':
+              result = await this.client.getOrganization(
+                params.org_id,
+                params.include_team,
+                params.include_investments
+              );
+              break;
 
-        case 'get_people':
-          result = await this.client.getPeople(params.people_id, language);
-          break;
+            case 'get_people':
+              result = await this.client.getPeople(params.people_id, language);
+              break;
 
-        case 'get_id_map':
-          result = await this.client.getIdMap(params.type, language);
-          break;
+            case 'get_id_map':
+              result = await this.client.getIdMap(params.type, language);
+              break;
 
-        case 'get_funding_rounds':
-          result = await this.client.getFundingRounds(params, language);
-          break;
+            case 'get_funding_rounds':
+              result = await this.client.getFundingRounds(params, language);
+              break;
 
-        case 'get_investors':
-          result = await this.client.getInvestors(params.page, params.page_size, language);
-          break;
+            case 'get_investors':
+              result = await this.client.getInvestors(params.page, params.page_size, language);
+              break;
 
-        case 'get_twitter_map':
-          result = await this.client.getTwitterMap(params.type, language);
-          break;
+            case 'get_twitter_map':
+              result = await this.client.getTwitterMap(params.type, language);
+              break;
 
-        case 'projects_by_ecosystems':
-          result = await this.client.getProjectsByEcosystems(params.ecosystem_ids, language);
-          break;
+            case 'projects_by_ecosystems':
+              result = await this.client.getProjectsByEcosystems(params.ecosystem_ids, language);
+              break;
 
-        case 'projects_by_tags':
-          result = await this.client.getProjectsByTags(params.tag_ids, language);
-          break;
+            case 'projects_by_tags':
+              result = await this.client.getProjectsByTags(params.tag_ids, language);
+              break;
 
-        default:
-          throw new Error(`Endpoint ${endpointId} not yet implemented`);
+            case 'ecosystem_map':
+              result = await this.client.getEcosystemMap(language);
+              break;
+
+            case 'tag_map':
+              result = await this.client.getTagMap(language);
+              break;
+
+            default:
+              throw new Error(`Endpoint ${endpointId} not yet implemented`);
+          }
+
+          console.log(`📥 API call successful, endpoint: ${endpointId}`);
+
+          // 验证响应结构
+          if (!validateApiResponse(result)) {
+            console.warn(`⚠️ Invalid response structure for ${endpointId}`);
+          }
+
+          // 验证响应数据
+          if (result.success && result.data) {
+            try {
+              result.data = validateResponse(endpointId, result.data, options);
+              console.log(`✅ Response data validated for ${endpointId}`);
+            } catch (validationError) {
+              console.warn(`⚠️ Data validation warning for ${endpointId}:`, validationError.message);
+            }
+          }
+
+          // 格式化响应并更新credits
+          return this.formatResponse(result, endpoint.creditsPerCall);
+        } catch (error) {
+          console.error(`💥 API call failed, endpoint: ${endpointId}`);
+          console.error(`❌ Error message: ${error.message}`);
+          console.error(`🔍 Error stack:`, error.stack);
+          throw new Error(`API call failed: ${error.message}`);
+        }
       }
-
-      console.log(`📥 API call successful, endpoint: ${endpointId}`);
-
-      // 格式化响应并更新credits
-      return this.formatResponse(result, endpoint.creditsPerCall);
-    } catch (error) {
-      console.error(`💥 API call failed, endpoint: ${endpointId}`);
-      console.error(`❌ Error message: ${error.message}`);
-      console.error(`🔍 Error stack:`, error.stack);
-      throw new Error(`API call failed: ${error.message}`);
-    }
+    );
   }
 
   /**
@@ -480,6 +534,22 @@ class RootDataProvider extends DataProvider {
       supportedLanguages:  ['en', 'zh'],
       apiEndpoint:         'https://api.rootdata.com/open'
     };
+  }
+
+  /**
+   * 清理资源
+   */
+  cleanup() {
+    if (this.performanceOptimizer) {
+      this.performanceOptimizer.cleanup();
+    }
+  }
+
+  /**
+   * 获取性能统计
+   */
+  getPerformanceStats() {
+    return this.performanceOptimizer.getStats();
   }
 }
 

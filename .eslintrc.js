@@ -1,72 +1,64 @@
 module.exports = {
   env: {
-    node:   true,
-    es2022: true
+    browser: false,
+    es2021: true,
+    node: true,
+    jest: true
   },
   extends: [
-    'standard'
+    'eslint:recommended'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType:  'module'
+    sourceType: 'module'
   },
   rules: {
-    // Enforce consistent semicolon usage
-    semi: ['error', 'always'],
-
-    // Allow console.log for debugging in development
-    'no-console': 'off',
-
-    // Enforce consistent spacing
-    'space-before-function-paren': ['error', {
-      anonymous:  'always',
-      named:      'never',
-      asyncArrow: 'always'
+    // 错误级别规则
+    'no-console': 'off', // 允许console.log用于调试
+    'no-unused-vars': ['error', { 
+      vars: 'all', 
+      args: 'after-used', 
+      ignoreRestSiblings: true,
+      argsIgnorePattern: '^_'
     }],
-
-    // Allow unused parameters with underscore prefix
-    'no-unused-vars': 'off',
-
-    // Enforce consistent comma-dangle
+    'no-undef': 'error',
+    'no-unreachable': 'error',
+    'no-constant-condition': 'error',
+    
+    // 代码风格规则
+    'indent': ['error', 2, { SwitchCase: 1 }],
+    'linebreak-style': ['error', 'unix'],
+    'quotes': ['error', 'single', { avoidEscape: true }],
+    'semi': ['error', 'always'],
     'comma-dangle': ['error', 'never'],
-
-    // Allow multiple spaces for alignment
-    'no-multi-spaces': ['error', {
-      ignoreEOLComments: true,
-      exceptions:        {
-        Property:           true,
-        VariableDeclarator: true,
-        ImportDeclaration:  true
-      }
-    }],
-
-    // Enforce consistent quotes
-    quotes: ['error', 'single', { allowTemplateLiterals: true }],
-
-    // Allow empty catch blocks for optional error handling
-    'no-empty': ['error', { allowEmptyCatch: true }],
-
-    // Enforce consistent object property spacing
-    'key-spacing': ['error', { align: 'value' }],
-
-    // Allow long lines for URLs and template strings
-    'max-len': 'off',
-
-    // Allow lexical declarations in case blocks
-    'no-case-declarations': 'off'
+    'no-trailing-spaces': 'error',
+    'eol-last': 'error',
+    'space-before-blocks': 'error',
+    'keyword-spacing': 'error',
+    'space-infix-ops': 'error',
+    'comma-spacing': 'error',
+    'brace-style': ['error', '1tbs', { allowSingleLine: true }],
+    
+    // 最佳实践
+    'eqeqeq': ['error', 'always'],
+    'curly': ['error', 'all'],
+    'no-eval': 'error',
+    'no-implied-eval': 'error',
+    'prefer-const': 'error',
+    'no-var': 'error',
+    
+    // Node.js特定规则
+    'no-process-exit': 'warn',
+    'handle-callback-err': 'error'
   },
-
-  // Override rules for test files
   overrides: [
     {
-      files: ['test*.js', 'tests/**/*.js'],
-      env:   {
-        jest: true,
-        node: true
+      files: ['tests/**/*.js', '**/*.test.js', '**/*.spec.js'],
+      env: {
+        jest: true
       },
       rules: {
-        'no-console':     'off',
-        'no-unused-vars': 'off'
+        'no-unused-expressions': 'off'
       }
     }
   ]
