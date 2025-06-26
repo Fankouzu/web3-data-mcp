@@ -5,6 +5,9 @@
  * 基于Model Context Protocol的Web3数据查询服务
  */
 
+// 加载环境变量
+require('dotenv').config();
+
 const McpServer = require('./core/McpServer');
 const ConfigManager = require('./core/ConfigManager');
 
@@ -22,7 +25,7 @@ async function main() {
     }
 
     if (args.includes('--config-example')) {
-      console.log('📝 示例配置文件内容:');
+      console.log('📝 Example configuration file content:');
       console.log(ConfigManager.createExampleConfig());
       return;
     }
@@ -41,13 +44,13 @@ async function main() {
     // 检查是否有配置的供应商
     const configuredProviders = configManager.getConfiguredProviders();
     if (configuredProviders.length === 0) {
-      console.error('❌ 错误: 没有配置任何数据供应商');
+      console.error('❌ Error: No data providers configured');
       console.error('');
-      console.error('请设置环境变量或配置文件来配置至少一个数据供应商。');
+      console.error('Please set environment variables or configuration file to configure at least one data provider.');
       console.error('');
-      console.error('对于RootData，请设置: ROOTDATA_API_KEY=your-api-key');
+      console.error('For RootData, please set: ROOTDATA_API_KEY=your-api-key');
       console.error('');
-      console.error('运行 --env-help 查看所有可用的环境变量');
+      console.error('Run --env-help to see all available environment variables');
       process.exit(1);
     }
 
@@ -72,7 +75,7 @@ async function main() {
     const initSuccess = await mcpServer.initialize(providerConfigs);
     
     if (!initSuccess) {
-      console.error('❌ 服务器初始化失败');
+      console.error('❌ Server initialization failed');
       process.exit(1);
     }
 
@@ -80,13 +83,13 @@ async function main() {
     await mcpServer.start();
     
   } catch (error) {
-    console.error('💥 启动失败:', error.message);
+    console.error('💥 Startup failed:', error.message);
     
-    if (error.message.includes('配置验证失败')) {
+    if (error.message.includes('Configuration validation failed')) {
       console.error('');
-      console.error('请检查配置文件或环境变量设置。');
-      console.error('运行 --config-example 查看示例配置。');
-      console.error('运行 --env-help 查看环境变量配置说明。');
+      console.error('Please check configuration file or environment variable settings.');
+      console.error('Run --config-example to see example configuration.');
+      console.error('Run --env-help to see environment variable configuration instructions.');
     }
     
     process.exit(1);
@@ -139,7 +142,52 @@ MCP客户端配置示例:
     }
   }
 
-更多信息: https://github.com/your-repo/web3-data-mcp
+更多信息: https://github.com/Fankouzu/web3-data-mcp
+
+---
+
+🌟 Web3 Data MCP Server
+
+A Web3 data query service based on Model Context Protocol, supporting multiple data providers.
+
+Usage:
+  node src/index.js [options]
+
+Options:
+  --help, -h           Show this help message
+  --config-example     Show example configuration file
+  --env-help          Show environment variable configuration instructions
+  --debug             Enable debug mode
+
+Environment Variables:
+  ROOTDATA_API_KEY     RootData API key (required)
+  
+Run --env-help to see other environment variable configurations.
+
+Examples:
+  # Start with environment variables
+  ROOTDATA_API_KEY=your-key node src/index.js
+  
+  # Start in debug mode
+  ROOTDATA_API_KEY=your-key node src/index.js --debug
+
+Supported Data Providers:
+  - RootData (rootdata.com) - Web3 projects, funding, token data
+
+MCP Client Configuration Example:
+  {
+    "mcpServers": {
+      "web3-data": {
+        "command": "node",
+        "args": ["path/to/web3-data-mcp/src/index.js"],
+        "env": {
+          "ROOTDATA_API_KEY": "your-api-key-here"
+        }
+      }
+    }
+  }
+
+More Information: https://github.com/Fankouzu/web3-data-mcp
 `);
 }
 
@@ -147,12 +195,12 @@ MCP客户端配置示例:
  * 处理未捕获的异常
  */
 process.on('uncaughtException', (error) => {
-  console.error('💥 未捕获的异常:', error);
+  console.error('💥 Uncaught exception:', error);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 未处理的Promise拒绝:', reason);
+  console.error('💥 Unhandled promise rejection:', reason);
   process.exit(1);
 });
 

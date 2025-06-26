@@ -156,7 +156,7 @@ class ApiClient {
             }
           } catch (error) {
             reject(new ApiError(
-              `响应处理错误: ${error.message}`,
+              `Response processing error: ${error.message}`,
               'RESPONSE_PARSE_ERROR',
               res.statusCode,
               this.constructor.name
@@ -166,11 +166,11 @@ class ApiClient {
       });
 
       req.on('error', (error) => {
-        console.error(`🌐 网络请求失败: ${method} ${endpoint}`);
-        console.error(`❌ 网络错误: ${error.message}`);
-        console.error(`🔍 错误代码: ${error.code}`);
+        console.error(`🌐 Network request failed: ${method} ${endpoint}`);
+        console.error(`❌ Network error: ${error.message}`);
+        console.error(`🔍 Error code: ${error.code}`);
         reject(new ApiError(
-          `网络请求错误: ${error.message}`,
+          `Network request error: ${error.message}`,
           'NETWORK_ERROR',
           null,
           this.constructor.name
@@ -180,7 +180,7 @@ class ApiClient {
       req.on('timeout', () => {
         req.destroy();
         reject(new ApiError(
-          `请求超时 (${this.timeout}ms)`,
+          `Request timeout (${this.timeout}ms)`,
           'TIMEOUT',
           null,
           this.constructor.name

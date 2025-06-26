@@ -40,7 +40,7 @@ class RootDataProvider extends DataProvider {
       const creditsResult = await this.checkCredits();
       
       if (!creditsResult.success) {
-        throw new Error(`API凭据验证失败: ${creditsResult.error}`);
+        throw new Error(`API credentials validation failed: ${creditsResult.error}`);
       }
 
       // 手动设置用户状态
@@ -56,10 +56,10 @@ class RootDataProvider extends DataProvider {
       
       this.isInitialized = true;
       
-      console.error(`✅ RootData供应商初始化成功 (等级: ${this.userLevel}, Credits: ${this.credits})`);
+      console.error(`✅ RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
       return true;
     } catch (error) {
-      console.error(`❌ RootData供应商初始化失败: ${error.message}`);
+      console.error(`❌ RootData provider initialization failed: ${error.message}`);
       return false;
     }
   }
@@ -98,26 +98,26 @@ class RootDataProvider extends DataProvider {
     const endpoint = getEndpointById(endpointId);
     
     if (!endpoint) {
-      throw new Error(`未知的端点ID: ${endpointId}`);
+      throw new Error(`Unknown endpoint ID: ${endpointId}`);
     }
 
     // 检查用户等级权限
     if (!this.hasAccess(endpoint.requiredLevel)) {
-      throw new Error(`权限不足，需要 ${endpoint.requiredLevel} 级别，当前为 ${this.userLevel}`);
+      throw new Error(`Insufficient permissions, requires ${endpoint.requiredLevel} level, current is ${this.userLevel}`);
     }
 
     // 检查credits余额
     if (!this.hasCredits(endpoint.creditsPerCall)) {
-      throw new Error(`Credits不足，需要 ${endpoint.creditsPerCall}，当前剩余 ${this.credits}`);
+      throw new Error(`Insufficient credits, requires ${endpoint.creditsPerCall}, current remaining ${this.credits}`);
     }
 
     try {
       let result;
       const language = this.detectQueryLanguage(params.query || '') || 'en';
       
-      console.error(`🌐 执行RootData API调用: ${endpointId}`);
-      console.error(`📤 请求参数:`, JSON.stringify(params, null, 2));
-      console.error(`🔤 检测语言: ${language}`);
+      console.error(`🌐 Executing RootData API call: ${endpointId}`);
+      console.error(`📤 Request parameters:`, JSON.stringify(params, null, 2));
+      console.error(`🔤 Detected language: ${language}`);
 
       switch (endpointId) {
         case 'credits_check':
@@ -149,19 +149,19 @@ class RootDataProvider extends DataProvider {
           break;
 
         default:
-          throw new Error(`端点 ${endpointId} 暂未实现`);
+          throw new Error(`Endpoint ${endpointId} not yet implemented`);
       }
 
-      console.error(`📥 API调用成功，端点: ${endpointId}`);
+      console.error(`📥 API call successful, endpoint: ${endpointId}`);
       
       // 格式化响应并更新credits
       return this.formatResponse(result, endpoint.creditsPerCall);
 
     } catch (error) {
-      console.error(`💥 API调用失败，端点: ${endpointId}`);
-      console.error(`❌ 错误信息: ${error.message}`);
-      console.error(`🔍 错误堆栈:`, error.stack);
-      throw new Error(`API调用失败: ${error.message}`);
+      console.error(`💥 API call failed, endpoint: ${endpointId}`);
+      console.error(`❌ Error message: ${error.message}`);
+      console.error(`🔍 Error stack:`, error.stack);
+      throw new Error(`API call failed: ${error.message}`);
     }
   }
 
@@ -203,7 +203,7 @@ class RootDataProvider extends DataProvider {
       this.registerTool(toolDefinition);
     });
 
-    console.error(`📝 已注册 ${this.tools.size} 个RootData工具`);
+    console.error(`📝 Registered ${this.tools.size} RootData tools`);
   }
 
   /**
@@ -311,7 +311,7 @@ class RootDataProvider extends DataProvider {
       this.endpoints = getAvailableEndpoints(this.userLevel);
       this.updateAvailableTools();
       
-      console.error(`🔄 RootData状态已更新 (等级: ${this.userLevel}, Credits: ${this.credits})`);
+      console.error(`🔄 RootData status updated (Level: ${this.userLevel}, Credits: ${this.credits})`);
     }
     
     return credentialsResult;

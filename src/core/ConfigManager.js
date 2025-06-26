@@ -58,7 +58,7 @@ class ConfigManager {
    */
   get(path) {
     if (!this.config) {
-      throw new Error('配置尚未加载，请先调用 loadConfig()');
+      throw new Error('Configuration not loaded, please call loadConfig() first');
     }
 
     return this._getNestedValue(this.config, path);
@@ -71,7 +71,7 @@ class ConfigManager {
    */
   set(path, value) {
     if (!this.config) {
-      throw new Error('配置尚未加载，请先调用 loadConfig()');
+      throw new Error('Configuration not loaded, please call loadConfig() first');
     }
 
     this._setNestedValue(this.config, path, value);
@@ -191,48 +191,48 @@ class ConfigManager {
 
     // 验证服务器配置
     if (!this.config.server.name) {
-      errors.push('服务器名称不能为空');
+      errors.push('Server name cannot be empty');
     }
 
     if (this.config.server.timeout < 1000) {
-      errors.push('服务器超时时间不能少于1000毫秒');
+      errors.push('Server timeout cannot be less than 1000 milliseconds');
     }
 
     if (this.config.server.retries < 0) {
-      errors.push('重试次数不能为负数');
+      errors.push('Retry count cannot be negative');
     }
 
     // 验证供应商配置
     const configuredProviders = this.getConfiguredProviders();
     if (configuredProviders.length === 0) {
-      errors.push('至少需要配置一个数据供应商');
+      errors.push('At least one data provider must be configured');
     }
 
     configuredProviders.forEach(providerName => {
       const providerConfig = this.getProviderConfig(providerName);
       
       if (!providerConfig.apiKey) {
-        errors.push(`${providerName} 供应商缺少API密钥`);
+        errors.push(`${providerName} provider missing API key`);
       }
 
       if (providerConfig.timeout && providerConfig.timeout < 1000) {
-        errors.push(`${providerName} 供应商超时时间不能少于1000毫秒`);
+        errors.push(`${providerName} provider timeout cannot be less than 1000 milliseconds`);
       }
     });
 
     // 验证监控配置
     const monitoring = this.config.monitoring;
     if (monitoring.creditsWarningThreshold <= monitoring.creditsCriticalThreshold) {
-      errors.push('Credits警告阈值必须大于严重警告阈值');
+      errors.push('Credits warning threshold must be greater than critical threshold');
     }
 
     if (monitoring.autoRefreshInterval < 60000) {
-      errors.push('自动刷新间隔不能少于60秒');
+      errors.push('Auto refresh interval cannot be less than 60 seconds');
     }
 
     // 如果有错误，抛出异常
     if (errors.length > 0) {
-      throw new Error(`配置验证失败:\n${errors.join('\n')}`);
+      throw new Error(`Configuration validation failed:\n${errors.join('\n')}`);
     }
   }
 
@@ -378,6 +378,32 @@ RootData供应商配置:
   LOG_LEVEL                    日志级别 (debug, info, warn, error)
 
 示例:
+  export ROOTDATA_API_KEY=your-api-key-here
+  export CREDITS_WARNING_THRESHOLD=100
+  export LOG_LEVEL=info
+
+---
+
+Environment Variables Configuration Guide:
+
+Server Configuration:
+  MCP_SERVER_NAME              MCP server name
+  MCP_SERVER_TIMEOUT           Request timeout (milliseconds)
+
+RootData Provider Configuration:
+  ROOTDATA_API_KEY             RootData API key (required)
+  ROOTDATA_BASE_URL            RootData API base URL
+  ROOTDATA_TIMEOUT             RootData request timeout (milliseconds)
+  ROOTDATA_RETRIES             RootData request retry count
+
+Monitoring Configuration:
+  CREDITS_WARNING_THRESHOLD    Credits warning threshold
+  CREDITS_CRITICAL_THRESHOLD   Credits critical warning threshold
+
+Logging Configuration:
+  LOG_LEVEL                    Log level (debug, info, warn, error)
+
+Examples:
   export ROOTDATA_API_KEY=your-api-key-here
   export CREDITS_WARNING_THRESHOLD=100
   export LOG_LEVEL=info

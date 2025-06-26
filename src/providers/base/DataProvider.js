@@ -17,7 +17,7 @@ class DataProvider {
    */
   constructor(name, config) {
     if (this.constructor === DataProvider) {
-      throw new Error('DataProvider是抽象类，不能直接实例化');
+      throw new Error('DataProvider is an abstract class and cannot be instantiated directly');
     }
 
     this.name = name;
@@ -40,7 +40,7 @@ class DataProvider {
    * @returns {Promise<boolean>} 初始化是否成功
    */
   async initialize() {
-    throw new Error('子类必须实现 initialize() 方法');
+    throw new Error('Subclass must implement initialize() method');
   }
 
   /**
@@ -49,7 +49,7 @@ class DataProvider {
    * @returns {Promise<Object>} { credits, level, success }
    */
   async checkCredits() {
-    throw new Error('子类必须实现 checkCredits() 方法');
+    throw new Error('Subclass must implement checkCredits() method');
   }
 
   /**
@@ -60,7 +60,7 @@ class DataProvider {
    * @returns {Promise<Object>} API响应结果
    */
   async executeApiCall(endpoint, params) {
-    throw new Error('子类必须实现 executeApiCall() 方法');
+    throw new Error('Subclass must implement executeApiCall() method');
   }
 
   /**
@@ -69,7 +69,7 @@ class DataProvider {
    * @returns {Array} 工具定义数组
    */
   getAvailableTools() {
-    throw new Error('子类必须实现 getAvailableTools() 方法');
+    throw new Error('Subclass must implement getAvailableTools() method');
   }
 
   /**
@@ -151,7 +151,7 @@ class DataProvider {
     
     for (const field of requiredFields) {
       if (toolDefinition[field] === undefined || toolDefinition[field] === null) {
-        throw new Error(`工具定义缺少必需字段: ${field}`);
+        throw new Error(`Tool definition missing required field: ${field}`);
       }
     }
 
@@ -195,10 +195,10 @@ class DataProvider {
 
     if (this.credits <= 20) {
       status.status = 'critical';
-      status.message = `Credits严重不足 (${this.credits})，请立即充值`;
+      status.message = `Critical credits shortage (${this.credits}), please recharge immediately`;
     } else if (this.credits <= 100) {
       status.status = 'warning';
-      status.message = `Credits不足 (${this.credits})，建议充值`;
+      status.message = `Credits shortage (${this.credits}), please recharge`;
     }
 
     return status;

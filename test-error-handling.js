@@ -56,7 +56,7 @@ async function testErrorHandlingSystem() {
     
     // 测试API错误处理
     console.log('3.1 测试API错误处理...');
-    const apiError = new ApiError('API调用失败', 'API_ERROR', 500, 'rootdata');
+    const apiError = new ApiError('API call failed', 'API_ERROR', 500, 'rootdata');
     const errorResponse = errorHandler.handleApiError(apiError, 'rootdata', { 
       query: 'test query',
       includeDetails: true 

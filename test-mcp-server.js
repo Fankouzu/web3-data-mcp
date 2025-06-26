@@ -58,7 +58,7 @@ async function testMcpServerIntegration() {
     const initSuccess = await mcpServer.initialize(providerConfigs);
     
     if (!initSuccess) {
-      throw new Error('MCP服务器初始化失败');
+      throw new Error('MCP server initialization failed');
     }
 
     console.log('✅ MCP服务器初始化成功');

@@ -144,7 +144,7 @@ class RootDataClient extends ApiClient {
         };
       } else {
         throw new ApiError(
-          response.data.message || '获取项目详情失败',
+          response.data.message || 'Failed to get project details',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -155,7 +155,7 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `获取项目详情失败: ${error.message}`,
+        `Failed to get project details: ${error.message}`,
         'PROJECT_DETAILS_ERROR',
         null,
         'RootDataClient'
@@ -187,7 +187,7 @@ class RootDataClient extends ApiClient {
         };
       } else {
         throw new ApiError(
-          response.data.message || '获取融资信息失败',
+          response.data.message || 'Failed to get funding information',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -198,7 +198,7 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `获取融资信息失败: ${error.message}`,
+        `Failed to get funding information: ${error.message}`,
         'FUNDING_ERROR',
         null,
         'RootDataClient'
@@ -232,7 +232,7 @@ class RootDataClient extends ApiClient {
         };
       } else {
         throw new ApiError(
-          response.data.message || '获取代币信息失败',
+          response.data.message || 'Failed to get token information',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -243,7 +243,7 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `获取代币信息失败: ${error.message}`,
+        `Failed to get token information: ${error.message}`,
         'TOKEN_ERROR',
         null,
         'RootDataClient'
@@ -277,7 +277,7 @@ class RootDataClient extends ApiClient {
         };
       } else {
         throw new ApiError(
-          response.data.message || '按生态系统搜索失败',
+          response.data.message || 'Failed to search by ecosystem',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -288,7 +288,7 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `按生态系统搜索失败: ${error.message}`,
+        `Failed to search by ecosystem: ${error.message}`,
         'ECOSYSTEM_SEARCH_ERROR',
         null,
         'RootDataClient'

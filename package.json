@@ -29,7 +29,8 @@
   "author": "Web3 Data MCP Team",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.13.1"
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "dotenv": "^16.5.0"
   },
   "engines": {
     "node": ">=18.0.0"

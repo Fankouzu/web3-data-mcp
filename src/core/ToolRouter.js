@@ -70,7 +70,7 @@ class ToolRouter {
       this.registerTool(tool.name, name, tool);
     });
     
-    console.error(`🔧 已注册供应商: ${name} (${tools.length}个工具)`);
+    console.error(`🔧 Registered provider: ${name} (${tools.length} tools)`);
   }
 
   /**
@@ -120,7 +120,7 @@ class ToolRouter {
         this.routingStats.failedRoutes++;
         return {
           success: false,
-          error: '未找到合适的处理工具',
+          error: 'No suitable processing tool found',
           intent: intent,
           entities: entities,
           language: language
@@ -149,7 +149,7 @@ class ToolRouter {
       this.routingStats.failedRoutes++;
       return {
         success: false,
-        error: `路由处理失败: ${error.message}`,
+        error: `Routing processing failed: ${error.message}`,
         intent: { type: IntentTypes.UNKNOWN, confidence: 0 },
         entities: [],
         language: detectLanguage(query)
@@ -411,7 +411,7 @@ class ToolRouter {
     const provider = this.providers.get(routing.provider);
     
     if (!provider) {
-      throw new Error(`供应商 ${routing.provider} 不可用`);
+      throw new Error(`Provider ${routing.provider} is not available`);
     }
     
     // 构建API调用参数

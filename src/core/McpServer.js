@@ -64,7 +64,7 @@ class McpServer {
    */
   async initialize(providerConfigs = {}) {
     try {
-      console.error('🚀 正在初始化Web3 Data MCP服务器...');
+      console.error('🚀 Initializing Web3 Data MCP Server...');
       
       // 初始化数据供应商
       await this._initializeProviders(providerConfigs);
@@ -76,13 +76,13 @@ class McpServer {
       this.creditsMonitor.startAutoMonitoring();
       
       this.isInitialized = true;
-      console.error('✅ MCP服务器初始化完成');
-      console.error(`📊 已注册 ${this.providers.size} 个数据供应商`);
-      console.error(`🔧 可用工具总数: ${this._getTotalToolsCount()}`);
+      console.error('✅ MCP Server initialization completed');
+      console.error(`📊 Registered ${this.providers.size} data providers`);
+      console.error(`🔧 Total available tools: ${this._getTotalToolsCount()}`);
       
       return true;
     } catch (error) {
-      console.error('❌ MCP服务器初始化失败:', error.message);
+      console.error('❌ MCP Server initialization failed:', error.message);
       return false;
     }
   }
@@ -92,22 +92,22 @@ class McpServer {
    */
   async start() {
     if (!this.isInitialized) {
-      throw new Error('服务器未初始化，请先调用 initialize()');
+      throw new Error('Server not initialized, please call initialize() first');
     }
 
     try {
       const transport = new StdioServerTransport();
       await this.server.connect(transport);
       
-      console.error('🌟 Web3 Data MCP服务器已启动');
-      console.error('📡 等待MCP客户端连接...');
+      console.error('🌟 Web3 Data MCP Server started');
+      console.error('📡 Waiting for MCP client connections...');
       
       // 设置优雅关闭
       process.on('SIGINT', () => this.shutdown());
       process.on('SIGTERM', () => this.shutdown());
       
     } catch (error) {
-      console.error('❌ 启动MCP服务器失败:', error.message);
+      console.error('❌ Failed to start MCP Server:', error.message);
       throw error;
     }
   }
@@ -116,7 +116,7 @@ class McpServer {
    * 关闭服务器
    */
   async shutdown() {
-    console.error('\n🛑 正在关闭MCP服务器...');
+    console.error('\n🛑 Shutting down MCP Server...');
     
     // 停止监控
     this.creditsMonitor.stopAutoMonitoring();
@@ -127,7 +127,7 @@ class McpServer {
     // 关闭服务器
     await this.server.close();
     
-    console.error('👋 MCP服务器已关闭');
+    console.error('👋 MCP Server shutdown complete');
     process.exit(0);
   }
 
@@ -169,7 +169,7 @@ class McpServer {
   async _initializeProviders(providerConfigs) {
     // 初始化RootData供应商
     if (providerConfigs.rootdata) {
-      console.error('🔧 正在初始化RootData供应商...');
+      console.error('🔧 Initializing RootData provider...');
       
       const rootDataProvider = new RootDataProvider(providerConfigs.rootdata);
       const initResult = await rootDataProvider.initialize();
@@ -179,10 +179,10 @@ class McpServer {
         this.toolRouter.registerProvider('rootdata', rootDataProvider);
         this.creditsMonitor.registerProvider('rootdata', rootDataProvider);
         
-        console.error('✅ RootData供应商初始化成功');
-      } else {
-        throw new Error('RootData供应商初始化失败');
-      }
+        console.error('✅ RootData provider initialized successfully');
+              } else {
+          throw new Error('RootData provider initialization failed');
+        }
     }
 
     // 未来可以在这里添加更多供应商
@@ -207,10 +207,10 @@ class McpServer {
           }))
         };
       } catch (error) {
-        console.error('❌ 列出工具失败:', error.message);
+        console.error('❌ Failed to list tools:', error.message);
         throw new McpError(
           ErrorCode.InternalError,
-          `获取工具列表失败: ${error.message}`
+          `Failed to list tools: ${error.message}`
         );
       }
     });
@@ -223,26 +223,26 @@ class McpServer {
         this.stats.totalRequests++;
         this._updateToolUsageStats(toolName);
         
-        console.error(`🔧 执行工具调用: ${toolName}`);
-        console.error(`📝 参数:`, JSON.stringify(toolArgs, null, 2));
-        console.error(`⏰ 请求时间: ${new Date().toISOString()}`);
+              console.error(`🔧 Executing tool call: ${toolName}`);
+      console.error(`📝 Parameters:`, JSON.stringify(toolArgs, null, 2));
+      console.error(`⏰ Request time: ${new Date().toISOString()}`);
         
         // 构建查询字符串
         const query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || 
                      toolArgs.project_id || `${toolName} request`;
         
         // 通过智能路由执行查询
-        console.error(`🎯 路由查询: "${query}" 使用工具: ${toolName}`);
+        console.error(`🎯 Routing query: "${query}" using tool: ${toolName}`);
         const result = await this.toolRouter.routeQuery(query, {
           params: toolArgs,
           toolName: toolName,
           includeDetails: true
         });
         
-        console.error(`📊 查询结果: ${result.success ? '成功' : '失败'}`);
+        console.error(`📊 Query result: ${result.success ? 'Success' : 'Failed'}`);
         if (!result.success) {
-          console.error(`❌ 错误详情: ${result.error}`);
-          console.error(`🔍 错误堆栈:`, result.stack || 'No stack trace');
+          console.error(`❌ Error details: ${result.error}`);
+          console.error(`🔍 Error stack:`, result.stack || 'No stack trace');
         }
 
         if (result.success) {
@@ -257,7 +257,7 @@ class McpServer {
             );
           }
 
-          console.error(`✅ 工具调用成功: ${toolName}`);
+          console.error(`✅ Tool call successful: ${toolName}`);
           
           return {
             content: [
@@ -269,17 +269,17 @@ class McpServer {
           };
         } else {
           this.stats.failedRequests++;
-          console.error(`❌ 工具调用失败: ${toolName} - ${result.error}`);
+          console.error(`❌ Tool call failed: ${toolName} - ${result.error}`);
           
           throw new McpError(
             ErrorCode.InvalidRequest,
-            result.error || '工具调用失败'
+            result.error || 'Tool call failed'
           );
         }
         
       } catch (error) {
         this.stats.failedRequests++;
-        console.error(`💥 工具调用异常: ${toolName}`, error.message);
+        console.error(`💥 Tool call exception: ${toolName}`, error.message);
         
         // 记录错误
         const errorResponse = this.errorHandler.handleApiError(
@@ -302,13 +302,13 @@ class McpServer {
     /*
     // Resources list (资源列表)
     this.server.setRequestHandler({ method: 'resources/list' }, async () => {
-      console.error('📋 收到资源列表请求 - 返回空列表');
+      console.error('📋 Received resource list request - returning empty list');
       return { resources: [] };
     });
 
     // Prompts list (提示词列表)  
     this.server.setRequestHandler({ method: 'prompts/list' }, async () => {
-      console.error('📋 收到提示词列表请求 - 返回空列表');
+      console.error('📋 Received prompts list request - returning empty list');
       return { prompts: [] };
     });
     */
@@ -321,21 +321,21 @@ class McpServer {
   _setupEventHandlers() {
     // Credits警告事件
     this.creditsMonitor.on('credits_warning', (data) => {
-      console.error(`⚠️ Credits警告: ${data.provider} 剩余 ${data.credits} credits`);
+              console.error(`⚠️ Credits warning: ${data.provider} has ${data.credits} credits remaining`);
     });
 
     this.creditsMonitor.on('credits_critical', (data) => {
-      console.error(`🚨 Credits严重不足: ${data.provider} 剩余 ${data.credits} credits`);
+              console.error(`🚨 Credits critically low: ${data.provider} has ${data.credits} credits remaining`);
     });
 
     this.creditsMonitor.on('credits_exhausted', (data) => {
-      console.error(`💀 Credits已耗尽: ${data.provider}`);
+              console.error(`💀 Credits exhausted: ${data.provider}`);
     });
 
     // 错误频率监控
     setInterval(() => {
       if (this.errorHandler.hasFrequentErrors()) {
-        console.error('⚠️ 检测到频繁错误，请检查系统状态');
+        console.error('⚠️ Frequent errors detected, please check system status');
       }
     }, 60000); // 每分钟检查一次
   }
@@ -430,30 +430,30 @@ class McpServer {
     const uptime = Date.now() - this.stats.startTime.getTime();
     const uptimeHours = (uptime / (1000 * 60 * 60)).toFixed(2);
     
-    console.error('\n📊 服务器运行统计:');
-    console.error(`⏰ 运行时间: ${uptimeHours} 小时`);
-    console.error(`📞 总请求数: ${this.stats.totalRequests}`);
-    console.error(`✅ 成功请求: ${this.stats.successfulRequests}`);
-    console.error(`❌ 失败请求: ${this.stats.failedRequests}`);
+    console.error('\n📊 Server runtime statistics:');
+    console.error(`⏰ Uptime: ${uptimeHours} hours`);
+    console.error(`📞 Total requests: ${this.stats.totalRequests}`);
+    console.error(`✅ Successful requests: ${this.stats.successfulRequests}`);
+    console.error(`❌ Failed requests: ${this.stats.failedRequests}`);
     
     if (this.stats.totalRequests > 0) {
       const successRate = (this.stats.successfulRequests / this.stats.totalRequests * 100).toFixed(2);
-      console.error(`📈 成功率: ${successRate}%`);
+      console.error(`📈 Success rate: ${successRate}%`);
     }
     
     // 工具使用统计
     if (Object.keys(this.stats.toolUsage).length > 0) {
-      console.error('\n🔧 工具使用统计:');
+      console.error('\n🔧 Tool usage statistics:');
       Object.entries(this.stats.toolUsage)
         .sort(([,a], [,b]) => b - a)
         .forEach(([tool, count]) => {
-          console.error(`  ${tool}: ${count} 次`);
+          console.error(`  ${tool}: ${count} times`);
         });
     }
     
     // Credits状态
     const creditsOverview = this.creditsMonitor.getOverview();
-    console.error(`\n💰 Credits状态: ${creditsOverview.totalCredits} 剩余`);
+          console.error(`\n💰 Credits status: ${creditsOverview.totalCredits} remaining`);
   }
 }
 

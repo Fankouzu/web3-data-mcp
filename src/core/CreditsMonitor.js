@@ -73,7 +73,7 @@ class CreditsMonitor {
       consecutiveFailures: 0
     });
 
-    console.error(`📊 已注册Credits监控: ${providerName} (Credits: ${provider.credits})`);
+    console.error(`📊 Registered Credits monitoring: ${providerName} (Credits: ${provider.credits})`);
   }
 
   /**
@@ -86,7 +86,7 @@ class CreditsMonitor {
     const providerInfo = this.providerStatus.get(providerName);
     
     if (!providerInfo) {
-      console.warn(`⚠️ 未找到提供商: ${providerName}`);
+      console.warn(`⚠️ Provider not found: ${providerName}`);
       return;
     }
 
@@ -143,7 +143,7 @@ class CreditsMonitor {
         statusSummary.byStatus[currentStatus.status]++;
 
       } catch (error) {
-        console.error(`❌ 检查${providerName}状态失败:`, error.message);
+        console.error(`❌ Failed to check ${providerName} status:`, error.message);
         providerInfo.consecutiveFailures++;
         
         // 如果连续失败太多次，标记为不活跃
@@ -317,11 +317,11 @@ class CreditsMonitor {
       try {
         await this.checkAllProviders();
       } catch (error) {
-        console.error('❌ 自动监控检查失败:', error.message);
+        console.error('❌ Automatic monitoring check failed:', error.message);
       }
     }, intervalMs);
 
-    console.error(`🔄 已启动Credits自动监控 (间隔: ${intervalMs/1000}秒)`);
+    console.error(`🔄 Started automatic Credits monitoring (interval: ${intervalMs/1000} seconds)`);
   }
 
   /**
@@ -331,7 +331,7 @@ class CreditsMonitor {
     if (this.autoRefreshTimer) {
       clearInterval(this.autoRefreshTimer);
       this.autoRefreshTimer = null;
-      console.error('⏸️ 已停止Credits自动监控');
+      console.error('⏸️ Stopped automatic Credits monitoring');
     }
   }
 
@@ -356,7 +356,7 @@ class CreditsMonitor {
    * @private
    */
   _handleStatusChange(providerName, oldStatus, newStatus, oldCredits, newCredits) {
-    console.error(`📊 ${providerName} Credits状态变化: ${oldStatus} -> ${newStatus} (${oldCredits} -> ${newCredits})`);
+    console.error(`📊 ${providerName} Credits status changed: ${oldStatus} -> ${newStatus} (${oldCredits} -> ${newCredits})`);
     
     this._emitEvent(MonitorEvents.PROVIDER_STATUS_CHANGED, {
       provider: providerName,
@@ -415,7 +415,7 @@ class CreditsMonitor {
         try {
           callback(data);
         } catch (error) {
-          console.error(`❌ 事件监听器错误 (${eventName}):`, error.message);
+          console.error(`❌ Event listener error (${eventName}):`, error.message);
         }
       });
     }
@@ -489,15 +489,15 @@ class CreditsMonitor {
   _getStatusMessage(status, credits, thresholds) {
     switch (status) {
       case CreditsStatus.OK:
-        return `Credits充足 (${credits})`;
+        return `Credits sufficient (${credits})`;
       case CreditsStatus.WARNING:
-        return `Credits不足 (${credits})，建议充值`;
+        return `Credits insufficient (${credits}), please recharge`;
       case CreditsStatus.CRITICAL:
-        return `Credits严重不足 (${credits})，请立即充值`;
+        return `Critical credits shortage (${credits}), please recharge immediately`;
       case CreditsStatus.EXHAUSTED:
-        return `Credits已耗尽 (${credits})，无法继续使用`;
+        return `Credits exhausted (${credits}), cannot continue using`;
       default:
-        return `未知状态`;
+        return `Unknown status`;
     }
   }
 }

@@ -84,7 +84,7 @@ class ErrorHandler {
       type: ErrorTypes.INSUFFICIENT_CREDITS,
       severity: ErrorSeverity.HIGH,
       provider: provider,
-      message: `Credits不足，需要 ${required}，当前仅有 ${available}`,
+      message: `Credits insufficient, requires ${required}, currently only ${available}`,
       required: required,
       available: available,
       timestamp: new Date().toISOString()
@@ -100,7 +100,7 @@ class ErrorHandler {
         provider: provider,
         severity: errorInfo.severity,
         timestamp: errorInfo.timestamp,
-        suggestion: `请充值您的${provider}账户，或使用较少credits的功能`,
+        suggestion: `Please recharge your ${provider} account, or use features that require fewer credits`,
         details: {
           required: required,
           available: available,
@@ -122,7 +122,7 @@ class ErrorHandler {
       type: ErrorTypes.INSUFFICIENT_PERMISSIONS,
       severity: ErrorSeverity.MEDIUM,
       provider: provider,
-      message: `权限不足，需要 ${requiredLevel} 级别，当前为 ${currentLevel}`,
+      message: `Insufficient permissions, requires ${requiredLevel} level, currently ${currentLevel}`,
       requiredLevel: requiredLevel,
       currentLevel: currentLevel,
       timestamp: new Date().toISOString()
@@ -138,7 +138,7 @@ class ErrorHandler {
         provider: provider,
         severity: errorInfo.severity,
         timestamp: errorInfo.timestamp,
-        suggestion: `请升级您的${provider}账户到 ${requiredLevel} 级别以使用此功能`,
+        suggestion: `Please upgrade your ${provider} account to ${requiredLevel} level to use this feature`,
         details: {
           requiredLevel: requiredLevel,
           currentLevel: currentLevel
@@ -171,7 +171,7 @@ class ErrorHandler {
         message: message,
         severity: errorInfo.severity,
         timestamp: errorInfo.timestamp,
-        suggestion: '请检查输入参数是否符合要求',
+        suggestion: 'Please check if the input parameters meet the requirements',
         details: invalidParams
       }
     };
@@ -205,7 +205,7 @@ class ErrorHandler {
       type: ErrorTypes.SYSTEM_ERROR,
       severity: ErrorSeverity.MEDIUM,
       provider: provider,
-      message: error.message || '未知错误',
+      message: error.message || 'Unknown error',
       code: error.code || 'UNKNOWN_ERROR',
       details: {
         originalError: error.toString(),
@@ -262,15 +262,15 @@ class ErrorHandler {
    */
   _getUserFriendlyMessage(errorInfo) {
     const messageMap = {
-      [ErrorTypes.API_ERROR]: '数据查询失败，请稍后重试',
-      [ErrorTypes.AUTHENTICATION_ERROR]: 'API认证失败，请检查您的访问密钥',
-      [ErrorTypes.INSUFFICIENT_CREDITS]: `Credits余额不足，当前操作无法完成`,
-      [ErrorTypes.INSUFFICIENT_PERMISSIONS]: '权限不足，需要更高级别的账户',
-      [ErrorTypes.VALIDATION_ERROR]: '输入参数有误，请检查后重试',
-      [ErrorTypes.NETWORK_ERROR]: '网络连接失败，请检查网络连接',
-      [ErrorTypes.TIMEOUT_ERROR]: '请求超时，请稍后重试',
-      [ErrorTypes.PROVIDER_ERROR]: '数据提供商服务异常',
-      [ErrorTypes.SYSTEM_ERROR]: '系统内部错误，请稍后重试'
+      [ErrorTypes.API_ERROR]: 'Data query failed, please try again later',
+      [ErrorTypes.AUTHENTICATION_ERROR]: 'API authentication failed, please check your access key',
+      [ErrorTypes.INSUFFICIENT_CREDITS]: `Credits balance insufficient, current operation cannot be completed`,
+      [ErrorTypes.INSUFFICIENT_PERMISSIONS]: 'Insufficient permissions, requires a higher level account',
+      [ErrorTypes.VALIDATION_ERROR]: 'Input parameters are incorrect, please check and try again',
+      [ErrorTypes.NETWORK_ERROR]: 'Network connection failed, please check your network connection',
+      [ErrorTypes.TIMEOUT_ERROR]: 'Request timed out, please try again later',
+      [ErrorTypes.PROVIDER_ERROR]: 'Data provider service exception',
+      [ErrorTypes.SYSTEM_ERROR]: 'System internal error, please try again later'
     };
 
     return messageMap[errorInfo.type] || errorInfo.message;
@@ -282,18 +282,18 @@ class ErrorHandler {
    */
   _getErrorSuggestion(errorInfo) {
     const suggestionMap = {
-      [ErrorTypes.API_ERROR]: '请稍后重试，如果问题持续存在，请联系技术支持',
-      [ErrorTypes.AUTHENTICATION_ERROR]: '请检查API密钥是否正确且有效',
-      [ErrorTypes.INSUFFICIENT_CREDITS]: '请充值账户或使用消耗较少credits的功能',
-      [ErrorTypes.INSUFFICIENT_PERMISSIONS]: '请升级账户等级以获得更多功能',
-      [ErrorTypes.VALIDATION_ERROR]: '请查看API文档确认正确的参数格式',
-      [ErrorTypes.NETWORK_ERROR]: '请检查网络连接，确保可以访问外部API',
-      [ErrorTypes.TIMEOUT_ERROR]: '请稍后重试，或联系服务提供商检查服务状态',
-      [ErrorTypes.PROVIDER_ERROR]: '数据提供商可能正在维护，请稍后重试',
-      [ErrorTypes.SYSTEM_ERROR]: '请重启应用或联系技术支持'
+      [ErrorTypes.API_ERROR]: 'Please try again later, if the problem persists, please contact technical support',
+      [ErrorTypes.AUTHENTICATION_ERROR]: 'Please check if the API key is correct and valid',
+      [ErrorTypes.INSUFFICIENT_CREDITS]: 'Please recharge your account or use features that require fewer credits',
+      [ErrorTypes.INSUFFICIENT_PERMISSIONS]: 'Please upgrade your account level to get more features',
+      [ErrorTypes.VALIDATION_ERROR]: 'Please check the API documentation to confirm the correct parameter format',
+      [ErrorTypes.NETWORK_ERROR]: 'Please check your network connection to ensure you can access the external API',
+      [ErrorTypes.TIMEOUT_ERROR]: 'Please try again later, or contact the service provider to check the service status',
+      [ErrorTypes.PROVIDER_ERROR]: 'The data provider may be under maintenance, please try again later',
+      [ErrorTypes.SYSTEM_ERROR]: 'Please restart the application or contact technical support'
     };
 
-    return suggestionMap[errorInfo.type] || '请联系技术支持获得帮助';
+    return suggestionMap[errorInfo.type] || 'Please contact technical support for help';
   }
 
   /**
