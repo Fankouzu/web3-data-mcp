@@ -45,6 +45,15 @@ beforeEach(() => {
 afterEach(() => {
   // 清理可能的定时器
   jest.clearAllTimers();
+  
+  // 强制清理所有定时器和间隔
+  if (typeof global !== 'undefined') {
+    // 清理可能的内存监控定时器
+    for (let i = 1; i < 1000; i++) {
+      clearInterval(i);
+      clearTimeout(i);
+    }
+  }
 });
 
 // 设置全局测试工具

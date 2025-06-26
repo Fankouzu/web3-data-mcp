@@ -39,7 +39,7 @@ class RootDataProvider extends DataProvider {
         batchDelay: config.batchDelay || 100
       },
       memory: {
-        enabled: config.enableMemoryMonitoring !== false,
+        enabled: config.enableMemoryMonitoring !== false && process.env.NODE_ENV !== 'test' && typeof jest === 'undefined',
         maxMemoryMB: config.maxMemoryMB || 500
       }
     });

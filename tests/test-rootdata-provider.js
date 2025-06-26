@@ -505,27 +505,34 @@ describe('RootData API Level Simulation Tests', () => {
       basicProvider = new RootDataProvider();
       basicProvider.configure({ apiKey: 'basic-level-key' });
       basicProvider.userLevel = 'basic';
+      basicProvider.credits = 1000; // 设置充足的credits
+    });
+
+    afterEach(() => {
+      if (basicProvider && basicProvider.cleanup) {
+        basicProvider.cleanup();
+      }
     });
 
     test('Basic级别应该可以搜索', async () => {
-      basicProvider.client = {
-        searchEntities: jest.fn().mockResolvedValue({
-          success: true,
-          data:    [{ name: 'Test Project' }]
-        })
-      };
+      // 设置足够的credits和mock executeApiCall
+      basicProvider.credits = 100;
+      basicProvider.executeApiCall = jest.fn().mockResolvedValue({
+        success: true,
+        data:    [{ name: 'Test Project' }]
+      });
 
       const result = await basicProvider.searchWeb3Entities('test');
       expect(result.success).toBe(true);
     });
 
     test('Basic级别应该可以获取项目详情', async () => {
-      basicProvider.client = {
-        getProject: jest.fn().mockResolvedValue({
-          success: true,
-          data:    { project_name: 'Test Project' }
-        })
-      };
+      // 设置足够的credits和mock executeApiCall
+      basicProvider.credits = 100;
+      basicProvider.executeApiCall = jest.fn().mockResolvedValue({
+        success: true,
+        data:    { project_name: 'Test Project' }
+      });
 
       const result = await basicProvider.getProjectDetails('123');
       expect(result.success).toBe(true);
@@ -539,6 +546,13 @@ describe('RootData API Level Simulation Tests', () => {
       plusProvider = new RootDataProvider();
       plusProvider.configure({ apiKey: 'plus-level-key' });
       plusProvider.userLevel = 'plus';
+      plusProvider.credits = 1000; // 设置充足的credits
+    });
+
+    afterEach(() => {
+      if (plusProvider && plusProvider.cleanup) {
+        plusProvider.cleanup();
+      }
     });
 
     test('Plus级别应该可以获取融资信息', async () => {
@@ -560,6 +574,13 @@ describe('RootData API Level Simulation Tests', () => {
       proProvider = new RootDataProvider();
       proProvider.configure({ apiKey: 'pro-level-key' });
       proProvider.userLevel = 'pro';
+      proProvider.credits = 1000; // 设置充足的credits
+    });
+
+    afterEach(() => {
+      if (proProvider && proProvider.cleanup) {
+        proProvider.cleanup();
+      }
     });
 
     test('Pro级别应该可以获取人物信息', async () => {

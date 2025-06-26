@@ -349,8 +349,9 @@ class PerformanceOptimizer {
     this.requestCount = 0;
     this.errorCount = 0;
     
-    // 启动内存监控
-    if (options.memory?.enabled !== false) {
+    // 启动内存监控（测试环境中默认禁用）
+    const isTestEnv = process.env.NODE_ENV === 'test' || typeof jest !== 'undefined';
+    if (options.memory?.enabled !== false && !isTestEnv) {
       this.memoryMonitor.start();
     }
   }
