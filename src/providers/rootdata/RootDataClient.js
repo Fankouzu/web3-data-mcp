@@ -112,10 +112,9 @@ class RootDataClient extends ApiClient {
    * @param {string} contractAddress - 合约地址（可选）
    * @param {boolean} includeTeam - 是否包含团队信息
    * @param {boolean} includeInvestors - 是否包含投资方信息
-   * @param {string} language - 语言设置
    * @returns {Promise<Object>} 项目详情
    */
-  async getProject(projectId, contractAddress = null, includeTeam = false, includeInvestors = false, language = 'en') {
+  async getProject(projectId, contractAddress = null, includeTeam = false, includeInvestors = false) {
     try {
       const requestData = {};
 
@@ -132,11 +131,7 @@ class RootDataClient extends ApiClient {
         requestData.include_investors = true;
       }
 
-      const headers = {
-        language
-      };
-
-      const response = await this.request('/get_item', 'POST', requestData, headers);
+      const response = await this.request('/get_item', 'POST', requestData);
 
       if (response.data.result === 200) {
         return {
@@ -169,10 +164,9 @@ class RootDataClient extends ApiClient {
    * @param {number} orgId - 机构ID
    * @param {boolean} includeTeam - 是否包含团队信息
    * @param {boolean} includeInvestments - 是否包含投资项目信息
-   * @param {string} language - 语言设置
    * @returns {Promise<Object>} 机构详情
    */
-  async getOrganization(orgId, includeTeam = false, includeInvestments = false, language = 'en') {
+  async getOrganization(orgId, includeTeam = false, includeInvestments = false) {
     try {
       const requestData = {
         org_id: parseInt(orgId)
@@ -185,11 +179,7 @@ class RootDataClient extends ApiClient {
         requestData.include_investments = true;
       }
 
-      const headers = {
-        language
-      };
-
-      const response = await this.request('/get_org', 'POST', requestData, headers);
+      const response = await this.request('/get_org', 'POST', requestData);
 
       if (response.data.result === 200) {
         return {

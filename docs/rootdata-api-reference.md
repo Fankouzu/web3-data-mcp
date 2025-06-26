@@ -1208,7 +1208,7 @@ None required.
 
 #### Request Example
 ```bash
-curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/open/ecosystem_map
+curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/ecosystem_map
 ```
 
 #### Success Response Example
@@ -1258,7 +1258,7 @@ None required.
 
 #### Request Example
 ```bash
-curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/open/tag_map
+curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/tag_map
 ```
 
 #### Success Response Example

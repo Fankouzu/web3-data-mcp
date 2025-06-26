@@ -9,11 +9,11 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node src/index.js --debug",
-    "test": "node test-error-handling.js && node test-mcp-server.js && node test-rootdata-provider.js",
-    "test:unit": "node test-error-handling.js",
-    "test:integration": "node test-rootdata-provider.js",
-    "test:coverage": "echo 'Coverage reporting not yet implemented. Run: npm test'",
-    "test:provider": "node test-rootdata-provider.js",
+    "test": "jest tests/",
+    "test:unit": "jest tests/test-rootdata-provider.js",
+    "test:integration": "node tests/api-test.js",
+    "test:coverage": "jest --coverage",
+    "test:provider": "jest tests/test-rootdata-provider.js",
     "test:api": "node tests/api-test.js",
     "lint": "eslint src/ tests/ *.js --ext .js",
     "lint:fix": "eslint src/ tests/ *.js --ext .js --fix",
@@ -45,6 +45,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.6.0",
+    "jest": "^30.0.3",
     "prettier": "^3.6.1"
   },
   "engines": {
@@ -57,5 +58,17 @@
   "bugs": {
     "url": "https://github.com/your-org/web3-data-mcp/issues"
   },
-  "homepage": "https://github.com/your-org/web3-data-mcp#readme"
+  "homepage": "https://github.com/your-org/web3-data-mcp#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "collectCoverage": false,
+    "testMatch": ["**/tests/**/*.js"],
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js",
+      "!**/node_modules/**"
+    ]
+  }
 }

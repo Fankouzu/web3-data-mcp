@@ -53,7 +53,7 @@ const endpoints = [
   {
     id:             'get_project',
     name:           'get_project_details',
-    description:    '获取特定项目的详细信息',
+    description:    '获取特定项目的详细信息（注意：此API不支持language参数）',
     endpoint:       '/get_item',
     method:         'POST',
     requiredLevel:  'basic',
@@ -89,7 +89,7 @@ const endpoints = [
   {
     id:             'get_organization',
     name:           'get_organization_details',
-    description:    '获取特定机构的详细信息',
+    description:    '获取特定机构的详细信息（注意：此API不支持language参数）',
     endpoint:       '/get_org',
     method:         'POST',
     requiredLevel:  'basic',

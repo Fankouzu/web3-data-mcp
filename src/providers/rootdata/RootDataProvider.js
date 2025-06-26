@@ -18,16 +18,34 @@ class RootDataProvider extends DataProvider {
   constructor(config = {}) {
     super('rootdata', config);
 
+    this.apiKey = config.apiKey;
+    this.isConfigured = false;
+
+    if (config.apiKey) {
+      this.configure(config);
+    }
+  }
+
+  /**
+   * 配置RootData供应商
+   * @param {Object} config - 配置对象
+   * @param {string} config.apiKey - RootData API密钥
+   * @param {number} config.timeout - 请求超时时间
+   * @param {number} config.retries - 重试次数
+   */
+  configure(config) {
     if (!config.apiKey) {
-      throw new Error('RootData API Key is required');
+      throw new Error('RootData API密钥是必需的');
     }
 
+    this.apiKey = config.apiKey;
     this.client = new RootDataClient(config.apiKey, {
       timeout: config.timeout || 30000,
       retries: config.retries || 3
     });
 
     this.endpoints = getAvailableEndpoints('basic'); // 初始为basic级别
+    this.isConfigured = true;
   }
 
   /**
@@ -36,6 +54,10 @@ class RootDataProvider extends DataProvider {
    */
   async initialize() {
     try {
+      if (!this.isConfigured) {
+        throw new Error('Provider must be configured before initialization');
+      }
+
       // 直接调用checkCredits获取用户信息
       const creditsResult = await this.checkCredits();
 
@@ -70,6 +92,10 @@ class RootDataProvider extends DataProvider {
    */
   async checkCredits() {
     try {
+      if (!this.client) {
+        throw new Error('Provider not configured');
+      }
+
       const result = await this.client.checkCredits();
       return {
         success: true,
@@ -134,8 +160,7 @@ class RootDataProvider extends DataProvider {
             params.project_id,
             params.contract_address,
             params.include_team,
-            params.include_investors,
-            language
+            params.include_investors
           );
           break;
 
@@ -143,8 +168,7 @@ class RootDataProvider extends DataProvider {
           result = await this.client.getOrganization(
             params.org_id,
             params.include_team,
-            params.include_investments,
-            language
+            params.include_investments
           );
           break;
 
