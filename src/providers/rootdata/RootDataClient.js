@@ -1,6 +1,7 @@
 /**
  * RootData API客户端
  * 专门处理RootData API的请求和响应
+ * 严格按照官方API文档实现
  */
 
 const { ApiClient, ApiError } = require('../base/ApiClient');
@@ -18,6 +19,7 @@ class RootDataClient extends ApiClient {
     const defaultHeaders = {
       'apikey': apiKey,
       'language': 'en',
+      'Content-Type': 'application/json',
       ...options.defaultHeaders
     };
 
@@ -35,16 +37,12 @@ class RootDataClient extends ApiClient {
    */
   async checkCredits() {
     try {
-      const response = await this.request('/quotacredits');
+      const response = await this.request('/quotacredits', 'POST', {});
       
       if (response.data.result === 200) {
         return {
           success: true,
-          credits: response.data.data.credits,
-          level: response.data.data.level,
-          totalCredits: response.data.data.total_credits,
-          lastMonthCredits: response.data.data.last_mo_credits,
-          startTime: response.data.data.start
+          data: response.data.data
         };
       } else {
         throw new ApiError(
@@ -120,27 +118,40 @@ class RootDataClient extends ApiClient {
 
   /**
    * 获取项目详情
-   * @param {string} projectId - 项目ID
+   * @param {number|string} projectId - 项目ID
+   * @param {string} contractAddress - 合约地址（可选）
+   * @param {boolean} includeTeam - 是否包含团队信息
+   * @param {boolean} includeInvestors - 是否包含投资方信息
    * @param {string} language - 语言设置
    * @returns {Promise<Object>} 项目详情
    */
-  async getProjectDetails(projectId, language = 'en') {
+  async getProject(projectId, contractAddress = null, includeTeam = false, includeInvestors = false, language = 'en') {
     try {
-      const requestData = {
-        project_id: projectId
-      };
+      const requestData = {};
+
+      if (projectId) {
+        requestData.project_id = parseInt(projectId);
+      }
+      if (contractAddress) {
+        requestData.contract_address = contractAddress;
+      }
+      if (includeTeam) {
+        requestData.include_team = true;
+      }
+      if (includeInvestors) {
+        requestData.include_investors = true;
+      }
 
       const headers = {
         'language': language
       };
 
-      const response = await this.request('/project_details', 'POST', requestData, headers);
+      const response = await this.request('/get_item', 'POST', requestData, headers);
       
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data,
-          projectId: projectId
+          data: response.data.data
         };
       } else {
         throw new ApiError(
@@ -164,30 +175,40 @@ class RootDataClient extends ApiClient {
   }
 
   /**
-   * 获取融资轮次信息
-   * @param {Object} params - 查询参数
-   * @param {string} params.project_id - 项目ID
-   * @param {string} params.organization_id - 组织ID  
+   * 获取机构详情
+   * @param {number} orgId - 机构ID
+   * @param {boolean} includeTeam - 是否包含团队信息
+   * @param {boolean} includeInvestments - 是否包含投资项目信息
    * @param {string} language - 语言设置
-   * @returns {Promise<Object>} 融资信息
+   * @returns {Promise<Object>} 机构详情
    */
-  async getFundingRounds(params, language = 'en') {
+  async getOrganization(orgId, includeTeam = false, includeInvestments = false, language = 'en') {
     try {
+      const requestData = {
+        org_id: parseInt(orgId)
+      };
+
+      if (includeTeam) {
+        requestData.include_team = true;
+      }
+      if (includeInvestments) {
+        requestData.include_investments = true;
+      }
+
       const headers = {
         'language': language
       };
 
-      const response = await this.request('/funding_rounds', 'POST', params, headers);
+      const response = await this.request('/get_org', 'POST', requestData, headers);
       
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || [],
-          params: params
+          data: response.data.data
         };
       } else {
         throw new ApiError(
-          response.data.message || 'Failed to get funding information',
+          response.data.message || 'Failed to get organization details',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -198,7 +219,135 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `Failed to get funding information: ${error.message}`,
+        `Failed to get organization details: ${error.message}`,
+        'ORGANIZATION_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取人物详情 (Pro级别)
+   * @param {number} peopleId - 人物ID
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 人物详情
+   */
+  async getPeople(peopleId, language = 'en') {
+    try {
+      const requestData = {
+        people_id: parseInt(peopleId)
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/get_people', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get people details',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get people details: ${error.message}`,
+        'PEOPLE_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 获取ID列表 (Plus级别)
+   * @param {number} type - 类型: 1项目 2机构 3人物
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} ID列表
+   */
+  async getIdMap(type, language = 'en') {
+    try {
+      const requestData = {
+        type: parseInt(type)
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/id_map', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get ID map',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get ID map: ${error.message}`,
+        'ID_MAP_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 批量获取投资轮次信息 (Plus级别)
+   * @param {Object} params - 查询参数
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 融资信息
+   */
+  async getFundingRounds(params = {}, language = 'en') {
+    try {
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/get_fac', 'POST', params, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || {}
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get funding rounds',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get funding rounds: ${error.message}`,
         'FUNDING_ERROR',
         null,
         'RootDataClient'
@@ -207,32 +356,33 @@ class RootDataClient extends ApiClient {
   }
 
   /**
-   * 获取代币信息
-   * @param {string} tokenSymbol - 代币符号
+   * 批量获取投资者信息 (Plus级别)
+   * @param {number} page - 页码
+   * @param {number} pageSize - 每页条数
    * @param {string} language - 语言设置
-   * @returns {Promise<Object>} 代币信息
+   * @returns {Promise<Object>} 投资者信息
    */
-  async getTokenInfo(tokenSymbol, language = 'en') {
+  async getInvestors(page = 1, pageSize = 10, language = 'en') {
     try {
       const requestData = {
-        token_symbol: tokenSymbol
+        page: parseInt(page),
+        page_size: parseInt(pageSize)
       };
 
       const headers = {
         'language': language
       };
 
-      const response = await this.request('/token_info', 'POST', requestData, headers);
+      const response = await this.request('/get_invest', 'POST', requestData, headers);
       
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data,
-          tokenSymbol: tokenSymbol
+          data: response.data.data || {}
         };
       } else {
         throw new ApiError(
-          response.data.message || 'Failed to get token information',
+          response.data.message || 'Failed to get investors',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -243,8 +393,8 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `Failed to get token information: ${error.message}`,
-        'TOKEN_ERROR',
+        `Failed to get investors: ${error.message}`,
+        'INVESTORS_ERROR',
         null,
         'RootDataClient'
       );
@@ -252,15 +402,59 @@ class RootDataClient extends ApiClient {
   }
 
   /**
-   * 按生态系统搜索项目
-   * @param {string} ecosystem - 生态系统名称
+   * 批量导出X数据 (Plus级别)
+   * @param {number} type - 类型: 1项目 2机构 3人物
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} X数据
+   */
+  async getTwitterMap(type, language = 'en') {
+    try {
+      const requestData = {
+        type: parseInt(type)
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/twitter_map', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get Twitter map',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get Twitter map: ${error.message}`,
+        'TWITTER_MAP_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 根据生态系统获取项目 (Pro级别)
+   * @param {string} ecosystemIds - 生态ID，多个生态逗号分隔
    * @param {string} language - 语言设置
    * @returns {Promise<Object>} 项目列表
    */
-  async getProjectsByEcosystem(ecosystem, language = 'en') {
+  async getProjectsByEcosystems(ecosystemIds, language = 'en') {
     try {
       const requestData = {
-        ecosystem: ecosystem
+        ecosystem_ids: ecosystemIds
       };
 
       const headers = {
@@ -272,12 +466,11 @@ class RootDataClient extends ApiClient {
       if (response.data.result === 200) {
         return {
           success: true,
-          data: response.data.data || [],
-          ecosystem: ecosystem
+          data: response.data.data || []
         };
       } else {
         throw new ApiError(
-          response.data.message || 'Failed to search by ecosystem',
+          response.data.message || 'Failed to get projects by ecosystems',
           response.data.result,
           response.statusCode,
           'RootDataClient'
@@ -288,8 +481,52 @@ class RootDataClient extends ApiClient {
         throw error;
       }
       throw new ApiError(
-        `Failed to search by ecosystem: ${error.message}`,
-        'ECOSYSTEM_SEARCH_ERROR',
+        `Failed to get projects by ecosystems: ${error.message}`,
+        'PROJECTS_BY_ECOSYSTEMS_ERROR',
+        null,
+        'RootDataClient'
+      );
+    }
+  }
+
+  /**
+   * 根据标签获取项目 (Pro级别)
+   * @param {string} tagIds - 标签ID，多个标签逗号分隔
+   * @param {string} language - 语言设置
+   * @returns {Promise<Object>} 项目列表
+   */
+  async getProjectsByTags(tagIds, language = 'en') {
+    try {
+      const requestData = {
+        tag_ids: tagIds
+      };
+
+      const headers = {
+        'language': language
+      };
+
+      const response = await this.request('/projects_by_tags', 'POST', requestData, headers);
+      
+      if (response.data.result === 200) {
+        return {
+          success: true,
+          data: response.data.data || []
+        };
+      } else {
+        throw new ApiError(
+          response.data.message || 'Failed to get projects by tags',
+          response.data.result,
+          response.statusCode,
+          'RootDataClient'
+        );
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(
+        `Failed to get projects by tags: ${error.message}`,
+        'PROJECTS_BY_TAGS_ERROR',
         null,
         'RootDataClient'
       );

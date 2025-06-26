@@ -1,9 +1,10 @@
 /**
  * RootData API端点定义
- * 定义所有可用的API端点及其配置
+ * 严格按照官方API文档定义所有真实可用的API端点及其配置
  */
 
 const endpoints = [
+  // ========== Basic级别端点 ==========
   {
     id: 'credits_check',
     name: 'check_credits',
@@ -28,7 +29,7 @@ const endpoints = [
     endpoint: '/ser_inv',
     method: 'POST',
     requiredLevel: 'basic',
-    creditsPerCall: 5,
+    creditsPerCall: 0, // 文档显示不限次数
     category: 'search',
     inputSchema: {
       type: 'object',
@@ -40,7 +41,7 @@ const endpoints = [
         },
         precise_x_search: {
           type: 'boolean',
-          description: '是否进行精确的X(Twitter)账号搜索',
+          description: '基于X Handle（@…），精准搜索相应实体',
           default: false
         }
       },
@@ -50,96 +51,442 @@ const endpoints = [
   },
 
   {
-    id: 'project_details',
+    id: 'get_project',
     name: 'get_project_details',
     description: '获取特定项目的详细信息',
-    endpoint: '/project_details',
+    endpoint: '/get_item',
     method: 'POST',
     requiredLevel: 'basic',
-    creditsPerCall: 10,
+    creditsPerCall: 2,
     category: 'project',
     inputSchema: {
       type: 'object',
       properties: {
         project_id: {
-          type: 'string',
-          description: '项目的唯一标识符'
-        }
-      },
-      required: ['project_id']
-    },
-    outputDescription: '返回项目的详细信息，包括描述、团队、技术栈等'
-  },
-
-  {
-    id: 'funding_rounds',
-    name: 'get_funding_rounds',
-    description: '获取项目或组织的融资轮次信息',
-    endpoint: '/funding_rounds',
-    method: 'POST',
-    requiredLevel: 'plus',
-    creditsPerCall: 15,
-    category: 'funding',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        project_id: {
-          type: 'string',
-          description: '项目ID（与organization_id二选一）'
+          type: 'integer',
+          description: '项目的唯一标识符（与contract_address二选一）'
         },
-        organization_id: {
+        contract_address: {
           type: 'string',
-          description: '组织ID（与project_id二选一）'
+          description: '项目的合约地址（与project_id二选一）'
+        },
+        include_team: {
+          type: 'boolean',
+          description: '是否包含团队成员信息',
+          default: false
+        },
+        include_investors: {
+          type: 'boolean',
+          description: '是否包含投资方信息',
+          default: false
         }
       },
       anyOf: [
         { required: ['project_id'] },
-        { required: ['organization_id'] }
+        { required: ['contract_address'] }
       ]
+    },
+    outputDescription: '返回项目的详细信息，包括基本介绍、团队成员、投资方等'
+  },
+
+  {
+    id: 'get_organization',
+    name: 'get_organization_details',
+    description: '获取特定机构的详细信息',
+    endpoint: '/get_org',
+    method: 'POST',
+    requiredLevel: 'basic',
+    creditsPerCall: 2,
+    category: 'organization',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        org_id: {
+          type: 'integer',
+          description: '机构ID'
+        },
+        include_team: {
+          type: 'boolean',
+          description: '是否包含团队成员信息',
+          default: false
+        },
+        include_investments: {
+          type: 'boolean',
+          description: '是否包含投资项目信息',
+          default: false
+        }
+      },
+      required: ['org_id']
+    },
+    outputDescription: '返回机构的详细信息，包括基本介绍、团队成员、投资组合等'
+  },
+
+  // ========== Plus级别端点 ==========
+  {
+    id: 'get_id_map',
+    name: 'get_id_mapping',
+    description: '获取所有项目、人物与VC的ID列表',
+    endpoint: '/id_map',
+    method: 'POST',
+    requiredLevel: 'plus',
+    creditsPerCall: 20,
+    category: 'data',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'integer',
+          description: '类型: 1项目 2机构 3人物',
+          enum: [1, 2, 3]
+        }
+      },
+      required: ['type']
+    },
+    outputDescription: '返回指定类型的所有实体ID和名称列表'
+  },
+
+  {
+    id: 'get_investors',
+    name: 'get_investor_details',
+    description: '批量获取投资者的详细信息',
+    endpoint: '/get_invest',
+    method: 'POST',
+    requiredLevel: 'plus',
+    creditsPerCall: 2, // 2 credits/条
+    category: 'investor',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        page: {
+          type: 'integer',
+          description: '页码，默认1',
+          minimum: 1,
+          default: 1
+        },
+        page_size: {
+          type: 'integer',
+          description: '每页条数，默认10，最大100',
+          minimum: 1,
+          maximum: 100,
+          default: 10
+        }
+      },
+      required: []
+    },
+    outputDescription: '返回投资者详细信息，包括投资组合、数据分析等'
+  },
+
+  {
+    id: 'get_twitter_map',
+    name: 'get_twitter_data',
+    description: '批量导出X数据',
+    endpoint: '/twitter_map',
+    method: 'POST',
+    requiredLevel: 'plus',
+    creditsPerCall: 50,
+    category: 'social',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'integer',
+          description: '类型: 1项目 2机构 3人物',
+          enum: [1, 2, 3]
+        }
+      },
+      required: ['type']
+    },
+    outputDescription: '返回实体的X(Twitter)数据，包括关注者、影响力等'
+  },
+
+  {
+    id: 'get_funding_rounds',
+    name: 'get_funding_information',
+    description: '批量获取投融资轮次（限2018年至今）',
+    endpoint: '/get_fac',
+    method: 'POST',
+    requiredLevel: 'plus',
+    creditsPerCall: 2, // 2 credits/条
+    category: 'funding',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        page: {
+          type: 'integer',
+          description: '页码，默认1',
+          minimum: 1,
+          default: 1
+        },
+        page_size: {
+          type: 'integer',
+          description: '每页条数，默认10，最大200',
+          minimum: 1,
+          maximum: 200,
+          default: 10
+        },
+        start_time: {
+          type: 'string',
+          description: '融资公布日期（起） yyyy-MM',
+          pattern: '^\\d{4}-\\d{2}$'
+        },
+        end_time: {
+          type: 'string',
+          description: '融资公布日期（止） yyyy-MM',
+          pattern: '^\\d{4}-\\d{2}$'
+        },
+        min_amount: {
+          type: 'integer',
+          description: '融资金额最小范围（美元）',
+          minimum: 0
+        },
+        max_amount: {
+          type: 'integer',
+          description: '融资金额最大范围（美元）',
+          minimum: 0
+        },
+        project_id: {
+          type: 'integer',
+          description: '项目Id'
+        }
+      },
+      required: []
     },
     outputDescription: '返回融资轮次信息，包括融资金额、投资者、时间等'
   },
 
+  // ========== Pro级别端点 ==========
   {
-    id: 'token_info',
-    name: 'get_token_info',
-    description: '获取代币的详细信息',
-    endpoint: '/token_info',
+    id: 'get_people',
+    name: 'get_people_details',
+    description: '获取人物详细信息',
+    endpoint: '/get_people',
     method: 'POST',
-    requiredLevel: 'basic',
-    creditsPerCall: 8,
-    category: 'token',
+    requiredLevel: 'pro',
+    creditsPerCall: 2,
+    category: 'people',
     inputSchema: {
       type: 'object',
       properties: {
-        token_symbol: {
-          type: 'string',
-          description: '代币符号（如BTC、ETH等）'
+        people_id: {
+          type: 'integer',
+          description: '人物ID'
         }
       },
-      required: ['token_symbol']
+      required: ['people_id']
     },
-    outputDescription: '返回代币的基本信息、价格数据和相关项目信息'
+    outputDescription: '返回人物详细信息，包括X影响力/热度指数、工作变动等'
   },
 
   {
-    id: 'projects_by_ecosystem',
-    name: 'get_projects_by_ecosystem',
-    description: '按生态系统查找项目',
+    id: 'sync_updates',
+    name: 'get_sync_updates',
+    description: '获取单位时间内数据更新的项目列表',
+    endpoint: '/ser_change',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 1, // 1 credits/条
+    category: 'sync',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        begin_time: {
+          type: 'integer',
+          description: '开始时间，时间戳'
+        },
+        end_time: {
+          type: 'integer',
+          description: '结束时间，时间戳'
+        }
+      },
+      required: ['begin_time']
+    },
+    outputDescription: '返回在指定时间范围内更新的项目和机构列表'
+  },
+
+  {
+    id: 'hot_projects',
+    name: 'get_hot_projects_top100',
+    description: '获取Top100项目列表及其基本信息',
+    endpoint: '/hot_index',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 10,
+    category: 'ranking',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        days: {
+          type: 'integer',
+          description: '仅支持查询近1天/7天数据',
+          enum: [1, 7]
+        }
+      },
+      required: ['days']
+    },
+    outputDescription: '返回热门项目排行榜，包括项目信息和热度值'
+  },
+
+  {
+    id: 'hot_projects_on_x',
+    name: 'get_hot_projects_on_twitter',
+    description: '获取X热门项目列表',
+    endpoint: '/hot_project_on_x',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 10,
+    category: 'social',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        heat: {
+          type: 'boolean',
+          description: 'X 热度榜单'
+        },
+        influence: {
+          type: 'boolean',
+          description: 'X 影响力榜单'
+        },
+        followers: {
+          type: 'boolean',
+          description: 'X 关注者榜单'
+        }
+      },
+      required: ['heat', 'influence', 'followers']
+    },
+    outputDescription: '返回X平台上的热门项目榜单'
+  },
+
+  {
+    id: 'hot_people_on_x',
+    name: 'get_hot_people_on_twitter',
+    description: '获取当前X热门人物列表',
+    endpoint: '/leading_figures_on_crypto_x',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 10,
+    category: 'social',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        page: {
+          type: 'integer',
+          description: '页码，默认1',
+          minimum: 1,
+          default: 1
+        },
+        page_size: {
+          type: 'integer',
+          description: '每页条数，默认10，最大100',
+          minimum: 1,
+          maximum: 100,
+          default: 10
+        },
+        rank_type: {
+          type: 'string',
+          description: '榜单类型',
+          enum: ['heat', 'influence']
+        }
+      },
+      required: ['rank_type']
+    },
+    outputDescription: '返回X平台上的热门人物榜单'
+  },
+
+  {
+    id: 'job_changes',
+    name: 'get_job_changes',
+    description: '获取人物职位动态数据',
+    endpoint: '/job_changes',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 10,
+    category: 'people',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        recent_joinees: {
+          type: 'boolean',
+          description: '近期入职'
+        },
+        recent_resignations: {
+          type: 'boolean',
+          description: '近期离职'
+        }
+      },
+      required: ['recent_joinees', 'recent_resignations']
+    },
+    outputDescription: '返回近期入职和离职的人物动态信息'
+  },
+
+  {
+    id: 'new_tokens',
+    name: 'get_new_tokens',
+    description: '获取近三个月新发行的代币列表',
+    endpoint: '/new_tokens',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 10,
+    category: 'token',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    outputDescription: '返回近期新发行代币的项目列表'
+  },
+
+  {
+    id: 'ecosystem_map',
+    name: 'get_ecosystem_map',
+    description: '获取生态版图列表',
+    endpoint: '/ecosystem_map',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 50,
+    category: 'ecosystem',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    outputDescription: '返回所有生态系统及其项目数量'
+  },
+
+  {
+    id: 'tag_map',
+    name: 'get_tag_map',
+    description: '获取标签版图列表',
+    endpoint: '/tag_map',
+    method: 'POST',
+    requiredLevel: 'pro',
+    creditsPerCall: 50,
+    category: 'tag',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    },
+    outputDescription: '返回所有标签及其ID'
+  },
+
+  {
+    id: 'projects_by_ecosystems',
+    name: 'get_projects_by_ecosystems',
+    description: '根据生态批量获取项目信息',
     endpoint: '/projects_by_ecosystems',
     method: 'POST',
-    requiredLevel: 'basic',
-    creditsPerCall: 12,
+    requiredLevel: 'pro',
+    creditsPerCall: 20,
     category: 'ecosystem',
     inputSchema: {
       type: 'object',
       properties: {
-        ecosystem: {
+        ecosystem_ids: {
           type: 'string',
-          description: '生态系统名称（如Ethereum、Solana、Polygon等）'
+          description: '生态ID，多个生态逗号分隔'
         }
       },
-      required: ['ecosystem']
+      required: ['ecosystem_ids']
     },
     outputDescription: '返回指定生态系统中的项目列表'
   },
@@ -147,87 +494,23 @@ const endpoints = [
   {
     id: 'projects_by_tags',
     name: 'get_projects_by_tags',
-    description: '按标签查找项目',
+    description: '根据标签批量获取项目信息',
     endpoint: '/projects_by_tags',
     method: 'POST',
-    requiredLevel: 'basic',
-    creditsPerCall: 10,
-    category: 'search',
+    requiredLevel: 'pro',
+    creditsPerCall: 20,
+    category: 'tag',
     inputSchema: {
       type: 'object',
       properties: {
-        tags: {
-          type: 'array',
-          items: {
-            type: 'string'
-          },
-          description: '标签列表（如DeFi、NFT、Gaming等）',
-          minItems: 1
+        tag_ids: {
+          type: 'string',
+          description: '标签ID，多个标签逗号分隔'
         }
       },
-      required: ['tags']
+      required: ['tag_ids']
     },
     outputDescription: '返回具有指定标签的项目列表'
-  },
-
-  {
-    id: 'investment_analysis',
-    name: 'get_investment_analysis',
-    description: '获取投资分析数据',
-    endpoint: '/investment_analysis',
-    method: 'POST',
-    requiredLevel: 'pro',
-    creditsPerCall: 25,
-    category: 'analysis',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        analysis_type: {
-          type: 'string',
-          enum: ['market_trends', 'investor_activity', 'sector_analysis'],
-          description: '分析类型'
-        },
-        time_period: {
-          type: 'string',
-          enum: ['1M', '3M', '6M', '1Y'],
-          description: '分析时间段',
-          default: '3M'
-        }
-      },
-      required: ['analysis_type']
-    },
-    outputDescription: '返回投资分析报告和趋势数据'
-  },
-
-  {
-    id: 'social_data',
-    name: 'get_social_data',
-    description: '获取项目的社交媒体数据',
-    endpoint: '/social_data',
-    method: 'POST',
-    requiredLevel: 'plus',
-    creditsPerCall: 20,
-    category: 'social',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        project_id: {
-          type: 'string',
-          description: '项目ID'
-        },
-        platforms: {
-          type: 'array',
-          items: {
-            type: 'string',
-            enum: ['twitter', 'discord', 'telegram', 'github']
-          },
-          description: '要获取数据的社交平台',
-          default: ['twitter']
-        }
-      },
-      required: ['project_id']
-    },
-    outputDescription: '返回项目在各社交平台的数据和活跃度指标'
   }
 ];
 
@@ -299,6 +582,25 @@ function calculateTotalCredits(endpointIds) {
   }, 0);
 }
 
+/**
+ * 获取不同等级的端点统计
+ * @returns {Object} 各等级端点数量统计
+ */
+function getEndpointStatsByLevel() {
+  const stats = {
+    basic: 0,
+    plus: 0,
+    pro: 0,
+    total: endpoints.length
+  };
+
+  endpoints.forEach(endpoint => {
+    stats[endpoint.requiredLevel]++;
+  });
+
+  return stats;
+}
+
 module.exports = {
   endpoints,
   getAvailableEndpoints,
@@ -306,5 +608,6 @@ module.exports = {
   getEndpointById,
   getEndpointByName,
   getAllCategories,
-  calculateTotalCredits
+  calculateTotalCredits,
+  getEndpointStatsByLevel
 };

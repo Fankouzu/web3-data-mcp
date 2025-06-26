@@ -1,5 +1,7 @@
 # Web3 Data MCP
 
+**Languages**: [English](README.md) | [中文](README.zh-CN.md)
+
 A Model Context Protocol (MCP) server designed to provide Large Language Models (LLMs) with access to real-time, high-quality Web3 data from various data providers. This tool acts as a bridge, allowing AI agents to query detailed information about Web3 projects, funding, tokens, and market trends.
 
 The initial and primary data provider is **RootData**.

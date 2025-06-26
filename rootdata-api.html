@@ -1,0 +1,958 @@
+<div class="col col-9" data-v-4d7a0f90=""><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title0" data-v-4d7a0f90="">
+            1. 搜索项目/机构/人物
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/ser_inv</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              通根据关键词搜索项目/VC/人物简要信息，不限次数。
+            </li> <li data-v-4d7a0f90="">支持的版本: Basic, Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__59"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__69"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">query</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              搜索关键词，可以是项目/机构名称、代币或其他相关词汇
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">precise_x_search</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              基于X Handle（@…），精准搜索相应实体
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__79"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">唯一标识符</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              type
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">1 项目； 2 机构；3人物</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">logo 的 URL</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              introduce
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              active
+              <!----></td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">true:运营中；false:停止运营</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              rootdataurl
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">对应的RootData链接</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"query": "ETH" }' https://api.rootdata.com/open/ser_inv</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "introduce": "Ethereum is the first decentralized...",
+      "name": "Ethereum",
+      "logo": "https://api.rootdata.com/uploads/public/b15/1666341829033.jpg",
+      "rootdataurl": "https://api.rootdata.com/Projects/detail/Ethereum?k=MTI=",
+      "id": 12,
+      "type": 1
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title1" data-v-4d7a0f90="">
+            2. 查询apikey余额
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/quotacredits</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              查询apikey剩余Credits数量，免费。
+            </li> <li data-v-4d7a0f90="">支持的版本: Basic, Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__93"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__103"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class="b-table-empty-row"><td colspan="4" role="cell" class=""><div role="alert" aria-live="polite"><div class="text-center my-2">暂无数据</div></div></td></tr><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__113"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              apikey
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">apikey</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              start
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">有效期起</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              end
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">有效期止</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              level
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">Level</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              total_credits
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">credits总额</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              credits
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">当前剩余credits</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              last_mo_credits
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">上月结余credits</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/quotacredits</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "last_mo_credits": 60000,
+    "apikey": "XXX",
+    "level": "pro",
+    "credits": 59688,
+    "total_credits": 60000,
+    "start": 1721750400000,
+    "end": 1787846399000
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title2" data-v-4d7a0f90="">
+            3. 获取ID列表
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/id_map</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取所有项目、人物与VC的ID列表，20 Credits/次
+            </li> <li data-v-4d7a0f90="">支持的版本: Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__127"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__137"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">type</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              类型: 1项目 2机构 3人物
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__146"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">id</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">实体名称</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  -d '{"type": 1 }'  https://api.rootdata.com/open/id_map</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "id": 600,
+      "name": "XXX"
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title3" data-v-4d7a0f90="">
+            4. 获取项目
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/get_item</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              根据项目ID获取其详细信息，2 credits/次 。
+            </li> <li data-v-4d7a0f90="">支持的版本: Basic, Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__155"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__164"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">project_id</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              项目的唯一标识符。如果同时提供了`project_id`和`contract_address`，则`project_id`优先。
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">contract_address</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              项目的合约地址。如果同时提供了`project_id`和`contract_address`，则`project_id`优先。
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">include_team</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              是否包含团队成员信息，默认为 false
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">include_investors</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              是否包含投资方信息，默认为 false
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__176"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目 logo 的 URL</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              token_symbol
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">代币符号</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              establishment_date
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">成立时间</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">一句话介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              description
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">详细介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              active
+              <!----></td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">true:运营中;false:停止运营</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              total_funding
+              <!----></td><td aria-colindex="2" role="cell" class="">decimal</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">融资总额</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              tags
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目标签 (标签名数组)</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              rootdataurl
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目对应的RootData链接</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              investors
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资方信息</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              social_media
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">社交媒体链接 </div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              similar_project
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">同类项目 </div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              ecosystem
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目所属生态（数组，生态名称，不区分测试网和主网）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              on_main_net
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">已上线的主网（数组，生态名称）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              plan_to_launch
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">计划上线的生态（数组，生态名称）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              on_test_net
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">已上线的测试网（数组，生态名称）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              fully_diluted_market_cap
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">完全稀释市值<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              market_cap
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">流通市值<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              price
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">价格<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              event
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目重大事件 <span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              reports
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">新闻动态数据 <span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              team_members
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">团队成员信息<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              token_launch_time
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">代币发行时间 yyyy-MM<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              contracts
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">合约 <span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              support_exchanges
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">支持的交易所 包含（交易所名称，交易所logo）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度值<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度排名<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力排名<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              followers
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X关注者数量<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              following
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">正在关注的数量<span>PRO</span></div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"project_id":8719, "include_team":true,"include_investors":true }' https://api.rootdata.com/open/get_item</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "ecosystem": [],
+    "one_liner": "Building hardware for cryptography",
+    "description": "Fabric Cryptography is a start-up company focusing on developing advanced crypto algorithm hardware, especially building special computer chips for Zero-knowledge proof technology.",
+    "rootdataurl": "https://api.rootdata.com/Projects/detail/Fabric Cryptography?k=ODcxOQ==",
+    "total_funding": 87033106304,
+    "project_name": "Fabric Cryptography",
+    "investors": [
+      {
+        "name": "Inflection",
+        "logo": "https://api.rootdata.com/uploads/public/b17/1666870085112.jpg"
+      }
+    ],
+    "establishment_date": "2022",
+    "tags": [
+      "Infra",
+      "zk"
+    ],
+    "project_id": 8719,
+    "team_members": [
+      {
+        "medium": "",
+        "website": "https://www.fabriccryptography.com/",
+        "twitter": "",
+        "discord": "",
+        "linkedin": "https://www.linkedin.com/company/fabriccryptography/"
+      }
+    ],
+    "logo": "https://api.rootdata.com/uploads/public/b6/1690306559722.jpg",
+    "social_media": {
+      "medium": "",
+      "website": "https://llama.xyz/",
+      "twitter": "https://twitter.com/llama",
+      "discord": "",
+      "linkedin": ""
+    },
+    "contract_address": "0x00aU9GoIGOKahBostrD",
+    "fully_diluted_market_cap": "1000000",
+    "market_cap": "1000000",
+    "price": "1000000",
+    "reports": []
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title4" data-v-4d7a0f90="">
+            5. 获取机构
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/get_org</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              根据VC ID获取VC详细信息，2 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Basic, Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__223"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__232"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">org_id</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              机构ID
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">include_team</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              是否包含团队成员信息，默认为 false
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">include_investments</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              是否包含投资项目信息，默认为 false
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__243"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              org_id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">机构ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              org_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">机构名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">机构 logo 的 URL</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              establishment_date
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">成立时间</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              description
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">详细介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              active
+              <!----></td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">true:运营中;false:停止运营</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              category
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资者类型</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              social_media
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">社交媒体链接（官网、推特、LinkedIn）</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              investments
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资项目（数组，包括名称、logo）</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              rootdataurl
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">机构对应的RootData链接</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              team_members
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">团队成员信息（数组，包括姓名、职位）<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度值<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度排名<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力排名<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              followers
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X关注者数量<span>PRO</span></div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              following
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">正在关注的数量<span>PRO</span></div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"org_id":219,"include_team":true,"include_investments":true }' https://api.rootdata.com/open/get_org</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "org_id": 219,
+    "team_members": [
+      {
+        "name": "Shan Aggarwal",
+        "position": "Head"
+      },
+      {
+        "name": "Jonathan King",
+        "position": "Principal"
+      }
+    ],
+    "logo": "https://rdbk.rootdata.com/uploads/public/b17/1666777683240.jpg",
+    "description": "Coinbase Ventures is an investment arm of Coinbase that aims to invest in early-stage cryptocurrency and blockchain startups.",
+    "rootdataurl": "https://api.rootdata.com/Investors/detail/Coinbase Ventures?k=MjE5",
+    "org_name": "Coinbase Ventures",
+    "category": [
+      "Seed Plus"
+    ],
+    "investments": [
+      {
+        "name": "zkSync / Matter Labs",
+        "logo": "https://public.rootdata.com/uploads/public/b16/1666624791085.jpg"
+      }
+    ],
+    "establishment_date": "2018",
+    "social_media": {
+      "website": "https://www.coinbase.com/ventures",
+      "twitter": "https://twitter.com/cbventures",
+      "linkedin": ""
+    }
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title5" data-v-4d7a0f90="">
+            6. 获取人物（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/get_people</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              根据人物 ID获取人物详细信息，2 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__267"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__277"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">people_id</td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              人物ID
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__286"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              people_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              introduce
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">人物介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              head_img
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">头像</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              X
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X链接</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              people_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">人物名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              linkedin
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">领英链接</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度值</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度排名</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence_rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力排名</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              followers
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X关注者数量</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              following
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">正在关注的数量</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"people_id":12972 }' https://api.rootdata.com/open/get_people</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "people_id": 12972,
+    "introduce": "Cai Wensheng, also known as Mike Cai, is the founder and chairman of Meitu.",
+    "head_img": "https://public.rootdata.com/images/b30/1687197351918.jpg",
+    "one_liner": "",
+    "X": "",
+    "people_name": "Cai Wensheng",
+    "linkedin": ""
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title6" data-v-4d7a0f90="">
+            7. 批量获取投资者信息（Plus, Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/get_invest</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              批量获取投资者的详细信息（投资组合、数据分析等），2 credits/条。
+            </li> <li data-v-4d7a0f90="">支持的版本: Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__306"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__316"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              页码，默认1
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page_size</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              每页条数，默认10，最大100
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__326"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资者名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              type
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">类型: 1项目 2机构 3人物</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资者ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资者Logo</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              area
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">地区列表</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              last_fac_date
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">最近投资时间</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              last_invest_num
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">近一年投资次数</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_range
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">参投规模</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              description
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资者介绍</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_overview
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">object</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资概览</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              investments
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">对外投资项目</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              establishment_date
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">成立时间</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_num
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资次数</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invest_stics
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资版图</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              team_members
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">团队成员信息</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"page":1,"page_size":10}' https://api.rootdata.com/open/get_invest</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "items": [
+      {
+        "area": [
+          "Singapore",
+          "United Arab Emirates"
+        ],
+        "last_fac_date": "2023-10-12 00:00:00",
+        "last_invest_num": 25,
+        "description": "Binance Labs is the...",
+        "invest_overview": {
+          "lead_invest_num": 38,
+          "last_invest_round": 25,
+          "his_invest_round": 141,
+          "invest_num": 171
+        },
+        "type": 2,
+        "investments": [
+          {
+            "name": "zkSync / Matter Labs",
+            "logo": "https://public.rootdata.com/uploads/public/b16/1666624791085.jpg"
+          }
+        ],
+        "establishment_date": "2017",
+        "invest_num": 171,
+        "invest_stics": [
+          {
+            "track": "Infrastructure",
+            "invest_num": 69
+          }
+        ],
+        "invest_id": 229,
+        "invest_range": [
+          {
+            "lead_invest_num": 11,
+            "amount_range": "1-3M",
+            "lead_not_invest_num": 17,
+            "invest_num": 28
+          }
+        ],
+        "team_members": [
+          {
+            "head_img": "https://public.rootdata.com/uploads/public/b12/1669630219503.jpg",
+            "name": "Yi He",
+            "X": "https://twitter.com/heyibinance",
+            "position": "Head"
+          }
+        ],
+        "logo": "https://public.rootdata.com/uploads/public/b11/1666594924745.jpg",
+        "invest_name": "Binance Labs"
+      }
+    ],
+    "total": 1
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title7" data-v-4d7a0f90="">
+            8. 批量导出X数据
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/twitter_map</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              响力等，50 Credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__353"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__363"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">type</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              类型: 1项目 2机构 3人物
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__372"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">id</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">实体名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              X
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              followers
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X关注者数量</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              following
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">正在关注的数量</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X热度值</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">X影响力</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  -d '{"type": 1 }'  https://api.rootdata.com/open/twitter_map</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "id": 600,
+      "name": "XXX",
+      "X": "XXX"
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title8" data-v-4d7a0f90="">
+            9. 批量获取投资轮次信息（Plus, Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/get_fac</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              批量获取投融资轮次（限2018年至今），2 credits/条。
+            </li> <li data-v-4d7a0f90="">支持的版本: Plus, Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__386"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__396"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              页码，默认1
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page_size</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              每页条数，默认10，最大200
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">start_time</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              融资公布日期（起） yyyy-MM
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">end_time</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              融资公布日期（止） yyyy-MM
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">min_amount</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              融资金额最小范围（美元）
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">max_amount</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              融资金额最大范围（美元）
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">project_id</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              项目Id
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__411"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目 logo 的 URL</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              rounds
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">轮次名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              published_time
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">融资公布日期</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              amount
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">融资金额（美元）</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              valuation
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">估值（美元）</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              invests
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">投资方信息数组，包含Logo、名称</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{ }' https://api.rootdata.com/open/get_fac</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "total": 2870,
+    "items": [
+      {
+        "amount": 2500000,
+        "valuation": 30000000,
+        "published_time": "2023-10",
+        "name": "Convergence",
+        "logo": "https://public.rootdata.com/uploads/public/b6/1671983908027.jpg",
+        "rounds": "Pre-Seed",
+        "invests": [
+          {
+            "name": "C² Ventures",
+            "logo": "https://public.rootdata.com/uploads/public/b17/1666777874118.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title9" data-v-4d7a0f90="">
+            10. 同步更新（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/ser_change</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取单位时间内数据更新的项目列表，1 credits/条。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__427"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__437"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">begin_time</td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              开始时间，时间戳
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">end_time</td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              结束时间，时间戳
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__447"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              id
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              type
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">1：项目; 2：机构</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目/机构名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              update_time
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">更新时间，时间戳</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"begin_time":1693974909261,"end_time":1694476800000,}' https://api.rootdata.com/open/ser_change</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "update_time": 1693974909261,
+      "name": "Ethereum",
+      "id": 12,
+      "type": 1
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title10" data-v-4d7a0f90="">
+            11. 热门项目Top100（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/hot_index</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取Top100项目列表及其基本信息，10 credits/次
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__458"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__468"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">days</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              仅支持查询近1天/7天数据，1or7
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__477"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              eval
+              <!----></td><td aria-colindex="2" role="cell" class="">double</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">热度值</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              rank
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">排名</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目Logo</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              token_symbol
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">代币</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              tags
+              <!----></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目标签 (标签名数组)</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"days":1}' https://api.rootdata.com/open/hot_index</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "eval": 907.936508,
+      "project_id": 13671,
+      "one_liner": "Hemi Network is a modular Layer...",
+      "logo": "https://public.rootdata.com/images/b6/1721840384466.png",
+      "rank": 1,
+      "token_symbol": "",
+      "project_name": "Hemi Network",
+      "tags": [
+        "Infra"
+      ]
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title11" data-v-4d7a0f90="">
+            12. X热门项目（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/hot_project_on_x</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取 X 热门项目列表，10 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__492"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__502"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">heat</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              X 热度榜单
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">influence</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              X 影响力榜单
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">followers</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              X 关注者榜单
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__513"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              heat
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">热度榜</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              influence
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">影响力榜</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              followers
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">关注者数量榜单</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"heat":false,"influence":true,"followers":false}' https://api.rootdata.com/open/hot_project_on_x</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "influence": [
+      {
+        "score": "5615",
+        "project_id": 3875,
+        "one_liner": "Cryptocurrency exchange",
+        "logo": "https://public.rootdata.com/images/b16/1666878846006.jpg",
+        "project_name": "Coinbase"
+      }
+    ]
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title12" data-v-4d7a0f90="">
+            13. X热门人物（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/leading_figures_on_crypto_x</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取当前 X 热门人物列表，10 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__526"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__536"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              页码，默认1
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">page_size</td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              每页条数，默认10，最大100
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">rank_type</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              榜单类型"heat" or "influence"
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__547"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              people_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              score
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">热度值/影响力指数</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              head_img
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">头像</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              people_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">人物名称</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"page":1, "page_size":100,"rank_type":"heat" }' https://api.rootdata.com/open/leading_figures_on_crypto_x</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "total": 1000,
+    "items": [
+      {
+        "people_id": 13994,
+        "score": "86",
+        "head_img": "https://public.rootdata.com/images/b12/1676887718722.jpg",
+        "one_liner": "",
+        "people_name": "Jieyi Long"
+      },
+      {
+        "people_id": 13185,
+        "score": "66",
+        "head_img": "https://public.rootdata.com/images/b12/1669175527817.jpg",
+        "one_liner": "",
+        "people_name": "Katie Biber"
+      }
+    ]
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title13" data-v-4d7a0f90="">
+            14. 人物职位动态（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/job_changes</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取人物职位动态数据，10 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__559"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__569"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">recent_joinees</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              近期入职
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">recent_resignations</td><td aria-colindex="2" role="cell" class="">boolean</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              近期离职
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__579"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              recent_joinees
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">近期入职</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              recent_resignations
+              <button type="button" icon="" class="v-icon notranslate v-icon--link mdi mdi-menu-down theme--dark" style="font-size:24px;" data-v-4d7a0f90=""></button></td><td aria-colindex="2" role="cell" class="">array</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">近期离职</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"recent_joinees":true, "recent_resignations":true }' https://api.rootdata.com/open/job_changes</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {
+    "recent_resignations": [
+      {
+        "people_id": 17262,
+        "head_img": "https://public.rootdata.com/images/b6/1702801244037.jpg",
+        "company": "Kraken",
+        "people_name": "Curtis Ting",
+        "position": "VP &amp; Head of Global Operations"
+      }
+    ],
+    "recent_joinees": [
+      {
+        "people_id": 17316,
+        "head_img": "https://public.rootdata.xyz/images/b35/1717668332921.jpg",
+        "company": "HTX",
+        "people_name": "Test",
+        "position": "CTO"
+      }
+    ]
+  },
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title14" data-v-4d7a0f90="">
+            15. 近期发币项目（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/new_tokens</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取近三个月新发行的代币列表，10 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__590"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__600"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class="b-table-empty-row"><td colspan="4" role="cell" class=""><div role="alert" aria-live="polite"><div class="text-center my-2">暂无数据</div></div></td></tr><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__610"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目Logo</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              token_symbol
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">代币符号</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              hap_date
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">事件发生时间</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              market_cap
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">流通市值</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              fully_diluted_market_cap
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">完全稀释市值</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              exchanges
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">交易所</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/new_tokens</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "fully_diluted_market_cap": "23372320.99",
+      "market_cap": "0",
+      "project_id": 12062,
+      "one_liner": "Decentralized AI Agent Public Chain",
+      "exchanges": "Gate.io,KCEX",
+      "logo": "https://public.rootdata.com/images/b12/1711444046699.jpg",
+      "hap_date": "2024-09-18",
+      "token_symbol": "AGENT",
+      "project_name": "AgentLayer"
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title15" data-v-4d7a0f90="">
+            16. 生态版图（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/ecosystem_map</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取生态版图列表，50 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__626"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__636"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class="b-table-empty-row"><td colspan="4" role="cell" class=""><div role="alert" aria-live="polite"><div class="text-center my-2">暂无数据</div></div></td></tr><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__646"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              ecosystem_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">生态ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              ecosystem_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">生态名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_num
+              <!----></td><td aria-colindex="2" role="cell" class="">int</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目数量</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/open/ecosystem_map</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "ecosystem_name": "Ethereum",
+      "ecosystem_id": 52,
+      "project_num": 2158
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title16" data-v-4d7a0f90="">
+            17. 标签版图（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/tag_map</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              获取标签版图列表，50 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__656"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__666"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class="b-table-empty-row"><td colspan="4" role="cell" class=""><div role="alert" aria-live="polite"><div class="text-center my-2">暂无数据</div></div></td></tr><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__676"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              tag_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">标签ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              tag_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">标签名称</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json"  https://api.rootdata.com/open/open/tag_map</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "tag_name": "Bug Bounty",
+      "tag_id": 52
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title17" data-v-4d7a0f90="">
+            18. 根据生态获取项目（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/projects_by_ecosystems</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              根据生态批量获取项目信息，20 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__685"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__695"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">ecosystem_ids</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              生态ID，多个生态逗号分隔
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__704"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目Logo</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"ecosystem_ids":"52,54"}'  https://api.rootdata.com/open/projects_by_ecosystems</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "project_id": 2297,
+      "one_liner": "Crypto bug bounty platform",
+      "logo": "https://public.rootdata.com/images/b26/1666654548967.jpg",
+      "project_name": "Immunefi"
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div><div class="doc_item d-flex flex-column" data-v-4d7a0f90=""><h4 id="title18" data-v-4d7a0f90="">
+            19. 根据标签查项目（Pro）
+          </h4> <ul data-v-4d7a0f90=""><li data-v-4d7a0f90="">URL: https://api.rootdata.com/open/projects_by_tags</li> <li data-v-4d7a0f90="">Method: POST</li> <li data-v-4d7a0f90="">
+              描述:
+              根据标签批量获取项目信息，20 credits/次。
+            </li> <li data-v-4d7a0f90="">支持的版本: Pro</li></ul> <h5 data-v-4d7a0f90="">请求头</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__715"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">apikey</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              您申请的APIKEY
+            </td></tr><tr role="row" class=""><td aria-colindex="1" role="cell" class="">language</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">false</td><td aria-colindex="4" role="cell" class="">
+              所需的语言版本（例如：'en'表示英文，'cn'表示中文，默认为'en')
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求参数</h5> <table role="table" aria-busy="false" aria-colcount="4" class="table b-table request_parameters_table table-borderless" data-v-4d7a0f90="" id="__BVID__725"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" class=""><div>Required</div></th><th role="columnheader" scope="col" aria-colindex="4" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">tag_ids</td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class="">true</td><td aria-colindex="4" role="cell" class="">
+              标签ID，多个生态逗号分隔
+            </td></tr><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">响应字段</h5> <table role="table" aria-busy="false" aria-colcount="3" class="table b-table response_content_table table-borderless" data-v-4d7a0f90="" id="__BVID__734"><!----><!----><thead role="rowgroup" class=""><!----><tr role="row" class=""><th role="columnheader" scope="col" aria-colindex="1" aria-label="Key" class=""><div data-v-4d7a0f90="">参数</div></th><th role="columnheader" scope="col" aria-colindex="2" class=""><div>Type</div></th><th role="columnheader" scope="col" aria-colindex="3" aria-label="Desc" class=""><div data-v-4d7a0f90="">描述</div></th></tr></thead><tbody role="rowgroup"><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_id
+              <!----></td><td aria-colindex="2" role="cell" class="">long</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目ID</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              project_name
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目名称</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              logo
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">项目Logo</div></td></tr><!----><tr role="row" class=""><td aria-colindex="1" role="cell" class="">
+              one_liner
+              <!----></td><td aria-colindex="2" role="cell" class="">string</td><td aria-colindex="3" role="cell" class=""><div data-v-4d7a0f90="">简介</div></td></tr><!----><!----><!----></tbody><!----></table> <h5 data-v-4d7a0f90="">请求示例</h5> <pre class="request_sample" data-v-4d7a0f90="">curl -X POST -H "apikey: Your APIKEY" -H "language: en" -H "Content-Type: application/json" -d '{"tag_ids":"100,101"}'  https://api.rootdata.com/open/projects_by_tags</pre> <h5 data-v-4d7a0f90="">请求成功示例</h5> <pre data-v-4d7a0f90="">{
+  "data": [
+    {
+      "project_id": 2297,
+      "one_liner": "Crypto bug bounty platform",
+      "logo": "https://public.rootdata.com/images/b26/1666654548967.jpg",
+      "project_name": "Immunefi"
+    }
+  ],
+  "result": 200
+}</pre> <h5 data-v-4d7a0f90="">请求失败示例</h5> <pre data-v-4d7a0f90="">{
+  "data": {},
+  "result": 404,
+  "message": "error message"
+}</pre></div></div>
