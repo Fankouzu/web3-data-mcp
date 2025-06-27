@@ -148,6 +148,58 @@ logger.error('API调用失败', {
 });
 ```
 
+### 5. MCP协议兼容性规范
+
+#### 5.1 严格禁止在关键输出中使用Emoji字符
+```javascript
+// ❌ 错误示例 - 会导致JSON-RPC协议解析失败
+console.error('✅ MCP Server initialization completed');
+console.error(`📊 Registered ${this.providers.size} data providers`);
+console.log('📝 Registered tools');
+
+// ✅ 正确示例 - 使用纯文本
+console.error('MCP Server initialization completed');
+console.error(`Registered ${this.providers.size} data providers`);
+console.log('Registered tools');
+```
+
+#### 5.2 字符编码要求
+- **STDOUT输出**：必须只包含标准JSON-RPC消息，不得包含任何调试信息
+- **STDERR输出**：可用于调试日志，但不得包含emoji、特殊符号或非ASCII字符
+- **字符集限制**：所有日志输出必须使用ASCII或UTF-8编码，避免emoji字符
+
+#### 5.3 MCP服务器日志最佳实践
+```javascript
+// ✅ 推荐的日志格式
+class McpServer {
+  initialize() {
+    console.error('Initializing Web3 Data MCP Server...');
+    console.error('RootData provider initialized successfully');
+    console.error(`Registered ${count} data providers`);
+  }
+  
+  handleError(error) {
+    console.error('Tool call failed:', error.message);
+    console.error('Error details:', error.stack);
+  }
+}
+```
+
+#### 5.4 协议通信规则
+1. **STDOUT专用性**：STDOUT仅用于JSON-RPC协议通信，不得输出任何其他内容
+2. **STDERR调试**：所有调试信息、状态消息、错误日志通过STDERR输出
+3. **编码安全**：避免使用可能导致编码问题的特殊字符
+4. **消息格式**：确保所有JSON消息格式正确，不包含非标准字符
+
+#### 5.5 代码审查检查点
+在代码审查时，必须检查以下项目：
+- [ ] 是否有console.log/console.error包含emoji字符
+- [ ] STDOUT是否只输出JSON-RPC消息
+- [ ] 调试日志是否正确使用STDERR
+- [ ] 字符编码是否兼容MCP协议
+
+**重要提醒**：违反MCP协议兼容性规范会导致Claude Desktop无法正确解析服务器响应，造成"Unexpected token"错误。
+
 ## 测试规范
 
 ### 1. 单元测试

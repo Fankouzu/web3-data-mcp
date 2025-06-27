@@ -24,7 +24,7 @@
     "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\" \"*.js\" \"*.json\" \"*.md\"",
     "docs:generate": "jsdoc -c .jsdoc.json",
     "docs:serve": "npx http-server docs/api -p 8080",
-    "validate": "npm run lint && npm run format:check && npm run test",
+    "validate": "npm run lint && npm run format:check && npm run mcp:check && npm run test",
     "prebuild": "npm run validate",
     "build": "npm pack",
     "build:ci": "npm pack --ignore-scripts",
@@ -34,6 +34,8 @@
     "clean": "rm -rf node_modules coverage docs/api *.tgz",
     "health:check": "node scripts/health-check.js",
     "status": "npm run health:check",
+    "mcp:check": "node scripts/check-mcp-compatibility.js",
+    "mcp:lint": "npm run mcp:check",
     "config:example": "node src/index.js --config-example",
     "help": "node src/index.js --help",
     "env:help": "node src/index.js --env-help"

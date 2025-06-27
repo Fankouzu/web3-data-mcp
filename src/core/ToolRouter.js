@@ -70,7 +70,7 @@ class ToolRouter {
       this.registerTool(tool.name, name, tool);
     });
 
-    console.error(`🔧 Registered provider: ${name} (${tools.length} tools)`);
+    console.error(`Registered provider: ${name} (${tools.length} tools)`);
   }
 
   /**

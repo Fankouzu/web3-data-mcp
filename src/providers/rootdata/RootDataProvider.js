@@ -101,10 +101,10 @@ class RootDataProvider extends DataProvider {
 
       this.isInitialized = true;
 
-      console.log(`✅ RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
+      console.log(`RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
       return true;
     } catch (error) {
-      console.error(`❌ RootData provider initialization failed: ${error.message}`);
+      console.error(`RootData provider initialization failed: ${error.message}`);
       return false;
     }
   }
@@ -257,7 +257,7 @@ class RootDataProvider extends DataProvider {
           if (result.success && result.data) {
             try {
               result.data = validateResponse(endpointId, result.data, options);
-              console.log(`✅ Response data validated for ${endpointId}`);
+              console.log(`Response data validated for ${endpointId}`);
             } catch (validationError) {
               console.warn(`⚠️ Data validation warning for ${endpointId}:`, validationError.message);
             }
@@ -313,7 +313,7 @@ class RootDataProvider extends DataProvider {
       this.registerTool(toolDefinition);
     });
 
-    console.log(`📝 Registered ${this.tools.size} RootData tools`);
+    console.log(`Registered ${this.tools.size} RootData tools`);
   }
 
   // ========== 公共API方法 ==========

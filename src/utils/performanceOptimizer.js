@@ -279,7 +279,7 @@ class MemoryMonitor {
       this.checkMemory();
     }, this.checkInterval);
     
-    console.log('📊 Memory monitoring started');
+    console.log('Memory monitoring started');
   }
 
   stop() {
@@ -288,7 +288,7 @@ class MemoryMonitor {
       this.intervalId = null;
     }
     this.isMonitoring = false;
-    console.log('📊 Memory monitoring stopped');
+    console.log('Memory monitoring stopped');
   }
 
   checkMemory() {
@@ -406,7 +406,7 @@ class PerformanceOptimizer {
     for (const { endpoint, params, requestFn } of endpoints) {
       try {
         await this.optimizeRequest(endpoint, params, requestFn);
-        console.log(`✅ Warmed up cache for ${endpoint}`);
+        console.log(`Warmed up cache for ${endpoint}`);
       } catch (error) {
         console.warn(`⚠️ Failed to warm up cache for ${endpoint}:`, error.message);
       }

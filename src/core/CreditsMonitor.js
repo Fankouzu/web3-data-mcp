@@ -73,7 +73,7 @@ class CreditsMonitor {
       consecutiveFailures: 0
     });
 
-    console.error(`📊 Registered Credits monitoring: ${providerName} (Credits: ${provider.credits})`);
+    console.error(`Registered Credits monitoring: ${providerName} (Credits: ${provider.credits})`);
   }
 
   /**

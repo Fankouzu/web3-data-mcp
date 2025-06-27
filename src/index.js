@@ -75,7 +75,7 @@ async function main() {
     const initSuccess = await mcpServer.initialize(providerConfigs);
 
     if (!initSuccess) {
-      console.error('❌ Server initialization failed');
+      console.error('Server initialization failed');
       process.exit(1);
     }
 

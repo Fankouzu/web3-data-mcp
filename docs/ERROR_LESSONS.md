@@ -4,7 +4,66 @@
 
 ## 错误记录
 
-### 1. RootData API 调用格式错误 (2024-12-26)
+### 1. MCP协议JSON解析错误 - Emoji字符冲突 (2024-12-27)
+
+#### 问题描述
+在Claude Desktop中启动MCP服务器时出现JSON解析错误：
+```
+Unexpected token '�', "📊 Memory "... is not valid JSON
+Unexpected token '�', "📝 Registe"... is not valid JSON  
+Unexpected token '✅', "✅ RootData"... is not valid JSON
+```
+
+#### 错误原因
+- **MCP协议冲突**: MCP使用stdin/stdout进行JSON-RPC通信，emoji字符干扰了协议解析
+- **字符编码问题**: 某些emoji字符在传输过程中被转换为无效字符（`�`）
+- **输出混合**: 调试日志包含emoji字符被误认为是JSON-RPC消息的一部分
+
+#### 问题源头文件
+1. `src/core/McpServer.js` - 服务器初始化日志
+2. `src/providers/rootdata/RootDataProvider.js` - 供应商注册日志
+3. `src/utils/performanceOptimizer.js` - 内存监控日志
+4. `src/core/ToolRouter.js` - 工具注册日志
+5. `src/core/CreditsMonitor.js` - 监控注册日志
+
+#### 解决方案
+```javascript
+// ❌ 错误 - 包含emoji的日志输出
+console.error('✅ MCP Server initialization completed');
+console.error(`📊 Registered ${this.providers.size} data providers`);
+console.log('📝 Registered tools');
+
+// ✅ 正确 - 纯文本日志输出
+console.error('MCP Server initialization completed');
+console.error(`Registered ${this.providers.size} data providers`);
+console.log('Registered tools');
+```
+
+#### 关键修复点
+1. **移除所有emoji字符**: 从console.error/console.log输出中移除emoji
+2. **保持协议纯净**: STDOUT只用于JSON-RPC通信
+3. **规范日志格式**: 所有调试信息使用纯ASCII字符
+
+#### 验证方法
+创建JSON兼容性测试确认无解析错误：
+```javascript
+// 测试MCP启动时的JSON兼容性
+const mcpProcess = spawn('node', ['src/index.js'], {...});
+// 监听stderr输出，检查是否有"Unexpected token"错误
+```
+
+#### 经验教训
+- **MCP协议严格性**: MCP协议对JSON格式要求极其严格，任何非标准字符都会导致解析失败
+- **输出分离重要性**: STDOUT必须专用于协议通信，调试信息应通过STDERR输出
+- **字符编码安全**: 在协议通信场景下，应避免使用emoji和特殊字符
+- **测试的重要性**: 应该有专门的协议兼容性测试来验证MCP通信
+
+#### 预防措施
+- 在编码规范中明确禁止在MCP相关输出中使用emoji
+- 代码审查时检查是否包含非ASCII字符
+- 建立自动化测试来验证协议兼容性
+
+### 2. RootData API 调用格式错误 (2024-12-26)
 
 #### 问题描述
 初始API测试失败，收到302重定向响应和HTML错误页面。
