@@ -463,6 +463,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 📖 Documentation: [Full API docs](https://docs.example.com)
 - 🐛 Bug Reports: [GitHub Issues](https://github.com/your-username/web3-data-mcp/issues)
 
+## 💖 Sponsorship
+
+If you find this project helpful, please consider supporting its development:
+
+### Traditional Sponsorship
+- 💝 **GitHub Sponsors**: [Support on GitHub](https://github.com/sponsors/Fankouzu)
+
+### Crypto Sponsorship
+- 🌟 **Solana (SOL)**: `CuiDdffKV38LjgRVtiA2QiMTKhnzkjX2LUxqSMbVnGjG`
+
+Your support helps maintain and improve this project for the Web3 community! 🚀
+
 ---
 
 **Made with ❤️ for the Web3 community** 

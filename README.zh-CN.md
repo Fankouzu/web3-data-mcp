@@ -463,6 +463,18 @@ npm run format
 - 📖 文档: [完整 API 文档](https://docs.example.com)
 - 🐛 错误报告: [GitHub Issues](https://github.com/your-username/web3-data-mcp/issues)
 
+## 💖 赞助支持
+
+如果这个项目对您有帮助，请考虑支持项目的开发：
+
+### 传统赞助方式
+- 💝 **GitHub Sponsors**: [在 GitHub 上赞助](https://github.com/sponsors/Fankouzu)
+
+### 加密货币赞助
+- 🌟 **Solana (SOL)**: `CuiDdffKV38LjgRVtiA2QiMTKhnzkjX2LUxqSMbVnGjG`
+
+您的支持有助于维护和改进这个项目，为 Web3 社区提供更好的服务！🚀
+
 ---
 
 **为 Web3 社区倾心打造 ❤️** 
