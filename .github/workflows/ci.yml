@@ -188,7 +188,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload documentation artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: api-documentation
         path: docs/api/
@@ -268,7 +268,7 @@ jobs:
         git log --oneline --pretty=format:"- %s" HEAD~10..HEAD >> RELEASE_NOTES.md
 
     - name: Upload release notes
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-notes
         path: RELEASE_NOTES.md
@@ -303,7 +303,7 @@ jobs:
         fi
 
     - name: Upload pipeline status
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pipeline-status
         path: pipeline-status.md 
