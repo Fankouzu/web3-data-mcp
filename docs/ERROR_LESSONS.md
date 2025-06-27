@@ -82,6 +82,122 @@ const mcpProcess = spawn('node', ['src/index.js'], {...});
 - **实际测试**: 在Claude Desktop中实际测试MCP服务器启动
 - **代码审查重点**: 重点检查STDOUT输出纯净性
 
+### 3. MCP工具参数类型错误 - 参数类型不匹配导致方法调用失败 (2025-06-27)
+
+#### 问题描述
+在Claude Desktop调用`get_project_details`工具时出现错误：
+```
+{"code":-32600,"message":"MCP error -32600: Routing processing failed: query.toLowerCase is not a function"}
+```
+
+#### 错误原因分析
+**根本问题 - 参数类型假设错误**:
+- **类型不匹配**: MCP工具调用传入数字类型的`project_id: 11646`，但代码假设查询参数总是字符串
+- **隐式类型转换失败**: 直接将数字赋值给query参数，导致后续字符串方法调用失败
+
+**错误链路**:
+```
+Claude Desktop → McpServer → routeQuery(11646) → _analyzeIntent(11646) → (11646).toLowerCase() → TypeError
+```
+
+#### 问题源头代码
+**McpServer.js - 查询构建逻辑缺陷**:
+```javascript
+// 问题代码 - 直接使用project_id数字作为query
+const query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || toolArgs.project_id || `${toolName} request`;
+```
+
+**ToolRouter.js - 缺少类型检查**:
+```javascript
+// 错误触发点 - 假设query总是字符串
+const queryLower = query.toLowerCase(); // 💥 TypeError when query is number
+```
+
+#### 修复实施过程
+
+**修复1: McpServer查询构建智能化**
+```javascript
+// 修复后 - 智能处理不同类型的参数
+let query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem;
+
+// 对于特殊工具，处理非字符串参数
+if (!query) {
+  if (toolArgs.project_id && (toolName === 'get_project_details' || toolName.includes('project'))) {
+    query = `project_${toolArgs.project_id}`;  // 数字→字符串转换
+  } else if (toolArgs.org_id && (toolName === 'get_organization_details' || toolName.includes('organization'))) {
+    query = `organization_${toolArgs.org_id}`;
+  } else if (toolArgs.contract_address && toolName.includes('project')) {
+    query = toolArgs.contract_address;
+  } else {
+    query = `${toolName} request`;
+  }
+}
+
+// 确保query是字符串
+query = String(query);
+```
+
+**修复2: ToolRouter防御性编程**
+```javascript
+// 在routeQuery方法开始处添加类型保护
+if (typeof query !== 'string') {
+  query = String(query);
+  console.error(`[${requestId}] Query converted to string: "${query}"`);
+}
+```
+
+#### 测试验证结果
+**测试输入**:
+```javascript
+{
+  project_id: 11646,
+  include_team: true,
+  include_investors: true
+}
+```
+
+**修复后输出**:
+- ✅ query类型: `string`
+- ✅ query值: `"project_11646"`
+- ✅ 无TypeError异常
+- ✅ ToolRouter正常处理
+
+#### 核心经验教训
+1. **参数类型多样性**: MCP工具调用的参数类型不固定，需要适配不同场景
+   - 搜索工具: 字符串查询
+   - 详情工具: 数字ID
+   - 地址工具: 字符串地址
+
+2. **防御性编程必要性**: 关键方法入口必须进行类型检查和转换
+   ```javascript
+   // 好的实践 - 类型保护
+   if (typeof query !== 'string') {
+     query = String(query);
+   }
+   ```
+
+3. **错误信息的分析技巧**: 
+   - `query.toLowerCase is not a function` → query不是字符串
+   - 追踪调用链找到参数传递的源头
+   - 区分类型错误和逻辑错误
+
+4. **工具特化处理**: 不同工具有不同的参数模式，需要个性化处理
+   - 搜索类: 优先使用query字符串
+   - ID类: 构建描述性查询字符串
+   - 地址类: 直接使用地址作为查询
+
+#### 预防措施
+- **类型检查标准化**: 所有接收external参数的方法都要进行类型检查
+- **测试用例多样化**: 测试不同类型的参数输入（字符串、数字、布尔值）
+- **参数文档化**: 明确记录每个工具期望的参数类型和格式
+- **错误处理增强**: 提供更详细的类型错误信息
+
+#### 代码审查要点
+- [ ] 检查所有字符串方法调用前是否有类型验证
+- [ ] 确认参数类型转换的完整性
+- [ ] 验证不同工具的参数处理逻辑
+- [ ] 测试边界情况（null、undefined、非预期类型）
+
 ### 2. RootData API 调用格式错误 (2024-12-26)
 
 #### 问题描述

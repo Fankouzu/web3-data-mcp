@@ -237,11 +237,27 @@ class McpServer {
 
         console.error(`[${requestId}] Tool validated successfully`);
 
-        // 构建查询字符串
-        const query =
-          toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || toolArgs.project_id || `${toolName} request`;
+        // 构建查询字符串 - 确保query始终是字符串
+        let query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem;
+        
+        // 对于特殊工具，处理非字符串参数
+        if (!query) {
+          if (toolArgs.project_id && (toolName === 'get_project_details' || toolName.includes('project'))) {
+            query = `project_${toolArgs.project_id}`;
+          } else if (toolArgs.org_id && (toolName === 'get_organization_details' || toolName.includes('organization'))) {
+            query = `organization_${toolArgs.org_id}`;
+          } else if (toolArgs.contract_address && toolName.includes('project')) {
+            query = toolArgs.contract_address;
+          } else {
+            query = `${toolName} request`;
+          }
+        }
+        
+        // 确保query是字符串
+        query = String(query);
 
         console.error(`[${requestId}] Built query: "${query}"`);
+        console.error(`[${requestId}] Query type: ${typeof query}`);
 
         // 通过智能路由执行查询
         console.error(`[${requestId}] Starting route query with tool: ${toolName}`);

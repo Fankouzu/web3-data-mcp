@@ -210,17 +210,66 @@ class McpServer {
 3. **编码安全**：避免使用可能导致编码问题的特殊字符
 4. **消息格式**：确保所有JSON消息格式正确，不包含非标准字符
 
-#### 5.6 代码审查检查点
+#### 5.6 参数类型安全规范
+**关键原则**：
+- **类型防御性**: 所有接收外部参数的方法必须进行类型检查
+- **类型转换明确性**: 显式进行类型转换，避免隐式假设
+- **工具特化处理**: 不同工具类型需要不同的参数处理策略
+
+**必须遵循**：
+- ✅ 在方法入口进行参数类型检查
+- ✅ 为不同工具类型提供专门的参数处理逻辑
+- ✅ 使用`String()`, `parseInt()`等明确的类型转换
+
+**绝对禁止**：
+- ❌ 假设参数总是特定类型（如字符串）
+- ❌ 直接对未验证类型的参数调用方法
+- ❌ 忽略类型转换的边界情况
+
+```javascript
+// ✅ 正确的参数类型处理
+function processQuery(query, toolName) {
+  // 类型检查和转换
+  if (typeof query !== 'string') {
+    query = String(query);
+    console.error(`Query converted to string: "${query}"`);
+  }
+  
+  // 工具特化处理
+  if (toolName === 'get_project_details' && typeof originalParam === 'number') {
+    query = `project_${originalParam}`;
+  }
+  
+  return query.toLowerCase(); // 安全调用
+}
+
+// ❌ 错误的参数处理
+function processQuery(query) {
+  return query.toLowerCase(); // 💥 可能TypeError
+}
+```
+
+#### 5.7 代码审查检查点
 在代码审查时，必须检查以下项目：
+
+**MCP协议兼容性**：
 - [ ] **禁用console.log**：是否有使用`console.log()`输出到STDOUT
 - [ ] **禁用emoji字符**：是否有console.error包含emoji字符
 - [ ] **STDOUT纯净性**：STDOUT是否只输出JSON-RPC消息
 - [ ] **STDERR规范性**：调试日志是否正确使用STDERR
 - [ ] **字符编码安全**：是否使用纯ASCII字符
 
+**参数类型安全**：
+- [ ] **类型检查完整性**：关键方法是否有参数类型检查
+- [ ] **类型转换明确性**：是否使用显式类型转换
+- [ ] **字符串方法安全性**：调用字符串方法前是否验证类型
+- [ ] **工具参数适配**：不同工具是否有对应的参数处理逻辑
+- [ ] **边界情况测试**：是否测试null、undefined、非预期类型
+
 **重要提醒**：
 - 使用`console.log()`会导致Claude Desktop出现"Unexpected token"JSON解析错误
 - 使用emoji字符会导致字符编码问题
+- 参数类型错误会导致"is not a function"运行时错误
 - 违反这些规范会使MCP服务器完全无法在Claude Desktop中工作
 
 ## 测试规范

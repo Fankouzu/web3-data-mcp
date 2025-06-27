@@ -25,13 +25,13 @@ async function main() {
     }
 
     if (args.includes('--config-example')) {
-      console.log('Example configuration file content:');
-      console.log(ConfigManager.createExampleConfig());
+          console.error('Example configuration file content:');
+    console.error(ConfigManager.createExampleConfig());
       return;
     }
 
     if (args.includes('--env-help')) {
-      console.log(ConfigManager.getEnvironmentVariablesHelp());
+      console.error(ConfigManager.getEnvironmentVariablesHelp());
       return;
     }
 
@@ -99,7 +99,7 @@ async function main() {
  * 打印帮助信息
  */
 function printHelp() {
-  console.log(`
+  console.error(`
 🌟 Web3 Data MCP服务器
 
 一个基于Model Context Protocol的Web3数据查询服务，支持多个数据供应商。

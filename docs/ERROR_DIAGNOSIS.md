@@ -21,7 +21,106 @@
 
 ---
 
-### 2. **-32603 "System internal error" 错误**（已修复）
+### 2. **-32600 "Routing processing failed" 错误**（✅ 已修复）
+
+**错误表现**:
+```json
+{"code":-32600,"message":"MCP error -32600: Routing processing failed: query.toLowerCase is not a function"}
+```
+
+**出现场景**:
+- `get_project_details` 工具调用时
+- 任何传入非字符串参数作为主要查询参数的工具调用
+
+**🔍 根本原因分析**:
+
+#### 问题发现过程
+1. **错误进化**: 之前的-32603错误修复后，出现了新的-32600错误
+2. **错误信息**: "query.toLowerCase is not a function" 表明`query`参数不是字符串类型
+3. **调用链分析**:
+   ```
+   Claude Desktop → McpServer → routeQuery(query) → _analyzeIntent(query) → query.toLowerCase()
+   ```
+
+#### 具体问题点
+1. **参数类型问题**: 
+   - MCP调用传入: `{project_id: 11646, include_team: true, include_investors: true}`
+   - McpServer构建query: `toolArgs.project_id`（数字11646）
+   - routeQuery接收: 数字类型而非字符串
+
+2. **代码位置**:
+   ```javascript
+   // McpServer.js:243 - 问题源头
+   const query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || toolArgs.project_id || `${toolName} request`;
+   
+   // ToolRouter.js:146 - 错误触发点
+   const queryLower = query.toLowerCase(); // 💥 TypeError if query is not string
+   ```
+
+#### 🛠️ 修复实施详细
+
+**修复1: McpServer查询构建优化**
+```javascript
+// 修复前 (有缺陷)
+const query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || toolArgs.project_id || `${toolName} request`;
+
+// 修复后 (类型安全)
+let query = toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem;
+
+// 对于特殊工具，处理非字符串参数
+if (!query) {
+  if (toolArgs.project_id && (toolName === 'get_project_details' || toolName.includes('project'))) {
+    query = `project_${toolArgs.project_id}`;
+  } else if (toolArgs.org_id && (toolName === 'get_organization_details' || toolName.includes('organization'))) {
+    query = `organization_${toolArgs.org_id}`;
+  } else if (toolArgs.contract_address && toolName.includes('project')) {
+    query = toolArgs.contract_address;
+  } else {
+    query = `${toolName} request`;
+  }
+}
+
+// 确保query是字符串
+query = String(query);
+```
+
+**修复2: ToolRouter类型保护**
+```javascript
+// 在routeQuery方法开始处添加类型检查
+if (typeof query !== 'string') {
+  query = String(query);
+  console.error(`[${requestId}] Query converted to string: "${query}"`);
+}
+```
+
+#### 🎯 修复验证
+
+**测试用例**:
+```javascript
+// 输入: {project_id: 11646, include_team: true, include_investors: true}
+// 期望结果: query = "project_11646" (字符串类型)
+
+const mockRequest = {
+  params: {
+    name: 'get_project_details',
+    arguments: {
+      project_id: 11646,
+      include_team: true,
+      include_investors: true
+    }
+  }
+};
+```
+
+**验证结果**:
+✅ query类型: string
+✅ query值: "project_11646"
+✅ 不再出现toLowerCase错误
+✅ ToolRouter正常处理参数
+
+---
+
+### 3. **-32603 "System internal error" 错误**（已修复）
 
 **错误表现**:
 ```json

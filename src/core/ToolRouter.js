@@ -105,6 +105,13 @@ class ToolRouter {
     
     try {
       this.routingStats.totalQueries++;
+      
+      // 确保query是字符串
+      if (typeof query !== 'string') {
+        query = String(query);
+        console.error(`[${requestId}] Query converted to string: "${query}"`);
+      }
+      
       console.error(`[${requestId}] Starting routeQuery for: "${query}"`);
 
       // 1. 分析查询意图

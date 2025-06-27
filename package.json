@@ -40,6 +40,7 @@
     "debug:verbose": "DEBUG=* node scripts/debug-test.js",
     "test:get-project": "node scripts/test-get-project.js",
     "test:quick": "node scripts/quick-test.js",
+    "test:project-details": "node scripts/test-project-details.js",
     "config:example": "node src/index.js --config-example",
     "help": "node src/index.js --help",
     "env:help": "node src/index.js --env-help"

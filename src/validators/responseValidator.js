@@ -449,7 +449,7 @@ function validateApiResponse(response) {
     validateField(response, 'remaining_credits', validators.isNumber, false);
     return true;
   } catch (error) {
-    console.error('❌ Invalid API response structure:', error.message);
+    console.error('Invalid API response structure:', error.message);
     return false;
   }
 }
