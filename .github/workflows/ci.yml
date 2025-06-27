@@ -221,9 +221,14 @@ jobs:
 
     - name: Test package installation
       run: |
+        # Get the actual package file name
+        PACKAGE_FILE=$(ls web3-data-mcp-*.tgz)
+        echo "Found package file: $PACKAGE_FILE"
+        
+        # Test installation in a clean directory
         mkdir test-install && cd test-install
         npm init -y
-        npm install ../web3-data-mcp-*.tgz
+        npm install "../$PACKAGE_FILE"
         node -e "console.log('Package installed successfully')"
 
   # ==================== 发布准备 ====================
