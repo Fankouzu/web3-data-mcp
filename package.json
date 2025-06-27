@@ -36,6 +36,10 @@
     "status": "npm run health:check",
     "mcp:check": "node scripts/check-mcp-compatibility.js",
     "mcp:lint": "npm run mcp:check",
+    "debug": "node scripts/debug-test.js",
+    "debug:verbose": "DEBUG=* node scripts/debug-test.js",
+    "test:get-project": "node scripts/test-get-project.js",
+    "test:quick": "node scripts/quick-test.js",
     "config:example": "node src/index.js --config-example",
     "help": "node src/index.js --help",
     "env:help": "node src/index.js --env-help"

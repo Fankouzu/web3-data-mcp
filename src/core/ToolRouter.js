@@ -101,22 +101,35 @@ class ToolRouter {
    * @returns {Promise<Object>} 路由结果
    */
   async routeQuery(query, options = {}) {
+    const requestId = options.requestId || 'unknown';
+    
     try {
       this.routingStats.totalQueries++;
+      console.error(`[${requestId}] Starting routeQuery for: "${query}"`);
 
       // 1. 分析查询意图
+      console.error(`[${requestId}] Step 1: Analyzing query intent`);
       const intent = this._analyzeIntent(query);
+      console.error(`[${requestId}] Intent analysis result:`, intent);
 
       // 2. 提取查询实体
+      console.error(`[${requestId}] Step 2: Extracting entities`);
       const entities = this._extractEntities(query);
+      console.error(`[${requestId}] Entities extracted:`, entities);
 
       // 3. 检测语言
+      console.error(`[${requestId}] Step 3: Detecting language`);
       const language = detectLanguage(query);
+      console.error(`[${requestId}] Language detected: ${language}`);
 
       // 4. 选择最佳路由
+      console.error(`[${requestId}] Step 4: Selecting best route`);
+      console.error(`[${requestId}] Route options:`, options);
       const routing = this._selectBestRoute(intent, entities, options);
-
+      
       if (!routing) {
+        console.error(`[${requestId}] No routing found!`);
+        console.error(`[${requestId}] Available providers:`, Array.from(this.providers.keys()));
         this.routingStats.failedRoutes++;
         return {
           success: false,
@@ -127,13 +140,22 @@ class ToolRouter {
         };
       }
 
+      console.error(`[${requestId}] Selected routing:`, routing);
+
       // 5. 执行路由
+      console.error(`[${requestId}] Step 5: Executing route`);
       const result = await this._executeRoute(routing, query, entities, language, options);
+      console.error(`[${requestId}] Route execution result:`, {
+        success: result.success,
+        hasData: !!result.data,
+        hasCredits: !!result.credits,
+        error: result.error
+      });
 
       // 6. 更新统计
       this._updateRoutingStats(intent.type, routing.provider, result.success);
 
-      return {
+      const finalResult = {
         success:  result.success,
         data:     result.data,
         provider: routing.provider,
@@ -144,7 +166,12 @@ class ToolRouter {
         credits:  result.credits,
         error:    result.error
       };
+
+      console.error(`[${requestId}] Final result prepared, success: ${finalResult.success}`);
+      return finalResult;
     } catch (error) {
+      console.error(`[${requestId}] EXCEPTION in routeQuery:`, error.message);
+      console.error(`[${requestId}] Exception stack:`, error.stack);
       this.routingStats.failedRoutes++;
       return {
         success:  false,
@@ -407,18 +434,32 @@ class ToolRouter {
    * @private
    */
   async _executeRoute(routing, query, entities, language, options) {
+    const requestId = options.requestId || 'unknown';
+    console.error(`[${requestId}] Executing route with provider: ${routing.provider}`);
+    
     const provider = this.providers.get(routing.provider);
 
     if (!provider) {
+      console.error(`[${requestId}] Provider ${routing.provider} not found!`);
+      console.error(`[${requestId}] Available providers:`, Array.from(this.providers.keys()));
       throw new Error(`Provider ${routing.provider} is not available`);
     }
 
+    console.error(`[${requestId}] Provider found successfully`);
+
     // 构建API调用参数
+    console.error(`[${requestId}] Building API params for tool: ${routing.tool}`);
     const params = this._buildApiParams(routing.tool, query, entities, language, options);
+    console.error(`[${requestId}] Built params:`, params);
+    console.error(`[${requestId}] Using endpoint: ${routing.definition.endpoint}`);
 
     try {
       // 执行API调用
+      console.error(`[${requestId}] Starting API call to provider.executeApiCall`);
       const result = await provider.executeApiCall(routing.definition.endpoint, params);
+      console.error(`[${requestId}] API call completed successfully`);
+      console.error(`[${requestId}] Result data size:`, result.data ? JSON.stringify(result.data).length : 0);
+      console.error(`[${requestId}] Credits info:`, result.credits);
 
       return {
         success: true,
@@ -426,6 +467,9 @@ class ToolRouter {
         credits: result.credits
       };
     } catch (error) {
+      console.error(`[${requestId}] API call FAILED:`, error.message);
+      console.error(`[${requestId}] Error type:`, error.constructor.name);
+      console.error(`[${requestId}] Error stack:`, error.stack);
       return {
         success: false,
         error:   error.message
@@ -438,23 +482,49 @@ class ToolRouter {
    * @private
    */
   _buildApiParams(toolName, query, entities, language, options) {
+    // 优先使用options.params中的参数（来自MCP工具调用）
     const params = { ...options.params };
 
     switch (toolName) {
       case 'search_web3_entities':
-        params.query = query;
-        if (options.preciseXSearch) {
+        // 如果params中没有query，使用传入的query
+        if (!params.query) {
+          params.query = query;
+        }
+        if (options.preciseXSearch || params.precise_x_search) {
           params.precise_x_search = true;
         }
         break;
 
       case 'get_project_details':
-        const projectEntity = entities.find(e => e.type === EntityTypes.PROJECT);
-        if (projectEntity) {
-          params.project_id = projectEntity.value;
-        } else {
-          params.project_id = options.projectId || query;
+        // 已经在params中的参数优先级最高（来自MCP调用）
+        if (params.project_id === undefined && params.contract_address === undefined) {
+          // 只有在params中没有这些参数时才从其他地方获取
+          if (options.project_id !== undefined) {
+            params.project_id = parseInt(options.project_id);
+          } else if (options.projectId !== undefined) {
+            params.project_id = parseInt(options.projectId);
+          } else {
+            const projectEntity = entities.find(e => e.type === EntityTypes.PROJECT);
+            if (projectEntity) {
+              params.project_id = parseInt(projectEntity.value);
+            } else {
+              // 尝试从查询中解析数字
+              const idMatch = query.match(/\d+/);
+              if (idMatch) {
+                params.project_id = parseInt(idMatch[0]);
+              } else {
+                params.project_id = query;
+              }
+            }
+          }
         }
+        
+        // 确保数字类型的参数被正确转换
+        if (params.project_id !== undefined && typeof params.project_id !== 'number') {
+          params.project_id = parseInt(params.project_id);
+        }
+        
         break;
 
       case 'get_token_info':

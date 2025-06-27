@@ -215,31 +215,67 @@ class McpServer {
     // 执行工具调用
     this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name: toolName, arguments: toolArgs } = request.params;
+      const requestId = Math.random().toString(36).substr(2, 9);
 
       try {
         this.stats.totalRequests++;
         this._updateToolUsageStats(toolName);
 
-        console.error(`Executing tool call: ${toolName}`);
-        console.error(`Parameters:`, JSON.stringify(toolArgs, null, 2));
-        console.error(`Request time: ${new Date().toISOString()}`);
+        console.error(`[${requestId}] Executing tool call: ${toolName}`);
+        console.error(`[${requestId}] Parameters:`, JSON.stringify(toolArgs, null, 2));
+        console.error(`[${requestId}] Request time: ${new Date().toISOString()}`);
+
+        // 验证工具是否存在
+        const availableTools = this.toolRouter.getAvailableTools();
+        const toolExists = availableTools.some(tool => tool.name === toolName);
+        
+        if (!toolExists) {
+          console.error(`[${requestId}] ERROR: Tool ${toolName} not found in available tools`);
+          console.error(`[${requestId}] Available tools:`, availableTools.map(t => t.name));
+          throw new McpError(ErrorCode.InvalidRequest, `Tool ${toolName} is not available`);
+        }
+
+        console.error(`[${requestId}] Tool validated successfully`);
 
         // 构建查询字符串
         const query =
           toolArgs.query || toolArgs.token_symbol || toolArgs.ecosystem || toolArgs.project_id || `${toolName} request`;
 
-        // 通过智能路由执行查询
-        console.error(`Routing query: "${query}" using tool: ${toolName}`);
-        const result = await this.toolRouter.routeQuery(query, {
-          params:         toolArgs,
-          toolName,
-          includeDetails: true
-        });
+        console.error(`[${requestId}] Built query: "${query}"`);
 
-        console.error(`Query result: ${result.success ? 'Success' : 'Failed'}`);
+        // 通过智能路由执行查询
+        console.error(`[${requestId}] Starting route query with tool: ${toolName}`);
+        
+        let result;
+        try {
+          result = await this.toolRouter.routeQuery(query, {
+            params:         toolArgs,
+            toolName,
+            includeDetails: true,
+            requestId       // 传递requestId用于更详细的日志追踪
+          });
+          console.error(`[${requestId}] Route query completed`);
+        } catch (routeError) {
+          console.error(`[${requestId}] Route query FAILED:`, routeError.message);
+          console.error(`[${requestId}] Route error stack:`, routeError.stack);
+          throw routeError;
+        }
+
+        console.error(`[${requestId}] Query result: ${result.success ? 'Success' : 'Failed'}`);
+        
         if (!result.success) {
-          console.error(`Error details: ${result.error}`);
-          console.error(`Error stack:`, result.stack || 'No stack trace');
+          console.error(`[${requestId}] Error details: ${result.error}`);
+          console.error(`[${requestId}] Result object:`, JSON.stringify(result, null, 2));
+          
+          // 检查是否是credits问题
+          if (result.error && result.error.includes('credit')) {
+            console.error(`[${requestId}] Credits-related error detected`);
+          }
+          
+          // 检查是否是API问题
+          if (result.error && (result.error.includes('API') || result.error.includes('HTTP'))) {
+            console.error(`[${requestId}] API-related error detected`);
+          }
         }
 
         if (result.success) {
@@ -247,33 +283,51 @@ class McpServer {
 
           // 更新Credits监控
           if (result.credits) {
+            console.error(`[${requestId}] Updating credits monitor:`, result.credits);
             this.creditsMonitor.updateCredits(result.provider, result.credits.remaining, result.credits.used);
           }
 
-          console.error(`Tool call successful: ${toolName}`);
+          console.error(`[${requestId}] Tool call successful: ${toolName}`);
+
+          const formattedResponse = this._formatToolResponse(result);
+          console.error(`[${requestId}] Response formatted successfully, size: ${formattedResponse.length} chars`);
 
           return {
             content: [
               {
                 type: 'text',
-                text: this._formatToolResponse(result)
+                text: formattedResponse
               }
             ]
           };
         } else {
           this.stats.failedRequests++;
-          console.error(`Tool call failed: ${toolName} - ${result.error}`);
+          console.error(`[${requestId}] Tool call failed: ${toolName} - ${result.error}`);
 
           throw new McpError(ErrorCode.InvalidRequest, result.error || 'Tool call failed');
         }
       } catch (error) {
         this.stats.failedRequests++;
-        console.error(`Tool call exception: ${toolName}`, error.message);
+        console.error(`[${requestId}] Tool call EXCEPTION: ${toolName}`);
+        console.error(`[${requestId}] Exception message: ${error.message}`);
+        console.error(`[${requestId}] Exception stack:`, error.stack);
+        console.error(`[${requestId}] Exception type: ${error.constructor.name}`);
+        
+        // 检查是否是MCP错误
+        if (error instanceof McpError) {
+          console.error(`[${requestId}] This is already an MCP error, re-throwing`);
+          throw error;
+        }
 
         // 记录错误
-        const errorResponse = this.errorHandler.handleApiError(error, 'mcp-server', { toolName, toolArgs });
-
-        throw new McpError(ErrorCode.InternalError, errorResponse.error.message);
+        try {
+          const errorResponse = this.errorHandler.handleApiError(error, 'mcp-server', { toolName, toolArgs, requestId });
+          console.error(`[${requestId}] Error handler response:`, errorResponse);
+          throw new McpError(ErrorCode.InternalError, errorResponse.error.message);
+        } catch (handlerError) {
+          console.error(`[${requestId}] Error handler FAILED:`, handlerError.message);
+          throw new McpError(ErrorCode.InternalError, `System internal error, please try again later`);
+        }
       }
     });
 

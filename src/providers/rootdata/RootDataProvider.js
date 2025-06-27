@@ -172,24 +172,42 @@ class RootDataProvider extends DataProvider {
       endpointId,
       params,
       async () => {
+        const requestId = options.requestId || 'unknown';
+        console.error(`[${requestId}] RootDataProvider executing API call: ${endpointId}`);
+        
         try {
           let result;
           const language = this.detectQueryLanguage(params.query || '') || 'en';
 
-                console.error(`Executing RootData API call: ${endpointId}`);
-      console.error(`Request parameters:`, JSON.stringify(params, null, 2));
-      console.error(`Detected language: ${language}`);
+          console.error(`[${requestId}] Request parameters:`, JSON.stringify(params, null, 2));
+          console.error(`[${requestId}] Detected language: ${language}`);
+          console.error(`[${requestId}] Client status:`, this.client ? 'Ready' : 'Not initialized');
+
+          if (!this.client) {
+            console.error(`[${requestId}] ERROR: RootData client is not initialized!`);
+            throw new Error('RootData client is not initialized');
+          }
+
+          console.error(`[${requestId}] Starting endpoint switch for: ${endpointId}`);
 
           switch (endpointId) {
             case 'credits_check':
+              console.error(`[${requestId}] Calling client.checkCredits()`);
               result = await this.client.checkCredits();
               break;
 
             case 'search_entities':
+              console.error(`[${requestId}] Calling client.searchEntities()`);
               result = await this.client.searchEntities(params.query, language, params.precise_x_search);
               break;
 
             case 'get_project':
+              console.error(`[${requestId}] Calling client.getProject() with params:`, {
+                project_id: params.project_id,
+                contract_address: params.contract_address,
+                include_team: params.include_team,
+                include_investors: params.include_investors
+              });
               result = await this.client.getProject(
                 params.project_id,
                 params.contract_address,
@@ -199,6 +217,7 @@ class RootDataProvider extends DataProvider {
               break;
 
             case 'get_organization':
+              console.error(`[${requestId}] Calling client.getOrganization()`);
               result = await this.client.getOrganization(
                 params.org_id,
                 params.include_team,
@@ -207,68 +226,95 @@ class RootDataProvider extends DataProvider {
               break;
 
             case 'get_people':
+              console.error(`[${requestId}] Calling client.getPeople()`);
               result = await this.client.getPeople(params.people_id, language);
               break;
 
             case 'get_id_map':
+              console.error(`[${requestId}] Calling client.getIdMap()`);
               result = await this.client.getIdMap(params.type, language);
               break;
 
             case 'get_funding_rounds':
+              console.error(`[${requestId}] Calling client.getFundingRounds()`);
               result = await this.client.getFundingRounds(params, language);
               break;
 
             case 'get_investors':
+              console.error(`[${requestId}] Calling client.getInvestors()`);
               result = await this.client.getInvestors(params.page, params.page_size, language);
               break;
 
             case 'get_twitter_map':
+              console.error(`[${requestId}] Calling client.getTwitterMap()`);
               result = await this.client.getTwitterMap(params.type, language);
               break;
 
             case 'projects_by_ecosystems':
+              console.error(`[${requestId}] Calling client.getProjectsByEcosystems()`);
               result = await this.client.getProjectsByEcosystems(params.ecosystem_ids, language);
               break;
 
             case 'projects_by_tags':
+              console.error(`[${requestId}] Calling client.getProjectsByTags()`);
               result = await this.client.getProjectsByTags(params.tag_ids, language);
               break;
 
             case 'ecosystem_map':
+              console.error(`[${requestId}] Calling client.getEcosystemMap()`);
               result = await this.client.getEcosystemMap(language);
               break;
 
             case 'tag_map':
+              console.error(`[${requestId}] Calling client.getTagMap()`);
               result = await this.client.getTagMap(language);
               break;
 
             default:
+              console.error(`[${requestId}] ERROR: Unknown endpoint ${endpointId}`);
               throw new Error(`Endpoint ${endpointId} not yet implemented`);
           }
 
-          console.error(`API call successful, endpoint: ${endpointId}`);
+          console.error(`[${requestId}] Client call completed, result:`, {
+            success: result?.success,
+            hasData: !!result?.data,
+            dataType: result?.data ? typeof result.data : 'none'
+          });
 
           // 验证响应结构
           if (!validateApiResponse(result)) {
-            console.warn(`⚠️ Invalid response structure for ${endpointId}`);
+            console.error(`[${requestId}] WARNING: Invalid response structure for ${endpointId}`);
           }
 
           // 验证响应数据
           if (result.success && result.data) {
             try {
+              console.error(`[${requestId}] Validating response data`);
               result.data = validateResponse(endpointId, result.data, options);
-                              console.error(`Response data validated for ${endpointId}`);
+              console.error(`[${requestId}] Response data validated for ${endpointId}`);
             } catch (validationError) {
-              console.warn(`⚠️ Data validation warning for ${endpointId}:`, validationError.message);
+              console.error(`[${requestId}] Data validation warning for ${endpointId}:`, validationError.message);
             }
           }
 
           // 格式化响应并更新credits
-          return this.formatResponse(result, endpoint.creditsPerCall);
+          console.error(`[${requestId}] Formatting response`);
+          const formattedResult = this.formatResponse(result, endpoint.creditsPerCall);
+          console.error(`[${requestId}] API call successful, endpoint: ${endpointId}`);
+          
+          return formattedResult;
         } catch (error) {
-                console.error(`API call failed, endpoint: ${endpointId}`);
-      console.error(`Error message: ${error.message}`);
-      console.error(`Error stack:`, error.stack);
+          console.error(`[${requestId}] API call FAILED, endpoint: ${endpointId}`);
+          console.error(`[${requestId}] Error message: ${error.message}`);
+          console.error(`[${requestId}] Error type: ${error.constructor.name}`);
+          console.error(`[${requestId}] Error stack:`, error.stack);
+          
+          // 记录更多错误上下文
+          if (error.response) {
+            console.error(`[${requestId}] HTTP Response status: ${error.response.status}`);
+            console.error(`[${requestId}] HTTP Response data:`, error.response.data);
+          }
+          
           throw new Error(`API call failed: ${error.message}`);
         }
       }
