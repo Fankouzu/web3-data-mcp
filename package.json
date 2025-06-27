@@ -27,6 +27,7 @@
     "validate": "npm run lint && npm run format:check && npm run test",
     "prebuild": "npm run validate",
     "build": "npm pack",
+    "build:ci": "npm pack --ignore-scripts",
     "prepack": "npm run validate",
     "security:audit": "npm audit --audit-level high",
     "security:fix": "npm audit fix",

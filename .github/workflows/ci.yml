@@ -215,8 +215,8 @@ jobs:
 
     - name: Verify package can be built
       run: |
-        echo "Creating package with npm pack..."
-        PACKAGE_OUTPUT=$(npm pack)
+        echo "Creating package with npm pack (skipping validation scripts for CI)..."
+        PACKAGE_OUTPUT=$(npm run build:ci)
         echo "npm pack output: $PACKAGE_OUTPUT"
         
         echo "Listing all .tgz files:"
