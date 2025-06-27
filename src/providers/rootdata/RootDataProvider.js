@@ -101,7 +101,7 @@ class RootDataProvider extends DataProvider {
 
       this.isInitialized = true;
 
-      console.log(`RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
+      console.error(`RootData provider initialized successfully (Level: ${this.userLevel}, Credits: ${this.credits})`);
       return true;
     } catch (error) {
       console.error(`RootData provider initialization failed: ${error.message}`);
@@ -176,9 +176,9 @@ class RootDataProvider extends DataProvider {
           let result;
           const language = this.detectQueryLanguage(params.query || '') || 'en';
 
-          console.log(`🌐 Executing RootData API call: ${endpointId}`);
-          console.log(`📤 Request parameters:`, JSON.stringify(params, null, 2));
-          console.log(`🔤 Detected language: ${language}`);
+                console.error(`Executing RootData API call: ${endpointId}`);
+      console.error(`Request parameters:`, JSON.stringify(params, null, 2));
+      console.error(`Detected language: ${language}`);
 
           switch (endpointId) {
             case 'credits_check':
@@ -246,7 +246,7 @@ class RootDataProvider extends DataProvider {
               throw new Error(`Endpoint ${endpointId} not yet implemented`);
           }
 
-          console.log(`📥 API call successful, endpoint: ${endpointId}`);
+          console.error(`API call successful, endpoint: ${endpointId}`);
 
           // 验证响应结构
           if (!validateApiResponse(result)) {
@@ -257,7 +257,7 @@ class RootDataProvider extends DataProvider {
           if (result.success && result.data) {
             try {
               result.data = validateResponse(endpointId, result.data, options);
-              console.log(`Response data validated for ${endpointId}`);
+                              console.error(`Response data validated for ${endpointId}`);
             } catch (validationError) {
               console.warn(`⚠️ Data validation warning for ${endpointId}:`, validationError.message);
             }
@@ -266,9 +266,9 @@ class RootDataProvider extends DataProvider {
           // 格式化响应并更新credits
           return this.formatResponse(result, endpoint.creditsPerCall);
         } catch (error) {
-          console.error(`💥 API call failed, endpoint: ${endpointId}`);
-          console.error(`❌ Error message: ${error.message}`);
-          console.error(`🔍 Error stack:`, error.stack);
+                console.error(`API call failed, endpoint: ${endpointId}`);
+      console.error(`Error message: ${error.message}`);
+      console.error(`Error stack:`, error.stack);
           throw new Error(`API call failed: ${error.message}`);
         }
       }
@@ -313,7 +313,7 @@ class RootDataProvider extends DataProvider {
       this.registerTool(toolDefinition);
     });
 
-    console.log(`Registered ${this.tools.size} RootData tools`);
+    console.error(`Registered ${this.tools.size} RootData tools`);
   }
 
   // ========== 公共API方法 ==========

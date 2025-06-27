@@ -113,7 +113,7 @@ class RequestCacheManager {
     
     if (result) {
       this.hitCount++;
-      console.log(`📋 Cache hit for ${endpoint}`);
+              console.error(`Cache hit for ${endpoint}`);
     } else {
       this.missCount++;
     }
@@ -132,7 +132,7 @@ class RequestCacheManager {
       params
     });
     
-    console.log(`💾 Cached response for ${endpoint}`);
+          console.error(`Cached response for ${endpoint}`);
   }
 
   invalidate(pattern) {
@@ -244,7 +244,7 @@ class RequestBatcher {
     const batch = this.pendingRequests.splice(0, this.batchSize);
     if (batch.length === 0) return;
 
-    console.log(`🔄 Processing batch of ${batch.length} requests`);
+    console.error(`Processing batch of ${batch.length} requests`);
 
     // 并行处理批次中的所有请求
     const promises = batch.map(async ({ request, resolve, reject }) => {
@@ -279,7 +279,7 @@ class MemoryMonitor {
       this.checkMemory();
     }, this.checkInterval);
     
-    console.log('Memory monitoring started');
+    console.error('Memory monitoring started');
   }
 
   stop() {
@@ -288,7 +288,7 @@ class MemoryMonitor {
       this.intervalId = null;
     }
     this.isMonitoring = false;
-    console.log('Memory monitoring stopped');
+    console.error('Memory monitoring stopped');
   }
 
   checkMemory() {
@@ -310,7 +310,7 @@ class MemoryMonitor {
       
       // 触发垃圾回收（如果可用）
       if (global.gc) {
-        console.log('🗑️ Triggering garbage collection');
+        console.error('Triggering garbage collection');
         global.gc();
       }
     }
@@ -401,18 +401,18 @@ class PerformanceOptimizer {
    * 预热缓存
    */
   async warmupCache(endpoints) {
-    console.log('🔥 Starting cache warmup...');
+    console.error('Starting cache warmup...');
     
     for (const { endpoint, params, requestFn } of endpoints) {
       try {
         await this.optimizeRequest(endpoint, params, requestFn);
-        console.log(`Warmed up cache for ${endpoint}`);
+        console.error(`Warmed up cache for ${endpoint}`);
       } catch (error) {
-        console.warn(`⚠️ Failed to warm up cache for ${endpoint}:`, error.message);
+                  console.warn(`Failed to warm up cache for ${endpoint}:`, error.message);
       }
     }
     
-    console.log('🔥 Cache warmup completed');
+    console.error('Cache warmup completed');
   }
 
   /**

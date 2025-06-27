@@ -25,7 +25,7 @@ async function main() {
     }
 
     if (args.includes('--config-example')) {
-      console.log('📝 Example configuration file content:');
+      console.log('Example configuration file content:');
       console.log(ConfigManager.createExampleConfig());
       return;
     }
@@ -44,7 +44,7 @@ async function main() {
     // 检查是否有配置的供应商
     const configuredProviders = configManager.getConfiguredProviders();
     if (configuredProviders.length === 0) {
-      console.error('❌ Error: No data providers configured');
+      console.error('Error: No data providers configured');
       console.error('');
       console.error('Please set environment variables or configuration file to configure at least one data provider.');
       console.error('');
@@ -82,7 +82,7 @@ async function main() {
     // 启动服务器
     await mcpServer.start();
   } catch (error) {
-    console.error('💥 Startup failed:', error.message);
+    console.error('Startup failed:', error.message);
 
     if (error.message.includes('Configuration validation failed')) {
       console.error('');
@@ -194,12 +194,12 @@ More Information: https://github.com/Fankouzu/web3-data-mcp
  * 处理未捕获的异常
  */
 process.on('uncaughtException', (error) => {
-  console.error('💥 Uncaught exception:', error);
+  console.error('Uncaught exception:', error);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 Unhandled promise rejection:', reason);
+  console.error('Unhandled promise rejection:', reason);
   process.exit(1);
 });
 

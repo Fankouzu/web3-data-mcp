@@ -420,7 +420,7 @@ function validateResponse(endpointId, data, options = {}) {
     return validator(data);
   } catch (error) {
     if (error instanceof ValidationError) {
-      console.error(`❌ Validation failed for ${endpointId}:`, error.message);
+      console.error(`Validation failed for ${endpointId}:`, error.message);
       if (error.field) {
         console.error(`   Field: ${error.field}, Value:`, error.value);
       }

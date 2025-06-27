@@ -150,25 +150,44 @@ logger.error('API调用失败', {
 
 ### 5. MCP协议兼容性规范
 
-#### 5.1 严格禁止在关键输出中使用Emoji字符
+#### 5.1 STDOUT协议专用性要求（重要！）
 ```javascript
-// ❌ 错误示例 - 会导致JSON-RPC协议解析失败
+// ❌ 严重错误 - console.log输出到STDOUT，会干扰JSON-RPC协议
+console.log('Memory monitoring started');
+console.log('RootData provider initialized successfully');
+console.log('Registered tools');
+
+// ✅ 正确做法 - 所有调试信息使用console.error输出到STDERR
+console.error('Memory monitoring started');
+console.error('RootData provider initialized successfully');
+console.error('Registered tools');
+```
+
+#### 5.2 严格禁止使用Emoji字符
+```javascript
+// ❌ 错误示例 - 会导致字符编码问题
 console.error('✅ MCP Server initialization completed');
 console.error(`📊 Registered ${this.providers.size} data providers`);
-console.log('📝 Registered tools');
+console.error('🔧 Tool registered');
 
 // ✅ 正确示例 - 使用纯文本
 console.error('MCP Server initialization completed');
 console.error(`Registered ${this.providers.size} data providers`);
-console.log('Registered tools');
+console.error('Tool registered');
 ```
 
-#### 5.2 字符编码要求
-- **STDOUT输出**：必须只包含标准JSON-RPC消息，不得包含任何调试信息
-- **STDERR输出**：可用于调试日志，但不得包含emoji、特殊符号或非ASCII字符
-- **字符集限制**：所有日志输出必须使用ASCII或UTF-8编码，避免emoji字符
+#### 5.3 字符编码和输出流要求
+**关键原则**：
+- **STDOUT专用性**：STDOUT必须只包含标准JSON-RPC消息，任何其他输出都会导致协议解析失败
+- **STDERR调试**：所有调试信息、状态消息、错误日志必须通过STDERR输出
+- **字符集限制**：所有日志输出必须使用纯ASCII字符，避免emoji和特殊符号
 
-#### 5.3 MCP服务器日志最佳实践
+**绝对禁止**：
+- ❌ 在MCP服务器中使用`console.log()`
+- ❌ 在日志中使用emoji字符
+- ❌ 向STDOUT输出任何非JSON-RPC内容
+
+#### 5.4 MCP服务器日志最佳实践
 ```javascript
 // ✅ 推荐的日志格式
 class McpServer {
@@ -185,20 +204,24 @@ class McpServer {
 }
 ```
 
-#### 5.4 协议通信规则
+#### 5.5 协议通信规则
 1. **STDOUT专用性**：STDOUT仅用于JSON-RPC协议通信，不得输出任何其他内容
 2. **STDERR调试**：所有调试信息、状态消息、错误日志通过STDERR输出
 3. **编码安全**：避免使用可能导致编码问题的特殊字符
 4. **消息格式**：确保所有JSON消息格式正确，不包含非标准字符
 
-#### 5.5 代码审查检查点
+#### 5.6 代码审查检查点
 在代码审查时，必须检查以下项目：
-- [ ] 是否有console.log/console.error包含emoji字符
-- [ ] STDOUT是否只输出JSON-RPC消息
-- [ ] 调试日志是否正确使用STDERR
-- [ ] 字符编码是否兼容MCP协议
+- [ ] **禁用console.log**：是否有使用`console.log()`输出到STDOUT
+- [ ] **禁用emoji字符**：是否有console.error包含emoji字符
+- [ ] **STDOUT纯净性**：STDOUT是否只输出JSON-RPC消息
+- [ ] **STDERR规范性**：调试日志是否正确使用STDERR
+- [ ] **字符编码安全**：是否使用纯ASCII字符
 
-**重要提醒**：违反MCP协议兼容性规范会导致Claude Desktop无法正确解析服务器响应，造成"Unexpected token"错误。
+**重要提醒**：
+- 使用`console.log()`会导致Claude Desktop出现"Unexpected token"JSON解析错误
+- 使用emoji字符会导致字符编码问题
+- 违反这些规范会使MCP服务器完全无法在Claude Desktop中工作
 
 ## 测试规范
 

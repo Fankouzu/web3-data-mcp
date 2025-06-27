@@ -142,7 +142,7 @@ class CreditsMonitor {
         statusSummary.providers[providerName] = currentStatus;
         statusSummary.byStatus[currentStatus.status]++;
       } catch (error) {
-        console.error(`❌ Failed to check ${providerName} status:`, error.message);
+        console.error(`Failed to check ${providerName} status:`, error.message);
         providerInfo.consecutiveFailures++;
 
         // 如果连续失败太多次，标记为不活跃
@@ -316,11 +316,11 @@ class CreditsMonitor {
       try {
         await this.checkAllProviders();
       } catch (error) {
-        console.error('❌ Automatic monitoring check failed:', error.message);
+        console.error('Automatic monitoring check failed:', error.message);
       }
     }, intervalMs);
 
-    console.error(`🔄 Started automatic Credits monitoring (interval: ${intervalMs / 1000} seconds)`);
+          console.error(`Started automatic Credits monitoring (interval: ${intervalMs / 1000} seconds)`);
   }
 
   /**
@@ -416,7 +416,7 @@ class CreditsMonitor {
         try {
           callback(data);
         } catch (error) {
-          console.error(`❌ Event listener error (${eventName}):`, error.message);
+          console.error(`Event listener error (${eventName}):`, error.message);
         }
       });
     }

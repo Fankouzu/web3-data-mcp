@@ -9,7 +9,7 @@ const path = require('path');
 
 // emoji和特殊字符正则表达式
 const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu;
-const PROBLEMATIC_CHARS = ['✅', '❌', '📊', '📝', '🔧', '⚠️', '🚨', '💀', '🌟', '📡', '💥', '🔍', '🎯', '⏰', '🛑', '👋', '💰'];
+const PROBLEMATIC_CHARS = ['✅', '❌', '📊', '📝', '🔧', '⚠️', '🚨', '💀', '🌟', '📡', '💥', '🔍', '🎯', '⏰', '🛑', '👋', '💰', '🔄', '🏥', '🔥', '💾', '📋', '🗑️', '🌐', '📤', '📥', '🔤'];
 
 // 需要检查的文件模式
 const CHECK_PATTERNS = [
@@ -64,6 +64,16 @@ function checkFile(filePath) {
   const issues = [];
   
   lines.forEach((line, index) => {
+    // 检查console.log（MCP服务器中绝对禁止）
+    if (line.includes('console.log(')) {
+      issues.push({
+        line: index + 1,
+        content: line.trim(),
+        type: 'console_log',
+        chars: ['console.log']
+      });
+    }
+    
     // 检查console.log/console.error中的emoji
     if (line.includes('console.') && (line.includes('log') || line.includes('error'))) {
       // 检查emoji正则
@@ -112,7 +122,12 @@ function checkMcpCompatibility() {
       
       console.log(`❌ ${filePath}:`);
       issues.forEach(issue => {
-        console.log(`   第${issue.line}行: ${issue.type === 'emoji' ? 'Emoji字符' : '问题字符'}: ${issue.chars.join(', ')}`);
+        let typeDesc = '问题字符';
+        if (issue.type === 'emoji') typeDesc = 'Emoji字符';
+        else if (issue.type === 'console_log') typeDesc = '⚠️ CRITICAL - console.log输出到STDOUT';
+        else if (issue.type === 'problematic_chars') typeDesc = '问题字符';
+        
+        console.log(`   第${issue.line}行: ${typeDesc}: ${issue.chars.join(', ')}`);
         console.log(`   内容: ${issue.content}`);
         console.log('');
       });
@@ -130,10 +145,11 @@ function checkMcpCompatibility() {
   } else {
     console.log('\n发现MCP协议兼容性问题，请修复后重新检查。');
     console.log('\n修复建议:');
-    console.log('   1. 移除console.log/console.error中的所有emoji字符');
-    console.log('   2. 使用纯文本替代emoji字符');
-    console.log('   3. 确保STDOUT只输出JSON-RPC消息');
-    console.log('   4. 参考docs/CODING_STANDARDS.md中的MCP协议兼容性规范');
+    console.log('   1. 🚨 将所有console.log改为console.error（避免污染STDOUT）');
+    console.log('   2. 移除console.log/console.error中的所有emoji字符');
+    console.log('   3. 使用纯文本替代emoji字符');
+    console.log('   4. 确保STDOUT只输出JSON-RPC消息');
+    console.log('   5. 参考docs/CODING_STANDARDS.md中的MCP协议兼容性规范');
     
     return false;
   }

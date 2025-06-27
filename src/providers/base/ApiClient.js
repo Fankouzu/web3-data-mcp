@@ -168,9 +168,9 @@ class ApiClient {
       });
 
       req.on('error', error => {
-        console.error(`🌐 Network request failed: ${method} ${endpoint}`);
-        console.error(`❌ Network error: ${error.message}`);
-        console.error(`🔍 Error code: ${error.code}`);
+              console.error(`Network request failed: ${method} ${endpoint}`);
+      console.error(`Network error: ${error.message}`);
+      console.error(`Error code: ${error.code}`);
         reject(new ApiError(`Network request error: ${error.message}`, 'NETWORK_ERROR', null, this.constructor.name));
       });
 

@@ -15,9 +15,13 @@ Unexpected token '✅', "✅ RootData"... is not valid JSON
 ```
 
 #### 错误原因
-- **MCP协议冲突**: MCP使用stdin/stdout进行JSON-RPC通信，emoji字符干扰了协议解析
-- **字符编码问题**: 某些emoji字符在传输过程中被转换为无效字符（`�`）
-- **输出混合**: 调试日志包含emoji字符被误认为是JSON-RPC消息的一部分
+**主要原因 - console.log输出干扰**:
+- **STDOUT污染**: `console.log()`输出到STDOUT，而MCP协议要求STDOUT只能包含JSON-RPC消息
+- **协议混合**: 任何非JSON内容都会被MCP客户端当作协议消息解析，导致JSON语法错误
+
+**次要原因 - emoji字符编码**:
+- **字符编码问题**: emoji字符在传输过程中被转换为无效字符（`�`）
+- **协议解析器限制**: JSON-RPC解析器无法正确处理emoji等特殊字符
 
 #### 问题源头文件
 1. `src/core/McpServer.js` - 服务器初始化日志
@@ -27,16 +31,28 @@ Unexpected token '✅', "✅ RootData"... is not valid JSON
 5. `src/core/CreditsMonitor.js` - 监控注册日志
 
 #### 解决方案
+**步骤1: 消除console.log输出**
+```javascript
+// ❌ 严重错误 - console.log输出到STDOUT，干扰JSON-RPC协议
+console.log('Memory monitoring started');
+console.log('RootData provider initialized successfully');
+console.log('Registered tools');
+
+// ✅ 正确 - 所有调试信息改为console.error输出到STDERR
+console.error('Memory monitoring started');
+console.error('RootData provider initialized successfully');
+console.error('Registered tools');
+```
+
+**步骤2: 移除emoji字符**
 ```javascript
 // ❌ 错误 - 包含emoji的日志输出
 console.error('✅ MCP Server initialization completed');
 console.error(`📊 Registered ${this.providers.size} data providers`);
-console.log('📝 Registered tools');
 
 // ✅ 正确 - 纯文本日志输出
 console.error('MCP Server initialization completed');
 console.error(`Registered ${this.providers.size} data providers`);
-console.log('Registered tools');
 ```
 
 #### 关键修复点
@@ -53,15 +69,18 @@ const mcpProcess = spawn('node', ['src/index.js'], {...});
 ```
 
 #### 经验教训
-- **MCP协议严格性**: MCP协议对JSON格式要求极其严格，任何非标准字符都会导致解析失败
-- **输出分离重要性**: STDOUT必须专用于协议通信，调试信息应通过STDERR输出
-- **字符编码安全**: 在协议通信场景下，应避免使用emoji和特殊字符
-- **测试的重要性**: 应该有专门的协议兼容性测试来验证MCP通信
+- **STDOUT绝对纯净性**: MCP协议要求STDOUT绝对只能包含JSON-RPC消息，任何其他输出都会导致解析失败
+- **console.log是MCP服务器的禁忌**: 在MCP服务器中使用console.log是导致JSON解析错误的最主要原因
+- **调试信息必须走STDERR**: 所有状态信息、调试日志、错误信息必须通过console.error输出到STDERR
+- **字符编码严格要求**: emoji和特殊字符会加重协议解析问题
+- **错误症状的误导性**: "Unexpected token"错误看起来像JSON格式问题，实际是输出流混合问题
 
 #### 预防措施
-- 在编码规范中明确禁止在MCP相关输出中使用emoji
-- 代码审查时检查是否包含非ASCII字符
-- 建立自动化测试来验证协议兼容性
+- **禁用console.log**: 在MCP服务器项目中全面禁用`console.log()`
+- **强制使用console.error**: 所有非协议输出必须使用`console.error()`
+- **自动化检查**: 使用`npm run mcp:check`定期检查协议兼容性
+- **实际测试**: 在Claude Desktop中实际测试MCP服务器启动
+- **代码审查重点**: 重点检查STDOUT输出纯净性
 
 ### 2. RootData API 调用格式错误 (2024-12-26)
 
