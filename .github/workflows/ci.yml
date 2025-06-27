@@ -215,21 +215,44 @@ jobs:
 
     - name: Verify package can be built
       run: |
-        npm pack
-        tar -tzf *.tgz
-      continue-on-error: true
+        echo "Creating package with npm pack..."
+        PACKAGE_OUTPUT=$(npm pack)
+        echo "npm pack output: $PACKAGE_OUTPUT"
+        
+        echo "Listing all .tgz files:"
+        ls -la *.tgz
+        
+        echo "Verifying package contents:"
+        tar -tzf *.tgz | head -20
+        
+        echo "✅ Package created successfully"
 
     - name: Test package installation
       run: |
-        # Get the actual package file name
-        PACKAGE_FILE=$(ls web3-data-mcp-*.tgz)
-        echo "Found package file: $PACKAGE_FILE"
+        echo "Current directory:"
+        pwd
+        echo "All files in current directory:"
+        ls -la
         
-        # Test installation in a clean directory
-        mkdir test-install && cd test-install
-        npm init -y
-        npm install "../$PACKAGE_FILE"
-        node -e "console.log('Package installed successfully')"
+        echo "Looking for package files:"
+        ls -la *.tgz 2>/dev/null || echo "No .tgz files found"
+        
+        # Get the actual package file name more robustly
+        if ls *.tgz 1> /dev/null 2>&1; then
+          PACKAGE_FILE=$(ls *.tgz | head -n1)
+          echo "Found package file: $PACKAGE_FILE"
+          
+          # Test installation in a clean directory
+          mkdir test-install && cd test-install
+          npm init -y
+          echo "Installing package: ../$PACKAGE_FILE"
+          npm install "../$PACKAGE_FILE"
+          node -e "console.log('Package installed successfully')"
+        else
+          echo "Error: No package file found after npm pack"
+          echo "Let's check if npm pack succeeded in the previous step..."
+          exit 1
+        fi
 
   # ==================== 发布准备 ====================
   release-check:
