@@ -16,6 +16,7 @@ const RootDataProvider = require('../providers/rootdata/RootDataProvider');
 const { ErrorHandler } = require('./ErrorHandler');
 const { CreditsMonitor } = require('./CreditsMonitor');
 const { ToolRouter } = require('./ToolRouter');
+const PromptManager = require('./PromptManager');
 
 class McpServer {
   constructor(config = {}) {
@@ -41,6 +42,9 @@ class McpServer {
     this.errorHandler = new ErrorHandler();
     this.creditsMonitor = new CreditsMonitor();
     this.toolRouter = new ToolRouter();
+    
+    // 初始化提示词管理器
+    this.promptManager = new PromptManager(config.prompts || {});
 
     // 供应商管理
     this.providers = new Map();
@@ -66,6 +70,9 @@ class McpServer {
     try {
       console.error('Initializing Web3 Data MCP Server...');
 
+      // 初始化提示词管理器
+      await this.promptManager.initialize();
+      
       // 初始化数据供应商
       await this._initializeProviders(providerConfigs);
 
@@ -74,6 +81,10 @@ class McpServer {
 
       // 启动Credits监控
       this.creditsMonitor.startAutoMonitoring();
+      
+      // 注入提示词管理器到其他组件
+      this.toolRouter.setPromptManager(this.promptManager);
+      this.errorHandler.setPromptManager(this.promptManager);
 
       this.isInitialized = true;
       console.error('MCP Server initialization completed');
@@ -200,11 +211,36 @@ class McpServer {
         const availableTools = this.toolRouter.getAvailableTools({ checkCredits: true });
 
         return {
-          tools: availableTools.map(tool => ({
-            name:        tool.name,
-            description: tool.description,
-            inputSchema: tool.inputSchema
-          }))
+          tools: availableTools.map(tool => {
+            // 获取工具的提示词信息
+            const systemPrompt = this.promptManager.getToolPrompt(
+              tool.name, 
+              'system', 
+              { language: 'en' }
+            );
+            const usagePrompt = this.promptManager.getToolPrompt(
+              tool.name, 
+              'usage', 
+              { language: 'en' }
+            );
+            const examples = this.promptManager.getToolPrompt(
+              tool.name, 
+              'examples', 
+              { language: 'en' }
+            );
+            
+            return {
+              name:        tool.name,
+              description: tool.description,
+              inputSchema: tool.inputSchema,
+              // 新增提示词相关字段
+              guidance: {
+                system: systemPrompt,
+                usage: usagePrompt,
+                examples: examples
+              }
+            };
+          })
         };
       } catch (error) {
         console.error('Failed to list tools:', error.message);
@@ -397,9 +433,17 @@ class McpServer {
    * @private
    */
   _formatToolResponse(result) {
+    // 获取响应提示词
+    const language = result.language || 'en';
+    const formatGuidance = this.promptManager.getResponsePrompt('data_formatting', { language });
+    const interpretGuidance = this.promptManager.getResponsePrompt('data_interpretation', { language });
+    const suggestionGuidance = this.promptManager.getResponsePrompt('suggestions', { language });
+    
+    // 基础响应结构
     const response = {
       success:  true,
       provider: result.provider,
+      tool:     result.tool,
       data:     result.data,
       metadata: {
         intent:    result.intent,
@@ -422,7 +466,228 @@ class McpServer {
       }
     }
 
+    // 使用提示词增强响应
+    if (this.promptManager) {
+      // 添加数据解释
+      response.interpretation = this._generateDataInterpretation(result, interpretGuidance);
+      
+      // 添加建议
+      response.suggestions = this._generateSuggestions(result, suggestionGuidance);
+      
+      // 添加数据质量指标
+      response.dataQuality = this._assessDataQuality(result);
+      
+      // 如果是空结果，提供更友好的处理
+      if (!result.data || (Array.isArray(result.data) && result.data.length === 0)) {
+        const emptyGuidance = this.promptManager.getResponsePrompt('empty_results', { language });
+        response.emptyResultHelp = this._generateEmptyResultHelp(result, emptyGuidance);
+      }
+    }
+
     return JSON.stringify(response, null, 2);
+  }
+
+  /**
+   * 生成数据解释
+   * @private
+   */
+  _generateDataInterpretation(result, guidance) {
+    const interpretation = {
+      summary: '',
+      highlights: [],
+      insights: []
+    };
+
+    if (!result.data) return interpretation;
+
+    // 根据工具类型生成解释
+    switch (result.tool) {
+      case 'search_web3_entities':
+        if (Array.isArray(result.data)) {
+          interpretation.summary = `Found ${result.data.length} matching entities`;
+          if (result.data.length > 0) {
+            interpretation.highlights.push(`Top result: ${result.data[0].name || result.data[0].title}`);
+          }
+        }
+        break;
+        
+      case 'get_project_details':
+        if (result.data.name) {
+          interpretation.summary = `Details for ${result.data.name}`;
+          if (result.data.marketCap) {
+            interpretation.highlights.push(`Market Cap: $${this._formatNumber(result.data.marketCap)}`);
+          }
+          if (result.data.fundingTotal) {
+            interpretation.highlights.push(`Total Funding: $${this._formatNumber(result.data.fundingTotal)}`);
+          }
+        }
+        break;
+        
+      default:
+        interpretation.summary = 'Data retrieved successfully';
+    }
+
+    return interpretation;
+  }
+
+  /**
+   * 生成建议
+   * @private
+   */
+  _generateSuggestions(result, guidance) {
+    const suggestions = [];
+
+    // 根据工具和结果生成建议
+    if (result.tool === 'search_web3_entities' && Array.isArray(result.data) && result.data.length > 0) {
+      suggestions.push({
+        action: 'get_details',
+        description: `Get detailed information about ${result.data[0].name || 'the first result'}`,
+        query: `get_project_details for project_id ${result.data[0].id}`
+      });
+      
+      if (result.data.length > 1) {
+        suggestions.push({
+          action: 'compare',
+          description: 'Compare the top results',
+          query: `compare ${result.data.slice(0, 3).map(d => d.name).join(', ')}`
+        });
+      }
+    }
+
+    if (result.tool === 'get_project_details' && result.data) {
+      if (result.data.token) {
+        suggestions.push({
+          action: 'token_info',
+          description: `Get token information for ${result.data.token.symbol}`,
+          query: `get_token_info ${result.data.token.symbol}`
+        });
+      }
+      
+      if (result.data.ecosystem) {
+        suggestions.push({
+          action: 'ecosystem_projects',
+          description: `Explore other ${result.data.ecosystem} projects`,
+          query: `get_projects_by_ecosystem ${result.data.ecosystem}`
+        });
+      }
+    }
+
+    return suggestions;
+  }
+
+  /**
+   * 评估数据质量
+   * @private
+   */
+  _assessDataQuality(result) {
+    const quality = {
+      score: 0,
+      indicators: [],
+      level: 'unknown'
+    };
+
+    if (!result.data) {
+      quality.level = 'no_data';
+      return quality;
+    }
+
+    // 数据完整性检查
+    let completeness = 0;
+    let totalFields = 0;
+    
+    if (typeof result.data === 'object' && !Array.isArray(result.data)) {
+      const importantFields = ['name', 'description', 'website', 'social'];
+      importantFields.forEach(field => {
+        totalFields++;
+        if (result.data[field]) completeness++;
+      });
+      
+      const completenessRatio = totalFields > 0 ? completeness / totalFields : 0;
+      quality.score = completenessRatio * 100;
+      
+      if (completenessRatio >= 0.8) {
+        quality.level = 'high';
+        quality.indicators.push('🟢 High data completeness');
+      } else if (completenessRatio >= 0.5) {
+        quality.level = 'medium';
+        quality.indicators.push('🟡 Medium data completeness');
+      } else {
+        quality.level = 'low';
+        quality.indicators.push('🔴 Low data completeness');
+      }
+    }
+
+    // 数据新鲜度（如果有时间戳）
+    if (result.data.updatedAt || result.data.lastUpdated) {
+      const updateTime = new Date(result.data.updatedAt || result.data.lastUpdated);
+      const daysSinceUpdate = (Date.now() - updateTime) / (1000 * 60 * 60 * 24);
+      
+      if (daysSinceUpdate < 1) {
+        quality.indicators.push('🟢 Updated recently');
+      } else if (daysSinceUpdate < 7) {
+        quality.indicators.push('🟡 Updated this week');
+      } else {
+        quality.indicators.push('🔴 Older data');
+      }
+    }
+
+    return quality;
+  }
+
+  /**
+   * 生成空结果帮助
+   * @private
+   */
+  _generateEmptyResultHelp(result, guidance) {
+    const help = {
+      message: result.language === 'zh' ? '未找到相关数据' : 'No data found',
+      possibleReasons: [],
+      suggestions: []
+    };
+
+    // 可能的原因
+    if (result.intent.type === 'search') {
+      help.possibleReasons.push(
+        result.language === 'zh' 
+          ? '搜索词可能拼写错误或过于具体'
+          : 'Search term might be misspelled or too specific'
+      );
+    }
+
+    // 建议
+    help.suggestions.push(
+      result.language === 'zh'
+        ? '尝试使用更通用的搜索词'
+        : 'Try using more general search terms'
+    );
+
+    if (result.entities.length > 0) {
+      help.suggestions.push(
+        result.language === 'zh'
+          ? '尝试搜索单个关键词而不是完整短语'
+          : 'Try searching for individual keywords instead of full phrases'
+      );
+    }
+
+    return help;
+  }
+
+  /**
+   * 格式化数字
+   * @private
+   */
+  _formatNumber(num) {
+    if (typeof num !== 'number') return num;
+    
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + 'M';
+    } else if (num >= 1e3) {
+      return (num / 1e3).toFixed(2) + 'K';
+    } else {
+      return num.toLocaleString();
+    }
   }
 
   /**

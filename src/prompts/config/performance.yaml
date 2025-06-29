@@ -1,0 +1,95 @@
+# 性能优化配置
+# 用于优化系统性能的各项配置参数
+
+cache:
+  # 缓存配置
+  enabled: true
+  ttl: 3600  # 缓存过期时间（秒）
+  maxSize: 1000  # 最大缓存条目数
+  
+  # 按类型设置缓存策略
+  strategies:
+    prompts:
+      ttl: 7200  # 提示词缓存2小时
+      priority: high
+    
+    routing:
+      ttl: 1800  # 路由结果缓存30分钟
+      priority: medium
+    
+    responses:
+      ttl: 900   # 响应缓存15分钟
+      priority: low
+
+batch:
+  # 批处理配置
+  enabled: true
+  maxBatchSize: 10
+  batchTimeout: 1000  # 批处理超时（毫秒）
+  
+  # 按工具类型设置批处理
+  tools:
+    search_web3_entities:
+      enabled: true
+      maxSize: 20
+    
+    get_project_details:
+      enabled: true
+      maxSize: 5
+
+optimization:
+  # 查询优化
+  query:
+    enableCache: true
+    enablePreprocessing: true
+    enableAbbreviationExpansion: true
+    maxQueryLength: 500
+  
+  # 响应优化
+  response:
+    enableCompression: false  # MCP不支持压缩
+    enableStreaming: false    # 当前不支持流式响应
+    maxResponseSize: 50000    # 最大响应大小（字符）
+    
+  # 并发控制
+  concurrency:
+    maxConcurrentRequests: 10
+    requestTimeout: 30000     # 请求超时（毫秒）
+    rateLimitPerMinute: 100   # 每分钟请求限制
+
+monitoring:
+  # 性能监控
+  enabled: true
+  metrics:
+    - responseTime
+    - cacheHitRate
+    - errorRate
+    - throughput
+  
+  # 告警阈值
+  thresholds:
+    responseTime: 1000        # 响应时间告警阈值（毫秒）
+    cacheHitRate: 0.7        # 缓存命中率告警阈值
+    errorRate: 0.05          # 错误率告警阈值
+    
+  # 性能日志
+  logging:
+    enabled: true
+    level: info
+    slowQueryThreshold: 500   # 慢查询阈值（毫秒）
+
+# 预热配置
+warmup:
+  enabled: true
+  strategies:
+    # 启动时预加载
+    preload:
+      - prompts        # 预加载所有提示词
+      - commonQueries  # 预加载常见查询
+    
+    # 常见查询模式
+    commonQueries:
+      - "search ethereum projects"
+      - "get project details"
+      - "check credits"
+      - "find defi protocols" 

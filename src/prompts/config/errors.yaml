@@ -1,0 +1,174 @@
+# 错误处理提示词配置文件
+# 版本: 1.0.0
+# 更新时间: 2025-06-28
+
+version: "1.0.0"
+
+errors:
+  # API错误处理
+  api_error:
+    en: |
+      When handling API errors:
+      1. Translate technical errors into user-friendly language
+      2. Explain what went wrong in simple terms
+      3. Suggest specific actions the user can take
+      4. Provide alternative approaches if available
+      5. Include estimated resolution time if known
+      
+      Focus on being helpful rather than just reporting the error.
+    zh: |
+      处理API错误时：
+      1. 将技术错误翻译成用户友好的语言
+      2. 用简单的术语解释出了什么问题
+      3. 建议用户可以采取的具体行动
+      4. 如果可用，提供替代方法
+      5. 如果已知，包含预计解决时间
+      
+      专注于提供帮助，而不仅仅是报告错误。
+
+  # 认证错误
+  authentication_error:
+    en: |
+      Authentication or permission issues:
+      1. Clearly state the permission requirement
+      2. Explain why this permission is needed
+      3. Provide steps to resolve the issue
+      4. Suggest contacting support if needed
+      5. Offer alternative queries that don't require this permission
+      
+      Be clear about what's needed without being technical.
+    zh: |
+      认证或权限问题：
+      1. 清楚说明权限要求
+      2. 解释为什么需要此权限
+      3. 提供解决问题的步骤
+      4. 如需要，建议联系支持
+      5. 提供不需要此权限的替代查询
+      
+      清楚说明需要什么，而不要过于技术化。
+
+  # 积分不足错误
+  insufficient_credits:
+    en: |
+      When credits are insufficient:
+      1. Show current balance and required amount clearly
+      2. Explain credit consumption for this operation
+      3. Suggest ways to obtain more credits
+      4. Recommend credit-efficient alternatives
+      5. Provide credit usage optimization tips
+      
+      Help users understand and manage their credit usage better.
+    zh: |
+      当积分不足时：
+      1. 清楚显示当前余额和所需金额
+      2. 解释此操作的积分消耗
+      3. 建议获取更多积分的方法
+      4. 推荐积分高效的替代方案
+      5. 提供积分使用优化提示
+      
+      帮助用户更好地理解和管理他们的积分使用。
+
+  # 验证错误
+  validation_error:
+    en: |
+      For input validation errors:
+      1. Identify the specific field or parameter with issues
+      2. Explain the correct format or requirements
+      3. Provide valid examples
+      4. Highlight common mistakes to avoid
+      5. Suggest auto-correction when possible
+      
+      Make it easy for users to fix their input.
+    zh: |
+      对于输入验证错误：
+      1. 识别有问题的特定字段或参数
+      2. 解释正确的格式或要求
+      3. 提供有效示例
+      4. 突出要避免的常见错误
+      5. 可能时建议自动更正
+      
+      让用户容易修复他们的输入。
+
+  # 网络错误
+  network_error:
+    en: |
+      Network connectivity issues:
+      1. Explain the connection problem simply
+      2. Suggest checking internet connection
+      3. Recommend trying again in a moment
+      4. Provide offline alternatives if any
+      5. Indicate if this is a temporary issue
+      
+      Be reassuring and provide clear next steps.
+    zh: |
+      网络连接问题：
+      1. 简单解释连接问题
+      2. 建议检查互联网连接
+      3. 建议稍后重试
+      4. 如有，提供离线替代方案
+      5. 指出这是否是临时问题
+      
+      让用户安心并提供清晰的下一步。
+
+  # 超时错误
+  timeout_error:
+    en: |
+      Request timeout handling:
+      1. Explain that the operation took too long
+      2. Suggest trying with simpler queries
+      3. Recommend breaking complex requests into parts
+      4. Indicate typical response times
+      5. Offer to retry with adjusted parameters
+      
+      Help users understand timeouts aren't failures.
+    zh: |
+      请求超时处理：
+      1. 解释操作耗时过长
+      2. 建议尝试更简单的查询
+      3. 建议将复杂请求分解为部分
+      4. 指出典型响应时间
+      5. 提供使用调整参数重试的选项
+      
+      帮助用户理解超时不是失败。
+
+  # 通用错误恢复
+  error_recovery:
+    en: |
+      General error recovery suggestions:
+      1. Save any important data before retrying
+      2. Check if the issue persists across different queries
+      3. Clear cache or refresh if applicable
+      4. Document the error for support reference
+      5. Try alternative approaches to achieve the goal
+      
+      Provide a structured approach to recovering from errors.
+    zh: |
+      通用错误恢复建议：
+      1. 重试前保存任何重要数据
+      2. 检查问题是否在不同查询中持续存在
+      3. 如适用，清除缓存或刷新
+      4. 记录错误以供支持参考
+      5. 尝试替代方法来实现目标
+      
+      提供从错误中恢复的结构化方法。
+
+  # 错误频率监控
+  frequent_errors:
+    en: |
+      When errors occur frequently:
+      1. Identify patterns in the errors
+      2. Suggest system-wide issues might be occurring
+      3. Recommend checking service status
+      4. Advise waiting before bulk operations
+      5. Provide links to status pages or support
+      
+      Help users recognize and respond to systematic issues.
+    zh: |
+      当错误频繁发生时：
+      1. 识别错误中的模式
+      2. 建议可能正在发生系统范围的问题
+      3. 建议检查服务状态
+      4. 建议在批量操作前等待
+      5. 提供状态页面或支持的链接
+      
+      帮助用户识别和响应系统性问题。 

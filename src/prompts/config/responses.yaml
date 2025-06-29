@@ -1,0 +1,176 @@
+# 响应提示词配置文件
+# 版本: 1.0.0
+# 更新时间: 2025-06-28
+
+version: "1.0.0"
+
+responses:
+  # 数据格式化提示词
+  data_formatting:
+    en: |
+      Format the response data for optimal readability and understanding:
+      1. Highlight key metrics and important values
+      2. Group related information logically
+      3. Use clear labels and descriptions
+      4. Include units where applicable (USD, ETH, %)
+      5. Format large numbers with commas
+      6. Show dates in human-readable format
+      
+      Focus on making the data immediately understandable to the user.
+    zh: |
+      格式化响应数据以获得最佳的可读性和理解性：
+      1. 突出显示关键指标和重要数值
+      2. 逻辑地分组相关信息
+      3. 使用清晰的标签和描述
+      4. 在适用的地方包含单位（USD、ETH、%）
+      5. 使用逗号格式化大数字
+      6. 以人类可读的格式显示日期
+      
+      专注于让数据对用户立即可理解。
+
+  # 数据解释提示词
+  data_interpretation:
+    en: |
+      Provide context and interpretation for the data:
+      1. Explain what the metrics mean in practical terms
+      2. Highlight significant trends or patterns
+      3. Compare values to industry benchmarks when relevant
+      4. Note any anomalies or interesting findings
+      5. Provide actionable insights based on the data
+      
+      Help users understand not just what the data shows, but what it means.
+    zh: |
+      为数据提供上下文和解释：
+      1. 用实际术语解释指标的含义
+      2. 突出显示重要的趋势或模式
+      3. 在相关时与行业基准进行比较
+      4. 注意任何异常或有趣的发现
+      5. 基于数据提供可操作的见解
+      
+      帮助用户理解数据不仅显示了什么，还意味着什么。
+
+  # 建议生成提示词
+  suggestions:
+    en: |
+      Generate helpful suggestions based on the response:
+      1. Recommend related queries the user might find useful
+      2. Suggest deeper analysis options
+      3. Point out related projects or tokens worth exploring
+      4. Recommend tools for further investigation
+      5. Provide tips for getting more detailed information
+      
+      Make suggestions specific and actionable, not generic.
+    zh: |
+      基于响应生成有用的建议：
+      1. 推荐用户可能觉得有用的相关查询
+      2. 建议更深入的分析选项
+      3. 指出值得探索的相关项目或代币
+      4. 推荐进一步调查的工具
+      5. 提供获取更详细信息的提示
+      
+      使建议具体且可操作，而非泛泛而谈。
+
+  # 成功响应增强
+  success_response:
+    en: |
+      When presenting successful results:
+      1. Start with a brief summary of what was found
+      2. Present the most important information first
+      3. Use clear section headers to organize data
+      4. Include relevant metadata (data source, update time)
+      5. End with next steps or related queries
+      
+      Structure: Summary → Key Data → Details → Context → Next Steps
+    zh: |
+      展示成功结果时：
+      1. 从发现内容的简要摘要开始
+      2. 首先展示最重要的信息
+      3. 使用清晰的部分标题来组织数据
+      4. 包含相关元数据（数据源、更新时间）
+      5. 以下一步或相关查询结束
+      
+      结构：摘要 → 关键数据 → 详情 → 上下文 → 下一步
+
+  # 空结果处理
+  empty_results:
+    en: |
+      When no results are found:
+      1. Clearly state that no data was found
+      2. Explain possible reasons (typo, not indexed, too new)
+      3. Suggest alternative search terms or queries
+      4. Recommend broader or narrower search strategies
+      5. Provide examples of successful queries
+      
+      Be helpful and constructive, not just report "no results".
+    zh: |
+      当未找到结果时：
+      1. 清楚说明未找到数据
+      2. 解释可能的原因（拼写错误、未索引、太新）
+      3. 建议替代搜索词或查询
+      4. 推荐更广泛或更狭窄的搜索策略
+      5. 提供成功查询的示例
+      
+      要有帮助和建设性，而不仅仅是报告"无结果"。
+
+  # 数据质量指示
+  data_quality:
+    en: |
+      Assess and communicate data quality:
+      1. Indicate data freshness (last updated)
+      2. Note data completeness (missing fields)
+      3. Highlight verified vs unverified information
+      4. Mention data source reliability
+      5. Flag any data inconsistencies
+      
+      Quality indicators: 🟢 High | 🟡 Medium | 🔴 Low | ⚪ Unknown
+    zh: |
+      评估并传达数据质量：
+      1. 指示数据新鲜度（最后更新）
+      2. 注意数据完整性（缺失字段）
+      3. 突出显示已验证与未验证的信息
+      4. 提及数据源可靠性
+      5. 标记任何数据不一致
+      
+      质量指标：🟢 高 | 🟡 中 | 🔴 低 | ⚪ 未知
+
+  # 对比分析提示词
+  comparison:
+    en: |
+      When comparing multiple items:
+      1. Use consistent metrics for fair comparison
+      2. Highlight key differences and similarities
+      3. Present data in a table format when possible
+      4. Include percentage changes and rankings
+      5. Provide context for the comparison
+      
+      Make it easy to see which option is better for different use cases.
+    zh: |
+      比较多个项目时：
+      1. 使用一致的指标进行公平比较
+      2. 突出关键差异和相似之处
+      3. 尽可能以表格格式呈现数据
+      4. 包含百分比变化和排名
+      5. 为比较提供上下文
+      
+      让用户容易看出哪个选项更适合不同的用例。
+
+  # 趋势分析提示词
+  trend_analysis:
+    en: |
+      When presenting time-series or trend data:
+      1. Identify the overall trend direction
+      2. Point out significant changes or inflection points
+      3. Calculate growth rates and percentages
+      4. Compare to relevant time periods
+      5. Suggest possible factors driving the trends
+      
+      Help users understand not just what changed, but why it might have changed.
+    zh: |
+      展示时间序列或趋势数据时：
+      1. 识别整体趋势方向
+      2. 指出重大变化或拐点
+      3. 计算增长率和百分比
+      4. 与相关时间段进行比较
+      5. 建议可能推动趋势的因素
+      
+      帮助用户理解不仅是什么发生了变化，还有为什么可能发生了变化。 

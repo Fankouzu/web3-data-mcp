@@ -1,0 +1,180 @@
+# 路由提示词配置文件
+# 版本: 1.0.0
+# 更新时间: 2025-06-28
+
+version: "1.0.0"
+
+routing:
+  # 意图分析提示词
+  intent_analysis:
+    en: |
+      Analyze the user's query to determine their intent. Consider:
+      1. Key action verbs (search, find, get, check, list)
+      2. Entity types mentioned (project, token, organization, funding)
+      3. Specific identifiers (numbers, addresses, symbols)
+      4. Context clues indicating detailed vs. broad queries
+      
+      Common intents:
+      - SEARCH: General exploration or discovery queries
+      - PROJECT_DETAILS: Specific project information requests
+      - FUNDING_INFO: Investment and funding related queries
+      - TOKEN_INFO: Token/cryptocurrency specific queries
+      - ECOSYSTEM_PROJECTS: Ecosystem-wide exploration
+      - CREDITS_CHECK: Account status inquiries
+    zh: |
+      分析用户查询以确定其意图。考虑：
+      1. 关键动作动词（搜索、查找、获取、检查、列出）
+      2. 提到的实体类型（项目、代币、组织、融资）
+      3. 特定标识符（数字、地址、符号）
+      4. 指示详细查询与广泛查询的上下文线索
+      
+      常见意图：
+      - SEARCH：一般探索或发现查询
+      - PROJECT_DETAILS：特定项目信息请求
+      - FUNDING_INFO：投资和融资相关查询
+      - TOKEN_INFO：代币/加密货币特定查询
+      - ECOSYSTEM_PROJECTS：生态系统范围的探索
+      - CREDITS_CHECK：账户状态查询
+
+  # 参数构建提示词
+  param_building:
+    en: |
+      Build optimal parameters for the selected tool based on:
+      1. Extracted entities from the query
+      2. Tool requirements and constraints
+      3. Default values and optional parameters
+      4. Previous context if available
+      
+      Guidelines:
+      - Numeric IDs should be parsed and validated
+      - Contract addresses must be properly formatted
+      - Boolean flags should default to false unless explicitly requested
+      - Include optional parameters only when relevant to the query
+    zh: |
+      根据以下内容为所选工具构建最佳参数：
+      1. 从查询中提取的实体
+      2. 工具要求和约束
+      3. 默认值和可选参数
+      4. 可用的先前上下文
+      
+      准则：
+      - 数字ID应被解析和验证
+      - 合约地址必须格式正确
+      - 布尔标志应默认为false，除非明确请求
+      - 仅在与查询相关时包含可选参数
+
+  # 路由选择提示词
+  route_selection:
+    en: |
+      Select the best tool for the query by evaluating:
+      1. Intent match score (how well the tool matches the detected intent)
+      2. Entity compatibility (whether the tool can handle the extracted entities)
+      3. Parameter availability (if we have the required parameters)
+      4. Credits and permission requirements
+      5. Historical success rate for similar queries
+      
+      Prioritize:
+      - Exact matches over fuzzy matches
+      - Specific tools over general ones
+      - Lower credit cost when multiple tools are suitable
+    zh: |
+      通过评估以下内容选择查询的最佳工具：
+      1. 意图匹配分数（工具与检测到的意图的匹配程度）
+      2. 实体兼容性（工具是否可以处理提取的实体）
+      3. 参数可用性（我们是否有所需的参数）
+      4. 积分和权限要求
+      5. 类似查询的历史成功率
+      
+      优先考虑：
+      - 精确匹配优于模糊匹配
+      - 特定工具优于通用工具
+      - 多个工具合适时选择积分成本较低的
+
+  # 实体提取提示词
+  entity_extraction:
+    en: |
+      Extract relevant entities from the query:
+      
+      Entity Types:
+      - PROJECT: Project names, protocols (e.g., "Uniswap", "Aave")
+      - TOKEN: Token symbols, names (e.g., "UNI", "ETH")
+      - ADDRESS: Contract addresses (0x...)
+      - NUMBER: Numeric IDs, amounts
+      - ORGANIZATION: Company names, VCs, DAOs
+      - ECOSYSTEM: Blockchain names, categories (e.g., "Ethereum", "DeFi")
+      - X_HANDLE: Twitter/X handles (@username)
+      
+      Extraction Rules:
+      - Be case-insensitive for names
+      - Preserve exact format for addresses
+      - Convert common abbreviations
+      - Handle multiple entities of the same type
+    zh: |
+      从查询中提取相关实体：
+      
+      实体类型：
+      - PROJECT：项目名称、协议（例如："Uniswap"、"Aave"）
+      - TOKEN：代币符号、名称（例如："UNI"、"ETH"）
+      - ADDRESS：合约地址（0x...）
+      - NUMBER：数字ID、金额
+      - ORGANIZATION：公司名称、风投、DAO
+      - ECOSYSTEM：区块链名称、类别（例如："Ethereum"、"DeFi"）
+      - X_HANDLE：Twitter/X账号（@username）
+      
+      提取规则：
+      - 名称不区分大小写
+      - 保留地址的精确格式
+      - 转换常见缩写
+      - 处理相同类型的多个实体
+
+  # 错误恢复提示词
+  error_recovery:
+    en: |
+      When a routing error occurs, consider:
+      1. Was the intent correctly identified?
+      2. Are there missing required parameters?
+      3. Is there an alternative tool that could work?
+      4. Can we ask for clarification on ambiguous parts?
+      
+      Recovery strategies:
+      - Suggest the closest matching tool
+      - Indicate what information is missing
+      - Offer alternative query formulations
+      - Provide examples of successful queries
+    zh: |
+      当路由错误发生时，考虑：
+      1. 意图是否被正确识别？
+      2. 是否缺少必需的参数？
+      3. 是否有可以工作的替代工具？
+      4. 我们能否就模糊部分要求澄清？
+      
+      恢复策略：
+      - 建议最接近的匹配工具
+      - 指出缺少什么信息
+      - 提供替代查询表述
+      - 提供成功查询的示例
+
+  # 查询优化提示词
+  query_optimization:
+    en: |
+      Optimize the query for better results:
+      1. Expand abbreviations to full names
+      2. Standardize entity references
+      3. Add relevant context when implicit
+      4. Remove redundant information
+      
+      Examples:
+      - "uni" → "Uniswap"
+      - "ethereum defi" → "Ethereum DeFi ecosystem"
+      - "project 123" → "project_id: 123"
+    zh: |
+      优化查询以获得更好的结果：
+      1. 将缩写扩展为全名
+      2. 标准化实体引用
+      3. 在隐含时添加相关上下文
+      4. 删除冗余信息
+      
+      示例：
+      - "uni" → "Uniswap"
+      - "以太坊 defi" → "Ethereum DeFi生态系统"
+      - "项目123" → "project_id: 123" 

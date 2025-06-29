@@ -41,6 +41,18 @@ class ErrorHandler {
 
     // 保留最近100个错误记录
     this.maxRecentErrors = 100;
+    
+    // 提示词管理器（将在初始化后注入）
+    this.promptManager = null;
+  }
+
+  /**
+   * 设置提示词管理器
+   * @param {PromptManager} promptManager - 提示词管理器实例
+   */
+  setPromptManager(promptManager) {
+    this.promptManager = promptManager;
+    console.error('PromptManager injected into ErrorHandler');
   }
 
   /**
@@ -261,6 +273,34 @@ class ErrorHandler {
    * @private
    */
   _getUserFriendlyMessage(errorInfo) {
+    // 如果有提示词管理器，使用提示词增强的消息
+    if (this.promptManager) {
+      const errorTypeMap = {
+        [ErrorTypes.API_ERROR]: 'api_error',
+        [ErrorTypes.AUTHENTICATION_ERROR]: 'authentication_error',
+        [ErrorTypes.INSUFFICIENT_CREDITS]: 'insufficient_credits',
+        [ErrorTypes.INSUFFICIENT_PERMISSIONS]: 'authentication_error',
+        [ErrorTypes.VALIDATION_ERROR]: 'validation_error',
+        [ErrorTypes.NETWORK_ERROR]: 'network_error',
+        [ErrorTypes.TIMEOUT_ERROR]: 'timeout_error',
+        [ErrorTypes.PROVIDER_ERROR]: 'api_error',
+        [ErrorTypes.SYSTEM_ERROR]: 'api_error'
+      };
+      
+      const promptType = errorTypeMap[errorInfo.type];
+      if (promptType) {
+        const guidance = this.promptManager.getErrorPrompt(promptType, {
+          language: errorInfo.language || 'en'
+        });
+        
+        // 如果获取到了提示词指导，使用它来生成更好的消息
+        if (guidance) {
+          return this._enhanceErrorMessage(errorInfo, guidance);
+        }
+      }
+    }
+    
+    // 默认消息映射
     const messageMap = {
       [ErrorTypes.API_ERROR]:                'Data query failed, please try again later',
       [ErrorTypes.AUTHENTICATION_ERROR]:     'API authentication failed, please check your access key',
@@ -281,6 +321,21 @@ class ErrorHandler {
    * @private
    */
   _getErrorSuggestion(errorInfo) {
+    // 如果有提示词管理器，生成更好的建议
+    if (this.promptManager) {
+      const errorRecoveryGuidance = this.promptManager.getErrorPrompt('error_recovery', {
+        language: errorInfo.language || 'en'
+      });
+      
+      if (errorRecoveryGuidance) {
+        const enhancedSuggestion = this._generateEnhancedSuggestion(errorInfo, errorRecoveryGuidance);
+        if (enhancedSuggestion) {
+          return enhancedSuggestion;
+        }
+      }
+    }
+    
+    // 默认建议映射
     const suggestionMap = {
       [ErrorTypes.API_ERROR]:                'Please try again later, if the problem persists, please contact technical support',
       [ErrorTypes.AUTHENTICATION_ERROR]:     'Please check if the API key is correct and valid',
@@ -294,6 +349,83 @@ class ErrorHandler {
     };
 
     return suggestionMap[errorInfo.type] || 'Please contact technical support for help';
+  }
+
+  /**
+   * 使用提示词增强错误消息
+   * @private
+   */
+  _enhanceErrorMessage(errorInfo, guidance) {
+    // 根据错误类型生成增强消息
+    switch (errorInfo.type) {
+      case ErrorTypes.INSUFFICIENT_CREDITS:
+        if (errorInfo.required && errorInfo.available) {
+          return `You need ${errorInfo.required} credits for this operation, but only have ${errorInfo.available} credits available. ${errorInfo.required - errorInfo.available} more credits needed.`;
+        }
+        break;
+        
+      case ErrorTypes.VALIDATION_ERROR:
+        if (errorInfo.invalidParams) {
+          const params = Object.keys(errorInfo.invalidParams).join(', ');
+          return `Invalid input detected in: ${params}. Please check the format and try again.`;
+        }
+        break;
+        
+      case ErrorTypes.TIMEOUT_ERROR:
+        return 'The request took longer than expected. This might be due to a complex query or temporary server load. Please try again with a simpler query.';
+        
+      default:
+        return errorInfo.message;
+    }
+    
+    return errorInfo.message;
+  }
+
+  /**
+   * 生成增强的错误建议
+   * @private
+   */
+  _generateEnhancedSuggestion(errorInfo, guidance) {
+    const suggestions = [];
+    
+    // 基于错误类型的具体建议
+    switch (errorInfo.type) {
+      case ErrorTypes.INSUFFICIENT_CREDITS:
+        suggestions.push('Consider using search instead of detailed queries to save credits');
+        suggestions.push('Check your credits balance before making bulk requests');
+        break;
+        
+      case ErrorTypes.VALIDATION_ERROR:
+        suggestions.push('Double-check the format of your input');
+        suggestions.push('Refer to the examples in the tool description');
+        break;
+        
+      case ErrorTypes.NETWORK_ERROR:
+        suggestions.push('Check if you can access other websites');
+        suggestions.push('Try disabling VPN if you\'re using one');
+        break;
+        
+      case ErrorTypes.TIMEOUT_ERROR:
+        suggestions.push('Break down complex queries into smaller parts');
+        suggestions.push('Try searching for one item at a time');
+        break;
+    }
+    
+    // 如果检测到频繁错误，添加额外建议
+    if (this.hasFrequentErrors(300000, 5)) { // 5分钟内5个错误
+      suggestions.push('Multiple errors detected - the service might be experiencing issues');
+      
+      if (this.promptManager) {
+        const frequentErrorsGuidance = this.promptManager.getErrorPrompt('frequent_errors', {
+          language: errorInfo.language || 'en'
+        });
+        if (frequentErrorsGuidance) {
+          suggestions.push('Consider waiting a few minutes before retrying');
+        }
+      }
+    }
+    
+    return suggestions.length > 0 ? suggestions.join('. ') : null;
   }
 
   /**

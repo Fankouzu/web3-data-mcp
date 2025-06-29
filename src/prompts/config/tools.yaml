@@ -1,0 +1,239 @@
+# 工具提示词配置文件
+# 版本: 1.0.0
+# 更新时间: 2025-06-28
+
+version: "1.0.0"
+
+tools:
+  # 搜索Web3实体工具
+  search_web3_entities:
+    system:
+      en: |
+        When searching for Web3 entities, follow these guidelines:
+        1. Consider multiple variations of project names (e.g., "Uni" for "Uniswap")
+        2. Check for common abbreviations and full names
+        3. Be aware of similar-sounding projects
+        4. The search supports fuzzy matching
+        5. For precise X handle searches, use the precise_x_search parameter
+        
+        The search covers:
+        - Web3 projects and protocols
+        - Organizations and DAOs
+        - Tokens and cryptocurrencies
+        - Key people in the ecosystem
+      zh: |
+        搜索Web3实体时，请遵循以下准则：
+        1. 考虑项目名称的多种变体（例如，"Uni"代表"Uniswap"）
+        2. 检查常见缩写和全称
+        3. 注意发音相似的项目
+        4. 搜索支持模糊匹配
+        5. 对于精确的X账号搜索，请使用precise_x_search参数
+        
+        搜索范围包括：
+        - Web3项目和协议
+        - 组织和DAO
+        - 代币和加密货币
+        - 生态系统中的关键人物
+    
+    usage:
+      en: |
+        Best practices:
+        - Use English names for better results
+        - Include token symbols if known (e.g., "UNI", "AAVE")
+        - Specify ecosystem when relevant (e.g., "Ethereum DeFi")
+        - Use quotes for exact matching
+      zh: |
+        最佳实践：
+        - 使用英文名称以获得更好的结果
+        - 如果知道代币符号，请包含在内（例如："UNI"、"AAVE"）
+        - 相关时指定生态系统（例如："Ethereum DeFi"）
+        - 使用引号进行精确匹配
+    
+    examples:
+      en:
+        - query: "Uniswap"
+          description: "Search for Uniswap protocol"
+        - query: "UNI"
+          description: "Search by token symbol"
+        - query: "@Uniswap"
+          precise_x_search: true
+          description: "Precise X handle search"
+        - query: "DeFi lending"
+          description: "Search for DeFi lending projects"
+      zh:
+        - query: "Uniswap"
+          description: "搜索Uniswap协议"
+        - query: "UNI"
+          description: "按代币符号搜索"
+        - query: "@Uniswap"
+          precise_x_search: true
+          description: "精确X账号搜索"
+        - query: "DeFi借贷"
+          description: "搜索DeFi借贷项目"
+    
+    preprocessing:
+      validation:
+        - rule: "query_not_empty"
+          message:
+            en: "Search query cannot be empty"
+            zh: "搜索查询不能为空"
+        - rule: "query_min_length"
+          value: 2
+          message:
+            en: "Query must be at least 2 characters"
+            zh: "查询至少需要2个字符"
+    
+    postprocessing:
+      interpretation:
+        en: "Focus on project relevance, token market data, and ecosystem positioning"
+        zh: "关注项目相关性、代币市场数据和生态系统定位"
+      suggestions:
+        en:
+          - "Use get_project_details for more information about a specific project"
+          - "Check token price trends with market data tools"
+          - "Explore ecosystem relationships"
+        zh:
+          - "使用get_project_details获取特定项目的更多信息"
+          - "使用市场数据工具查看代币价格趋势"
+          - "探索生态系统关系"
+  
+  # 获取项目详情工具
+  get_project_details:
+    system:
+      en: |
+        When retrieving project details, ensure:
+        1. Use project_id (numeric) or contract_address (string) as identifier
+        2. The project_id must be obtained from search results or previous queries
+        3. Include team and investor information when relevant
+        4. This tool provides comprehensive project data including:
+           - Basic project information
+           - Team members and founders
+           - Funding history and investors
+           - Token information if applicable
+           - Social media and community metrics
+        
+        Important: This API does NOT support language parameter. 
+        All responses are in a fixed format regardless of user language preference.
+      zh: |
+        获取项目详情时，请确保：
+        1. 使用project_id（数字）或contract_address（字符串）作为标识符
+        2. project_id必须从搜索结果或之前的查询中获取
+        3. 相关时包含团队和投资者信息
+        4. 此工具提供全面的项目数据，包括：
+           - 基本项目信息
+           - 团队成员和创始人
+           - 融资历史和投资者
+           - 代币信息（如适用）
+           - 社交媒体和社区指标
+        
+        重要提示：此API不支持language参数。
+        所有响应都采用固定格式，与用户语言偏好无关。
+    
+    usage:
+      en: |
+        Required parameters:
+        - project_id: Integer ID of the project (obtained from search)
+        - OR contract_address: Contract address string
+        
+        Optional parameters:
+        - include_team: Include team member details (default: false)
+        - include_investors: Include investor information (default: false)
+      zh: |
+        必需参数：
+        - project_id：项目的整数ID（从搜索中获取）
+        - 或 contract_address：合约地址字符串
+        
+        可选参数：
+        - include_team：包含团队成员详情（默认：false）
+        - include_investors：包含投资者信息（默认：false）
+    
+    examples:
+      en:
+        - project_id: 11646
+          description: "Get basic project info by ID"
+        - project_id: 11646
+          include_team: true
+          include_investors: true
+          description: "Get comprehensive project data"
+        - contract_address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          description: "Get project by contract address"
+      zh:
+        - project_id: 11646
+          description: "通过ID获取基本项目信息"
+        - project_id: 11646
+          include_team: true
+          include_investors: true
+          description: "获取全面的项目数据"
+        - contract_address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          description: "通过合约地址获取项目"
+    
+    preprocessing:
+      validation:
+        - rule: "require_identifier"
+          message:
+            en: "Either project_id or contract_address is required"
+            zh: "需要project_id或contract_address之一"
+        - rule: "valid_project_id"
+          message:
+            en: "project_id must be a positive integer"
+            zh: "project_id必须是正整数"
+        - rule: "valid_contract_address"
+          message:
+            en: "Invalid contract address format"
+            zh: "无效的合约地址格式"
+    
+    postprocessing:
+      interpretation:
+        en: |
+          When presenting project details:
+          1. Highlight key metrics and achievements
+          2. Explain the project's role in the ecosystem
+          3. Analyze funding rounds and investor quality
+          4. Assess team experience and track record
+        zh: |
+          展示项目详情时：
+          1. 突出关键指标和成就
+          2. 解释项目在生态系统中的作用
+          3. 分析融资轮次和投资者质量
+          4. 评估团队经验和历史记录
+      suggestions:
+        en:
+          - "Compare with similar projects in the ecosystem"
+          - "Analyze token economics if applicable"
+          - "Check recent funding or partnership announcements"
+        zh:
+          - "与生态系统中的类似项目进行比较"
+          - "如适用，分析代币经济学"
+          - "查看最近的融资或合作公告"
+
+  # 检查API余额工具
+  check_credits:
+    system:
+      en: |
+        This tool checks the remaining API credits and account status.
+        It helps monitor API usage and plan queries accordingly.
+        No parameters required.
+      zh: |
+        此工具检查剩余的API积分和账户状态。
+        它有助于监控API使用情况并相应地规划查询。
+        无需参数。
+    
+    usage:
+      en: "Simply call this tool to check your current API credits balance"
+      zh: "只需调用此工具即可检查您当前的API积分余额"
+
+  # 获取组织详情工具
+  get_organization_details:
+    system:
+      en: |
+        Retrieve detailed information about Web3 organizations, VCs, and DAOs.
+        Similar to project details but focused on organizational entities.
+        Requires org_id as the primary identifier.
+      zh: |
+        获取有关Web3组织、风投和DAO的详细信息。
+        类似于项目详情，但专注于组织实体。
+        需要org_id作为主要标识符。
+    
+    usage:
+      en: "Provide org_id (integer) obtained from search results"
+      zh: "提供从搜索结果中获取的org_id（整数）" 

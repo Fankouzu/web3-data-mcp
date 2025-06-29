@@ -1,0 +1,127 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Create .env file
+      run: |
+        echo "ROOTDATA_API_KEY=${{ secrets.ROOTDATA_API_KEY }}" >> .env
+        echo "NODE_ENV=test" >> .env
+    
+    - name: Run MCP compatibility check
+      run: npm run check-mcp
+    
+    - name: Run tests
+      run: npm test
+      env:
+        CI: true
+    
+    - name: Run integration tests
+      run: node scripts/test-integration.js
+    
+    - name: Generate test report
+      if: always()
+      run: |
+        mkdir -p test-reports
+        cp logs/test-summary-*.json test-reports/ || true
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: test-reports/
+    
+    - name: Check test coverage
+      run: |
+        if [ -f "logs/test-summary-*.json" ]; then
+          SUCCESS_RATE=$(cat logs/test-summary-*.json | jq -r '.summary.successRate' | sed 's/%//')
+          if (( $(echo "$SUCCESS_RATE < 100" | bc -l) )); then
+            echo "Test success rate is below 100%: $SUCCESS_RATE%"
+            exit 1
+          fi
+        fi
+
+  performance:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Create .env file
+      run: |
+        echo "ROOTDATA_API_KEY=${{ secrets.ROOTDATA_API_KEY }}" >> .env
+    
+    - name: Run performance tests
+      run: node scripts/optimize-performance.js
+    
+    - name: Run stress tests
+      run: |
+        timeout 60s node scripts/stress-test.js || true
+    
+    - name: Upload performance reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-reports
+        path: logs/optimization-report-*.json
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Validate YAML files
+      run: |
+        npm install -g js-yaml
+        find src/prompts/config -name "*.yaml" -exec js-yaml {} \; > /dev/null
+    
+    - name: Check file formatting
+      run: |
+        # Check for console.log in source files
+        if grep -r "console\.log" src/ --include="*.js" | grep -v "console\.error"; then
+          echo "Found console.log statements in source files. Use console.error instead."
+          exit 1
+        fi 
