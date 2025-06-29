@@ -12,7 +12,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x]
     
     steps:
     - uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
     
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.node-version }}
         path: test-reports/
@@ -93,7 +93,7 @@ jobs:
         timeout 60s node scripts/stress-test.js || true
     
     - name: Upload performance reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: performance-reports
         path: logs/optimization-report-*.json

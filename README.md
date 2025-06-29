@@ -71,13 +71,13 @@ npm test
 npm start
 ```
 
-For Claude Desktop integration, see our [Quick Start Guide](QUICK_START.md).
+For Claude Desktop integration, see the configuration section below.
 
 ## 🚀 Installation
 
 ### Prerequisites
 
-- Node.js 14+ (16+ recommended)
+- Node.js 16+ (recommended 18+)
 - npm or yarn
 - Valid RootData API key
 - Claude Desktop (for MCP integration)
@@ -413,11 +413,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Resources
 
-- [Quick Start Guide](QUICK_START.md) - Get started in 5 minutes
 - [User Guide](docs/USER_GUIDE.md) - Detailed usage instructions
 - [API Documentation](docs/API_PROMPT_ENHANCEMENT.md) - Technical API reference
 - [Deployment Guide](docs/DEPLOYMENT_GUIDE.md) - Production deployment
-- [Release Notes](RELEASE_NOTES.md) - What's new in v2.0.0
+- [Architecture Documentation](docs/ARCHITECTURE.md) - System architecture overview
 
 ## 🙋‍♂️ Support
 

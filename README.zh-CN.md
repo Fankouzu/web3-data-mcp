@@ -71,13 +71,13 @@ npm test
 npm start
 ```
 
-Claude Desktop集成请参见[快速开始指南](QUICK_START.md)。
+Claude Desktop集成请参见下面的配置章节。
 
 ## 🚀 安装
 
 ### 先决条件
 
-- Node.js 14+（推荐16+）
+- Node.js 16+（推荐18+）
 - npm或yarn
 - 有效的RootData API密钥
 - Claude Desktop（用于MCP集成）
@@ -413,11 +413,10 @@ npm run validate:prompts
 
 ## 🔗 资源
 
-- [快速开始指南](QUICK_START.md) - 5分钟入门
 - [用户指南](docs/USER_GUIDE.md) - 详细使用说明
 - [API文档](docs/API_PROMPT_ENHANCEMENT.md) - 技术API参考
 - [部署指南](docs/DEPLOYMENT_GUIDE.md) - 生产部署
-- [发布说明](RELEASE_NOTES.md) - v2.0.0新功能
+- [架构文档](docs/ARCHITECTURE.md) - 系统架构概述
 
 ## 🙋‍♂️ 支持
 
