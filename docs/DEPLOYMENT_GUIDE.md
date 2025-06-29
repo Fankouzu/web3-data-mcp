@@ -90,7 +90,8 @@ project-root/
 │           └── performance.yaml
 ├── .env
 ├── package.json
-└── index.js
+└── src/
+    └── index.js
 ```
 
 ## 🔧 配置详解
@@ -355,7 +356,7 @@ server.setConcurrencyLimit(10);
   "mcpServers": {
     "web3-data": {
       "command": "node",
-      "args": ["/path/to/web3-data-mcp/index.js"],
+      "args": ["/path/to/web3-data-mcp/src/index.js"],
       "env": {
         "ROOTDATA_API_KEY": "your_key",
         "PROMPTS_ENABLED": "true"
@@ -382,7 +383,7 @@ ENV PROMPTS_ENABLED=true
 
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["node", "src/index.js"]
 ```
 
 ### Kubernetes 配置

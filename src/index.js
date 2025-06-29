@@ -16,6 +16,19 @@ const ConfigManager = require('./core/ConfigManager');
  */
 async function main() {
   try {
+    // Debug logging for MCP connection issues
+    const isDebug = process.env.DEBUG || process.env.MCP_DEBUG || process.argv.includes('--debug');
+    if (isDebug) {
+      console.error('[DEBUG] Starting Web3 Data MCP Server v2.0.0');
+      console.error('[DEBUG] Node version:', process.version);
+      console.error('[DEBUG] Current directory:', process.cwd());
+      console.error('[DEBUG] Script path:', __filename);
+      console.error('[DEBUG] Environment:', {
+        hasRootDataKey: !!process.env.ROOTDATA_API_KEY,
+        debug: process.env.DEBUG,
+        mcpDebug: process.env.MCP_DEBUG
+      });
+    }
     // 检查命令行参数
     const args = process.argv.slice(2);
 
@@ -36,13 +49,23 @@ async function main() {
     }
 
     // 初始化配置管理器
+    if (isDebug) {
+      console.error('[DEBUG] Initializing ConfigManager...');
+    }
     const configManager = new ConfigManager();
 
     // 加载配置
     const config = configManager.loadConfig();
+    if (isDebug) {
+      console.error('[DEBUG] Configuration loaded successfully');
+      console.error('[DEBUG] Safe config:', JSON.stringify(configManager.exportSafeConfig(), null, 2));
+    }
 
     // 检查是否有配置的供应商
     const configuredProviders = configManager.getConfiguredProviders();
+    if (isDebug) {
+      console.error('[DEBUG] Configured providers:', configuredProviders);
+    }
     if (configuredProviders.length === 0) {
       console.error('Error: No data providers configured');
       console.error('');
@@ -51,6 +74,9 @@ async function main() {
       console.error('For RootData, please set: ROOTDATA_API_KEY=your-api-key');
       console.error('');
       console.error('Run --env-help to see all available environment variables');
+      if (isDebug) {
+        console.error('[DEBUG] Exiting due to no configured providers');
+      }
       process.exit(1);
     }
 
@@ -63,6 +89,9 @@ async function main() {
     }
 
     // 创建并初始化MCP服务器
+    if (isDebug) {
+      console.error('[DEBUG] Creating MCP server instance...');
+    }
     const mcpServer = new McpServer(config.server);
 
     // 准备供应商配置
@@ -72,15 +101,31 @@ async function main() {
     });
 
     // 初始化服务器
+    if (isDebug) {
+      console.error('[DEBUG] Initializing MCP server with provider configs...');
+    }
     const initSuccess = await mcpServer.initialize(providerConfigs);
 
     if (!initSuccess) {
       console.error('Server initialization failed');
+      if (isDebug) {
+        console.error('[DEBUG] Server initialization failed, exiting');
+      }
       process.exit(1);
+    }
+    if (isDebug) {
+      console.error('[DEBUG] MCP server initialized successfully');
     }
 
     // 启动服务器
+    if (isDebug) {
+      console.error('[DEBUG] Starting MCP server...');
+    }
     await mcpServer.start();
+    if (isDebug) {
+      console.error('[DEBUG] MCP server started successfully');
+      console.error('[DEBUG] Server is now listening for MCP client connections via stdio');
+    }
   } catch (error) {
     console.error('Startup failed:', error.message);
 
@@ -195,11 +240,20 @@ More Information: https://github.com/Fankouzu/web3-data-mcp
  */
 process.on('uncaughtException', (error) => {
   console.error('Uncaught exception:', error);
+  if (process.env.DEBUG || process.env.MCP_DEBUG) {
+    console.error('[DEBUG] Stack trace:', error.stack);
+  }
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled promise rejection:', reason);
+  if (process.env.DEBUG || process.env.MCP_DEBUG) {
+    console.error('[DEBUG] Promise:', promise);
+    if (reason && reason.stack) {
+      console.error('[DEBUG] Stack trace:', reason.stack);
+    }
+  }
   process.exit(1);
 });
 

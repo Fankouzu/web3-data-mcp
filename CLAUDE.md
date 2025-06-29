@@ -56,7 +56,7 @@ This is a Node.js project for building a Model Context Protocol (MCP) server tha
 ## Architecture
 
 **MCP Server Structure:**
-- Main entry point should be `index.js` as specified in package.json
+- Main entry point is `src/index.js` as specified in package.json
 - Uses `@modelcontextprotocol/sdk` for MCP server implementation
 - Intended to provide Web3 data tools and resources via MCP protocol
 

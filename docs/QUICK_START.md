@@ -42,7 +42,7 @@ Add to Claude Desktop config (`claude_desktop_config.json`):
   "mcpServers": {
     "web3-data": {
       "command": "node",
-      "args": ["/path/to/web3-data-mcp/index.js"],
+      "args": ["/path/to/web3-data-mcp/src/index.js"],
       "env": {
         "ROOTDATA_API_KEY": "your_api_key_here"
       }
