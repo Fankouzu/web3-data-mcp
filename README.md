@@ -49,6 +49,7 @@ A comprehensive Model Context Protocol (MCP) server for Web3 data analysis, prov
 - [Usage Examples](#usage-examples)
 - [Development](#development)
 - [Testing](#testing)
+- [AI Prompt Best Practices](#ai-prompt-best-practices)
 - [Contributing](#contributing)
 
 ## ⚡ Quick Start
@@ -379,6 +380,206 @@ npm run performance-test
 
 # Clean logs
 npm run clean:logs
+```
+
+## 🎯 AI Prompt Best Practices
+
+### Understanding the Prompt System
+
+The v2.0.0 prompt system uses a hierarchical structure with 4 main categories:
+
+1. **Tool Prompts** (`tools.yaml`) - Enhance tool descriptions and usage guidance
+2. **Routing Prompts** (`routing.yaml`) - Improve query understanding and tool selection
+3. **Response Prompts** (`responses.yaml`) - Format and enhance API responses
+4. **Error Prompts** (`errors.yaml`) - Provide helpful error messages and recovery suggestions
+
+### Customizing Prompts
+
+#### 1. Locate Prompt Files
+```bash
+src/prompts/config/
+├── tools.yaml      # Tool-specific prompts
+├── routing.yaml    # Query routing logic
+├── responses.yaml  # Response formatting
+└── errors.yaml     # Error handling
+```
+
+#### 2. Edit Prompt Templates
+Example of customizing a tool prompt:
+
+```yaml
+# src/prompts/config/tools.yaml
+search_web3_entities:
+  system: |
+    You are searching for Web3 entities. Consider:
+    - Project names, token symbols, and contract addresses
+    - Use fuzzy matching for abbreviations
+    - Expand common terms (e.g., "uni" → "Uniswap")
+  
+  guidance: |
+    💡 Tip: Try searching with project names, token symbols, 
+    or keywords like "DeFi", "NFT", "Layer 2"
+```
+
+#### 3. Add Context-Aware Suggestions
+```yaml
+# src/prompts/config/responses.yaml
+empty_results:
+  en: |
+    No results found for "{query}".
+    Suggestions:
+    - Check spelling and try variations
+    - Use broader search terms
+    - Try searching by category: DeFi, NFT, Infrastructure
+  
+  zh: |
+    未找到 "{query}" 的相关结果。
+    建议：
+    - 检查拼写并尝试变体
+    - 使用更宽泛的搜索词
+    - 按类别搜索：DeFi、NFT、基础设施
+```
+
+### Best Practices for Prompt Engineering
+
+#### 1. **Be Specific and Clear**
+```yaml
+# ❌ Too vague
+prompt: "Search for things"
+
+# ✅ Clear and specific
+prompt: "Search for Web3 projects, organizations, and people by name, symbol, or keyword"
+```
+
+#### 2. **Provide Examples**
+```yaml
+tool_usage:
+  examples:
+    - query: "Find Uniswap"
+      explanation: "Searches for the Uniswap project"
+    - query: "DeFi protocols on Ethereum"
+      explanation: "Finds DeFi projects in the Ethereum ecosystem"
+```
+
+#### 3. **Handle Edge Cases**
+```yaml
+error_handling:
+  invalid_input: |
+    The input format is incorrect. Expected formats:
+    - Project ID: numeric (e.g., 11646)
+    - Contract address: 0x... format
+    - Search query: text string
+```
+
+#### 4. **Use Progressive Enhancement**
+```yaml
+# Basic prompt
+basic: "Search for {query}"
+
+# Enhanced with context
+enhanced: |
+  Search for {query} in Web3 ecosystem.
+  Consider: projects, tokens, organizations, people.
+  
+# Advanced with intelligence
+advanced: |
+  Intelligently search for {query}:
+  - Expand abbreviations (btc → Bitcoin)
+  - Recognize entities (0x... → contract address)
+  - Support multiple languages
+  - Suggest related searches
+```
+
+### Language-Specific Prompts
+
+Support multiple languages with locale-specific templates:
+
+```yaml
+# src/prompts/templates/en/search.yaml
+search_help: "Enter project name, token symbol, or address"
+
+# src/prompts/templates/zh/search.yaml
+search_help: "输入项目名称、代币符号或地址"
+```
+
+### Dynamic Prompt Variables
+
+Use variables for dynamic content:
+
+```yaml
+project_details:
+  prompt: |
+    Getting details for project: {project_name}
+    Including: {include_options}
+    Language: {language}
+```
+
+### Testing Custom Prompts
+
+After modifying prompts:
+
+```bash
+# Validate YAML syntax
+npm run validate:prompts
+
+# Test with sample queries
+npm run test:prompts
+
+# Check specific tool behavior
+node scripts/test-tool-prompts.js
+```
+
+### Performance Considerations
+
+1. **Cache Frequently Used Prompts**
+   - Prompts are cached on first load
+   - Clear cache after updates: `npm run clean:cache`
+
+2. **Keep Prompts Concise**
+   - Shorter prompts = faster processing
+   - Focus on essential information
+
+3. **Use Conditional Logic Sparingly**
+   ```yaml
+   # Efficient: Simple conditions
+   prompt: |
+     {isDetailed ? "Detailed search" : "Quick search"} for {query}
+   ```
+
+### Monitoring Prompt Effectiveness
+
+Track prompt performance:
+
+```javascript
+// Enable prompt analytics
+PROMPTS_ANALYTICS=true npm start
+
+// View prompt usage stats
+npm run prompts:stats
+```
+
+### Common Patterns
+
+#### Entity Recognition Pattern
+```yaml
+entity_recognition:
+  patterns:
+    - type: "project"
+      regex: "^[A-Za-z0-9]+\\s*(protocol|finance|swap|dex)?"
+    - type: "address"
+      regex: "^0x[a-fA-F0-9]{40}$"
+    - type: "token"
+      regex: "^\\$?[A-Z]{2,10}$"
+```
+
+#### Error Recovery Pattern
+```yaml
+error_recovery:
+  insufficient_credits:
+    suggestion: "Try free search endpoints"
+    alternatives:
+      - tool: "search_web3_entities"
+        reason: "No credits required"
 ```
 
 ## 🤝 Contributing
