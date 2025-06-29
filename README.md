@@ -341,13 +341,15 @@ const result = await toolRouter.routeQuery("find DeFi projects", {
 npm test
 
 # Run specific test suites
-npm run test:prompts      # Prompt system tests
-npm run test:integration  # Integration tests
-npm run test:stress      # Stress tests
+npm run test:unit         # Unit tests (Jest)
+npm run test:integration  # Integration tests (Jest)
+npm run test:performance  # Performance tests (Jest)
+npm run test:memory       # Memory tests (Jest)
 
-# Performance testing
-npm run optimize         # Run performance optimization
-npm run test:performance # Benchmark tests
+# Script-based testing
+npm run integration:quick  # Quick integration check
+npm run perf:stress       # Stress testing
+npm run perf:optimize     # Performance optimization
 ```
 
 ### Test Coverage

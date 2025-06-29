@@ -341,13 +341,15 @@ const result = await toolRouter.routeQuery("查找DeFi项目", {
 npm test
 
 # 运行特定测试套件
-npm run test:prompts      # 提示词系统测试
-npm run test:integration  # 集成测试
-npm run test:stress      # 压力测试
+npm run test:unit         # 单元测试 (Jest)
+npm run test:integration  # 集成测试 (Jest)
+npm run test:performance  # 性能测试 (Jest)
+npm run test:memory       # 内存测试 (Jest)
 
-# 性能测试
-npm run optimize         # 运行性能优化
-npm run test:performance # 基准测试
+# 基于脚本的测试
+npm run integration:quick  # 快速集成检查
+npm run perf:stress       # 压力测试
+npm run perf:optimize     # 性能优化
 ```
 
 ### 测试覆盖
