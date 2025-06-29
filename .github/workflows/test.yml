@@ -32,7 +32,7 @@ jobs:
         echo "NODE_ENV=test" >> .env
     
     - name: Run MCP compatibility check
-      run: npm run check-mcp
+      run: npm run mcp:check
     
     - name: Run tests
       run: npm test
@@ -40,7 +40,7 @@ jobs:
         CI: true
     
     - name: Run integration tests
-      run: node scripts/test-integration.js
+      run: npm run integration:test
     
     - name: Generate test report
       if: always()
@@ -86,11 +86,11 @@ jobs:
         echo "ROOTDATA_API_KEY=${{ secrets.ROOTDATA_API_KEY }}" >> .env
     
     - name: Run performance tests
-      run: node scripts/optimize-performance.js
+      run: npm run perf:optimize
     
     - name: Run stress tests
       run: |
-        timeout 60s node scripts/stress-test.js || true
+        timeout 60s npm run perf:stress || true
     
     - name: Upload performance reports
       uses: actions/upload-artifact@v4
@@ -114,9 +114,7 @@ jobs:
       run: npm ci
     
     - name: Validate YAML files
-      run: |
-        npm install -g js-yaml
-        find src/prompts/config -name "*.yaml" -exec js-yaml {} \; > /dev/null
+      run: npm run validate:prompts
     
     - name: Check file formatting
       run: |

@@ -17,7 +17,7 @@
     "test:coverage": "jest --coverage --collectCoverageFrom=\"src/**/*.js\" --coverageReporters=text-lcov --coverageReporters=html",
     "test:watch": "jest --watch",
     "test:all": "npm run test && npm run integration:quick",
-    "integration:api": "node scripts/test-api-integration.js || echo 'Note: Run test:integration for Jest-based API tests'",
+    "integration:test": "node scripts/test-integration.js",
     "integration:quick": "node scripts/quick-test.js",
     "integration:project": "node scripts/test-project-details.js",
     "perf:stress": "node scripts/stress-test.js",
