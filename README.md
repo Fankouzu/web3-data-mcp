@@ -98,7 +98,7 @@ cp .env.example .env
 # Edit .env with your API key
 
 # Verify installation
-npm run check-mcp
+npm run mcp:check
 npm test
 
 # Start the server
@@ -376,7 +376,7 @@ npm run test:performance # Benchmark tests
 npm run optimize
 
 # Monitor performance
-npm run performance-test
+npm run test:performance
 
 # Clean logs
 npm run clean:logs

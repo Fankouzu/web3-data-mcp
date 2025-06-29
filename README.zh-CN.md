@@ -98,7 +98,7 @@ cp .env.example .env
 # 编辑 .env 文件添加您的API密钥
 
 # 验证安装
-npm run check-mcp
+npm run mcp:check
 npm test
 
 # 启动服务器
@@ -376,7 +376,7 @@ npm run test:performance # 基准测试
 npm run optimize
 
 # 监控性能
-npm run performance-test
+npm run test:performance
 
 # 清理日志
 npm run clean:logs

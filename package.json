@@ -47,10 +47,13 @@
     "test:prompts": "node scripts/run-tests-with-log.js",
     "test:stress": "node scripts/stress-test.js",
     "optimize": "node scripts/optimize-performance.js",
-    "validate:prompts": "js-yaml src/prompts/config/*.yaml",
+    "validate:prompts": "find src/prompts/config -name '*.yaml' -exec js-yaml {} \\;",
     "logs": "ls -la logs/ | tail -20",
     "clean:logs": "rm -rf logs/*.log logs/*.json",
-    "update-prompts": "echo 'Edit files in src/prompts/config/ then restart server'"
+    "clean:cache": "rm -rf .cache/ logs/cache-*.json",
+    "prompts:stats": "node scripts/analyze-prompt-usage.js || echo 'Prompt analytics not yet implemented'",
+    "update-prompts": "echo 'Edit files in src/prompts/config/ then restart server'",
+    "verify:commands": "node scripts/verify-npm-commands.js"
   },
   "keywords": [
     "mcp",
